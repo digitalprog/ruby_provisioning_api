@@ -22,3 +22,7 @@ tmp
 _yardoc
 doc/
 .idea
+#  Ignore wizzy configuration 
+.wizzy
+wizzy
+.wizzy-config
