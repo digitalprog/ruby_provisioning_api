@@ -2,8 +2,8 @@
 require File.expand_path('../lib/ruby_provisioning_api/version', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.authors       = ["Davide Targa"]
-  gem.email         = ["davide.targa@gmail.com"]
+  gem.authors       = ["Davide Targa", "Damiano Braga"]
+  gem.email         = ["davide.targa@gmail.com", "damiano.braga@gmail.com"]
   gem.description   = %q{TODO: Write a gem description}
   gem.summary       = %q{TODO: Write a gem summary}
   gem.homepage      = ""
@@ -14,4 +14,5 @@ Gem::Specification.new do |gem|
   gem.name          = "ruby_provisioning_api"
   gem.require_paths = ["lib"]
   gem.version       = RubyProvisioningApi::VERSION
+  gem.add_dependency 'faraday'
 end
