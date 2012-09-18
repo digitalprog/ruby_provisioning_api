@@ -1,5 +1,6 @@
 require 'ruby_provisioning_api/version'
 require 'ruby_provisioning_api/connection'
+require './lib/ruby_provisioning_api/group'
 require './lib/ruby_provisioning_api/configuration'
 
 require 'faraday'
@@ -14,7 +15,6 @@ module RubyProvisioningApi
     attr_reader :lib_path
 
     def new
-      puts "Ehi!"
       RubyProvisioningApi::Connection.new
     end
 
