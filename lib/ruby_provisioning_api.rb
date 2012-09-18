@@ -1,6 +1,6 @@
-require "ruby_provisioning_api/version"
-require "ruby_provisioning_api/connection"
-require "faraday"
+require 'ruby_provisioning_api/version'
+require 'ruby_provisioning_api/connection'
+require 'faraday'
 
 module RubyProvisioningApi
   class << self
@@ -10,3 +10,5 @@ module RubyProvisioningApi
     end
   end
 end
+
+RubyProvisioningApi.new

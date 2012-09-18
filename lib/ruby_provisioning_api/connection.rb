@@ -1,8 +1,7 @@
 module RubyProvisioningApi
   class Connection
-    def initialize()
+    def Initialized
       puts "Initialized"
     end
   end
-
 end
