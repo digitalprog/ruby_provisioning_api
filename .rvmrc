@@ -1,1 +1,1 @@
-rvm use 1.9.2@ruby_provisioning_api
+rvm use 1.9.2@ruby_provisioning_api --create
