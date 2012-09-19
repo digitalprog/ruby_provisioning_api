@@ -21,16 +21,32 @@ module RubyProvisioningApi
     def initialize
     end
 
+    # Retrieve all groups in a domain  GET https://apps-apis.google.com/a/feeds/group/2.0/domain[?[start=]]
     def self.all
       response = perform(ACTIONS[:retrieve_all])
     end
 
+
     #Create                          POST https://apps-apis.google.com/a/feeds/group/2.0/domain
+    def self.create
+    end
+
+
     #Retrieve a group                 GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId
+    def self.find(group_id)
+    end
+
+
     #Update a group                   PUT https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId
-    #Retrieve all groups for a member GET https://apps-apis.google.com/a/feeds/group/2.0/domain/?member=memberId[&directOnly=true|false]
-    #Retrieve all groups in a domain  GET https://apps-apis.google.com/a/feeds/group/2.0/domain[?[start=]]
+    def self.update
+    end
+
     #Delete group                  DELETE https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId
+    def self.delete
+    end
+
+    # TODO
+    #Retrieve all groups for a member GET https://apps-apis.google.com/a/feeds/group/2.0/domain/?member=memberId[&directOnly=true|false]
   end
 end	
 
