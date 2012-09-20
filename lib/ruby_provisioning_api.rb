@@ -3,6 +3,7 @@ $:.unshift(File.dirname(__FILE__)) unless ($:.include?(File.dirname(__FILE__)) |
 require 'yaml'
 require 'faraday'
 require 'nokogiri'
+require 'active_support/all'
 
 module RubyProvisioningApi
   class << self
