@@ -11,6 +11,7 @@ module RubyProvisioningApi
       :update =>  { method: "PUT" , url: "#{GROUP_PATH}/groupId"},
       :delete =>  { method: "DELETE" , url: "#{GROUP_PATH}/groupId"},
       :retrieve_all => { method: "GET" , url: "#{GROUP_PATH}" },
+      :retrieve_groups => { method: "GET" , url: "#{GROUP_PATH}/?member=memberId" },
       :retrieve => { method: "GET" , url: "#{GROUP_PATH}/groupId" }
     }
 
@@ -86,8 +87,15 @@ module RubyProvisioningApi
       response = perform(params)
     end
 
-    # TODO
     #Retrieve all groups for a member GET https://apps-apis.google.com/a/feeds/group/2.0/domain/?member=memberId[&directOnly=true|false]
+    def self.groups(member_id)
+      # Creating a deep copy of ACTION object
+      params = Marshal.load(Marshal.dump(ACTIONS[:retrieve_groups]))
+      # Replacing place holder groupId with correct group_id
+      params[:url].gsub!("memberId",member_id)
+      response = perform(params)
+    end
+
   end
 end	
 
