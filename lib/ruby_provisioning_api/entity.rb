@@ -14,7 +14,7 @@ module RubyProvisioningApi
         req.url "#{BASE_ENTITY_URL}#{BASE_PATH}#{action[:url]}"
         req.headers['Content-Type'] = 'application/atom+xml'
         req.headers['Authorization'] = "GoogleLogin auth=#{connection.token}"
-        req.body = '{"groupId": "Unagi","groupName": "name","description": "desc","emailPermission": "Owner"}' if params
+        req.body = params if params
       end
     end
   end
@@ -27,29 +27,11 @@ end
 # The emailPermission argument sets the permissions level of the group.
 
 
-# builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
-
-builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
-  xml.send(:'atom:entry', 'xmlns:atom' => 'http://www.w3.org/2005/Atom', 'xmlns:apps' => 'http://schemas.google.com/apps/2006') {
-    xml.send(:'atom:category', 'scheme' => 'http://schemas.google.com/g/2005#kind', 'term' => 'http://schemas.google.com/apps/2006#emailList')
-    xml.send(:'apps:property', 'name' => 'groupId', 'value' => 'testcde')
-    xml.send(:'apps:property', 'name' => 'groupName', 'value' => 'testcde name')
-    xml.send(:'apps:property', 'name' => 'description', 'value' => 'testcde desc')
-    xml.send(:'apps:property', 'name' => 'emailPermission', 'value' => 'Owner')
-  }
-end
 
 
-# string = <<-EOS
-# <?xml version="1.0" encoding="UTF-8"?>
-# <atom:entry xmlns:atom="http://www.w3.org/2005/Atom" xmlns:apps="http://schemas.google.com/apps/2006">
-#   <atom:category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/apps/2006#emailList"/>
-#   <apps:property name="groupId" value="testabc"/>
-#   <apps:property name="groupName" value="test name"/>
-#   <apps:property name="description" value="desc"/>
-#   <apps:property name="emailPermission" value="Owner"/>
-# </atom:entry>
-# EOS
+
+
+# string = 
 
 # response = client.post do |req|
 #   req.url 'https://apps-apis.google.com/a/feeds/group/2.0/damianobraga.com'
