@@ -7,7 +7,7 @@ module RubyProvisioningApi
     USER_PATH = "/user/2.0/#{RubyProvisioningApi.configuration[:domain]}/"
 
     ACTIONS = { 
-      :create =>  { method: "POST" , url: "#{USER_PATH}"},
+      :create =>  { method: "POST" , url: "#{USER_PATH}" },
       :retrieve_all => { method: "GET" , url: "#{USER_PATH}" }
     }
 
@@ -32,12 +32,18 @@ module RubyProvisioningApi
     end
 
 
-    #Create                          POST https://apps-apis.google.com/a/feeds/group/2.0/domain
+
+
+
+
+
+
+    # Create https://apps-apis.google.com/a/feeds/domain/user/2.0
     def self.create
     end
 
 
-    #Retrieve a user account GET https://apps-apis.google.com/a/feeds/domain/user/2.0/userName
+    # Retrieve a user account GET https://apps-apis.google.com/a/feeds/domain/user/2.0/userName
     def self.find(user_name)
     end
 
