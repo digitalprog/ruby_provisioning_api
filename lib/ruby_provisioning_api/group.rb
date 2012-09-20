@@ -15,6 +15,8 @@ module RubyProvisioningApi
       :retrieve => { method: "GET" , url: "#{GROUP_PATH}/groupId" }
     }
 
+      HTTP_OK_STATUS = [200,201]
+      
   	def initialize(group_id, group_name, description, email_permission)
       self.group_id = group_id
       self.group_name = group_name
@@ -46,17 +48,32 @@ module RubyProvisioningApi
           xml.send(:'apps:property', 'name' => 'emailPermission', 'value' => email_permission)
         }
       end
-      response = perform(ACTIONS[:create],builder.to_xml)
-      #TODO controllare eventuali eccezioni e restituire true/false in caso      
+      HTTP_OK_STATUS.include?(perform(ACTIONS[:create],builder.to_xml).status)    
     end
 
-    # Retrieve a group  GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId
+    # Retrieve a group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId
     def self.find(group_id)
       # Creating a deep copy of ACTION object
       params = Marshal.load(Marshal.dump(ACTIONS[:retrieve]))
       # Replacing place holder groupId with correct group_id
       params[:url].gsub!("groupId",group_id)
       response = perform(params)
+      case response.status
+        when 200
+          # Parse the response
+          xml = Nokogiri::XML(response.body)
+          group = Group.new
+          for attribute_name in ['groupId','groupName','description','emailPermission']
+            group.send("#{attribute_name.underscore}=",xml.children.css("entry apps|property[name='#{attribute_name}']").attribute("value").value)
+          end
+          group
+        when 400
+          # Gapps error?
+          xml = Nokogiri::XML(response.body)
+          error_code = xml.xpath('//error').first.attributes["errorCode"].value
+          error_description = xml.xpath('//error').first.attributes["reason"].value
+          puts "Google provisioning Api error #{error_code}: #{error_description}"
+      end
     end
 
 
@@ -75,19 +92,19 @@ module RubyProvisioningApi
           xml.send(:'apps:property', 'name' => 'emailPermission', 'value' => email_permission)
         }
       end 
-      response = Entity.perform(params,builder.to_xml)     
+      HTTP_OK_STATUS.include?(Entity.perform(params,builder.to_xml).status)     
     end
 
-    #Delete group  DELETE https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId
+    # Delete group  DELETE https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId
     def self.delete(group_id)
       # Creating a deep copy of ACTION object
       params = Marshal.load(Marshal.dump(ACTIONS[:delete]))
       # Replacing place holder groupId with correct group_id
       params[:url].gsub!("groupId",group_id)
-      response = perform(params)
+      HTTP_OK_STATUS.include?(perform(params).status) 
     end
 
-    #Retrieve all groups for a member GET https://apps-apis.google.com/a/feeds/group/2.0/domain/?member=memberId[&directOnly=true|false]
+    # Retrieve all groups for a member GET https://apps-apis.google.com/a/feeds/group/2.0/domain/?member=memberId[&directOnly=true|false]
     def self.groups(member_id)
       # Creating a deep copy of ACTION object
       params = Marshal.load(Marshal.dump(ACTIONS[:retrieve_groups]))
