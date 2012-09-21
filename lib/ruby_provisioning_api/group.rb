@@ -15,7 +15,7 @@ module RubyProvisioningApi
       :retrieve => { method: "GET" , url: "#{GROUP_PATH}/groupId" }
     }
 
-      HTTP_OK_STATUS = [200,201]
+    HTTP_OK_STATUS = [200,201]
       
   	def initialize(group_id, group_name, description, email_permission)
       self.group_id = group_id
@@ -30,6 +30,27 @@ module RubyProvisioningApi
     # Retrieve all groups in a domain  GET https://apps-apis.google.com/a/feeds/group/2.0/domain[?[start=]]
     def self.all
       response = perform(ACTIONS[:retrieve_all])
+      case response.status
+        when 200
+          # Parse the response
+          xml = Nokogiri::XML(response.body)
+          groups = []
+          xml.children.css("entry").each do |entry|
+            group = Group.new
+
+            for attribute_name in ['groupId','groupName','description','emailPermission']
+            group.send("#{attribute_name.underscore}=", entry.css("apps|property[name='#{attribute_name}']").attribute("value").value)
+            end
+            groups << group
+          end
+          groups
+        when 400
+          # Gapps error?
+          xml = Nokogiri::XML(response.body)
+          error_code = xml.xpath('//error').first.attributes["errorCode"].value
+          error_description = xml.xpath('//error').first.attributes["reason"].value
+          puts "Google provisioning Api error #{error_code}: #{error_description}"
+      end
     end
 
    # Save(Create) a group POST https://apps-apis.google.com/a/feeds/group/2.0/domain
@@ -58,31 +79,25 @@ module RubyProvisioningApi
       # Replacing place holder groupId with correct group_id
       params[:url].gsub!("groupId",group_id)
       response = perform(params)
-      case response.status
-        when 200
-          # Parse the response
-          xml = Nokogiri::XML(response.body)
-          group = Group.new
-          for attribute_name in ['groupId','groupName','description','emailPermission']
-            group.send("#{attribute_name.underscore}=",xml.children.css("entry apps|property[name='#{attribute_name}']").attribute("value").value)
-          end
-          group
-        when 400
-          # Gapps error?
-          xml = Nokogiri::XML(response.body)
-          error_code = xml.xpath('//error').first.attributes["errorCode"].value
-          error_description = xml.xpath('//error').first.attributes["reason"].value
-          puts "Google provisioning Api error #{error_code}: #{error_description}"
+      # Check if the response contains an error
+      check_response(response)
+      # Parse the response
+      xml = Nokogiri::XML(response.body)
+      group = Group.new
+      for attribute_name in ['groupId','groupName','description','emailPermission']
+        group.send("#{attribute_name.underscore}=",xml.children.css("entry apps|property[name='#{attribute_name}']").attribute("value").value)
       end
+      group
     end
 
+    #update attributes
 
     # Update group information   PUT https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId
-    def update(current_group_id)
+    def update
       # Creating a deep copy of ACTION object
       params = Marshal.load(Marshal.dump(ACTIONS[:update]))
       # Replacing place holder groupId with correct group_id
-      params[:url].gsub!("groupId",current_group_id)
+      params[:url].gsub!("groupId",group_id)
 
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
         xml.send(:'atom:entry', 'xmlns:atom' => 'http://www.w3.org/2005/Atom', 'xmlns:apps' => 'http://schemas.google.com/apps/2006') {
@@ -111,6 +126,27 @@ module RubyProvisioningApi
       # Replacing place holder groupId with correct group_id
       params[:url].gsub!("memberId",member_id)
       response = perform(params)
+      case response.status
+        when 200
+          # Parse the response
+          xml = Nokogiri::XML(response.body)
+          groups = []
+          xml.children.css("entry").each do |entry|
+            group = Group.new
+
+            for attribute_name in ['groupId','groupName','description','emailPermission']
+            group.send("#{attribute_name.underscore}=", entry.css("apps|property[name='#{attribute_name}']").attribute("value").value)
+            end
+            groups << group
+          end
+          groups
+        when 400
+          # Gapps error?
+          xml = Nokogiri::XML(response.body)
+          error_code = xml.xpath('//error').first.attributes["errorCode"].value
+          error_description = xml.xpath('//error').first.attributes["reason"].value
+          puts "Google provisioning Api error #{error_code}: #{error_description}"
+      end      
     end
 
   end
