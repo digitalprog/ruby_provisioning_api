@@ -4,7 +4,7 @@ module RubyProvisioningApi
     BASE_ENTITY_URL = 'https://apps-apis.google.com'
     BASE_PATH = '/a/feeds'
 
-    def self.perform(action,params = nil)
+    def self.perform(action, params = nil)
       connection = RubyProvisioningApi.connection
       client = connection.client(BASE_ENTITY_URL)
       method = action[:method]
@@ -27,13 +27,13 @@ module RubyProvisioningApi
       if (400..600).include?(response.status)
         xml = Nokogiri::XML(response.body)
         error_code = xml.xpath('//error').first.attributes["errorCode"].value
-        error_description = xml.xpath('//error').first.attributes["reason"].value        
+        error_description = xml.xpath('//error').first.attributes["reason"].value
+        puts error_description + "\n\n\n\n\n\n\n\n"
         RubyProvisioningApi.const_set(error_description, Class.new(RubyProvisioningApi::Error)) unless RubyProvisioningApi.const_defined? error_description
-        raise "RubyProvisioningApi::#{error_description}".classify.constantize
+        raise "RubyProvisioningApi::#{error_description}".constantize
       end
       true
     end
-
 
   end
 end
