@@ -31,6 +31,7 @@ module RubyProvisioningApi
         RubyProvisioningApi.const_set(error_description, Class.new(RubyProvisioningApi::Error))
         raise "RubyProvisioningApi::#{error_description}".classify.constantize
       end
+      true
     end
 
 

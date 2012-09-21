@@ -9,7 +9,8 @@ module RubyProvisioningApi
         :create => {method: "POST", url: "#{USER_PATH}"},
         :retrieve_all => {method: "GET", url: "#{USER_PATH}"},
         :retrieve => {:method => "GET", :url => "#{USER_PATH}/userName"},
-        :delete => {:method => "DELETE", :url => "#{USER_PATH}/userName"}
+        :delete => {:method => "DELETE", :url => "#{USER_PATH}/userName"},
+        :update => {:method => "PUT", :url => "#{USER_PATH}/userName"}
     }
 
     # User initialization
@@ -27,12 +28,28 @@ module RubyProvisioningApi
       end
     end
 
+    # Retrieve a user account GET https://apps-apis.google.com/a/feeds/domain/user/2.0/userName
+    def self.find(user_name)
+      params = Marshal.load(Marshal.dump(ACTIONS[:retrieve]))
+      params[:url].gsub!("userName", user_name)
+      response = perform(params)
+      check_response(response)
+      doc = Nokogiri::XML(response.body)
+      u = User.new
+      u.user_name = doc.xpath("//apps:login").first.attributes["userName"].value
+      u.family_name = doc.xpath("//apps:name").first.attributes["familyName"].value
+      u.given_name = doc.xpath("//apps:name").first.attributes["givenName"].value
+      u
+    end
+
     # Retrieve all users in a domain GET https://apps-apis.google.com/a/feeds/domain/user/2.0
     def self.all
       response = perform(ACTIONS[:retrieve_all])
+      check_response(response)
     end
 
     def save
+      # TODO
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
         xml.send(:'atom:entry', 'xmlns:atom' => 'http://www.w3.org/2005/Atom', 'xmlns:apps' => 'http://schemas.google.com/apps/2006') {
           xml.send(:'atom:category', 'scheme' => 'http://schemas.google.com/g/2005#kind', 'term' => 'http://schemas.google.com/apps/2006#user')
@@ -56,18 +73,15 @@ module RubyProvisioningApi
       user.save
     end
 
-    # Retrieve a user account GET https://apps-apis.google.com/a/feeds/domain/user/2.0/userName
-    def self.find(user_name)
-      params = Marshal.load(Marshal.dump(ACTIONS[:retrieve]))
-      params[:url].gsub!("userName", user_name)
-      response = perform(params)
-    end
+
 
     # FIX:will work only when find will return a User object
-    def update
-      params = Marshal.load(Marshal.dump(ACTIONS[:update]))
-      params[:url].gsub!("userName",user_name)
-      #TODO:... complete
+    def update_attributes(params)
+      old_user_name = self.user_name
+      self.user_name = params[:user_name] if params[:user_name]
+      self.family_name = params[:family_name] if params[:family_name]
+      self.given_name = params[:given_name] if params[:given_name]
+      update(old_user_name)
     end
 
     #TODO: To restore a user account using the protocol, change a suspended user's `suspended` value to `false` and make a `PUT` request with the updated entry.
@@ -92,5 +106,26 @@ module RubyProvisioningApi
 
     # TODO
     #Retrieve all groups for a member GET https://apps-apis.google.com/a/feeds/group/2.0/domain/?member=memberId[&directOnly=true|false]
+
+    private
+
+    def update(old_user_name)
+      params = Marshal.load(Marshal.dump(ACTIONS[:update]))
+      params[:url].gsub!("userName",old_user_name)
+      builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+        xml.send(:'atom:entry', 'xmlns:atom' => 'http://www.w3.org/2005/Atom', 'xmlns:apps' => 'http://schemas.google.com/apps/2006') {
+          xml.send(:'atom:category', 'scheme' => 'http://schemas.google.com/g/2005#kind', 'term' => 'http://schemas.google.com/apps/2006#user')
+          xml.send(:'apps:login', 'userName' => user_name, 'password' => '51eea05d46317fadd5cad6787a8f562be90b4446', 'suspended' => false)
+          xml.send(:'apps:name', 'familyName' => family_name, 'givenName' => given_name)
+        }
+      end
+      response = self.class.perform(params, builder.to_xml).env[:body]
+      doc = Nokogiri::XML(response)
+      u = User.new
+      u.user_name = doc.xpath("//apps:login").first.attributes["userName"].value
+      u.family_name = doc.xpath("//apps:name").first.attributes["familyName"].value
+      u.given_name = doc.xpath("//apps:name").first.attributes["givenName"].value
+      u
+    end
   end
 end
