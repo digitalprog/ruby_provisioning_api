@@ -67,13 +67,8 @@ module RubyProvisioningApi
           xml.send(:'apps:name', 'familyName' => family_name, 'givenName' => given_name)
         }
       end
-      response = self.class.perform(ACTIONS[:create], builder.to_xml).env[:body]
-      doc = Nokogiri::XML(response)
-      u = User.new
-      u.user_name = doc.xpath("//apps:login").first.attributes["userName"].value
-      u.family_name = doc.xpath("//apps:name").first.attributes["familyName"].value
-      u.given_name = doc.xpath("//apps:name").first.attributes["givenName"].value
-      u
+      response = self.class.perform(ACTIONS[:create], builder.to_xml)
+      User.check_response(response)
     end
 
     # Create POST https://apps-apis.google.com/a/feeds/domain/user/2.0
@@ -107,9 +102,14 @@ module RubyProvisioningApi
       response = perform(params)
     end
 
-    # FIX: will work only when User#find will return a user object
+    # Returns all the groups which the user is subscribed to
+    # TODO: move this inside member
     def groups
-      Groups.groups(user_name)
+      Group.groups(user_name)
+    end
+
+    # Returns all the users of a specific group
+    def users(group_id)
     end
 
     # TODO
@@ -127,13 +127,8 @@ module RubyProvisioningApi
           xml.send(:'apps:name', 'familyName' => family_name, 'givenName' => given_name)
         }
       end
-      response = self.class.perform(params, builder.to_xml).env[:body]
-      doc = Nokogiri::XML(response)
-      u = User.new
-      u.user_name = doc.xpath("//apps:login").first.attributes["userName"].value
-      u.family_name = doc.xpath("//apps:name").first.attributes["familyName"].value
-      u.given_name = doc.xpath("//apps:name").first.attributes["givenName"].value
-      u
+      response = self.class.perform(params, builder.to_xml)
+      User.check_response(response)
     end
   end
 end
