@@ -36,20 +36,29 @@ module RubyProvisioningApi
       check_response(response)
       doc = Nokogiri::XML(response.body)
       u = User.new
-      u.user_name = doc.xpath("//apps:login").first.attributes["userName"].value
-      u.family_name = doc.xpath("//apps:name").first.attributes["familyName"].value
-      u.given_name = doc.xpath("//apps:name").first.attributes["givenName"].value
+      u.user_name = doc.css("apps|login").first.attributes["userName"].value
+      u.family_name = doc.css("apps|name").first.attributes["familyName"].value
+      u.given_name = doc.css("apps|name").first.attributes["givenName"].value
       u
     end
 
     # Retrieve all users in a domain GET https://apps-apis.google.com/a/feeds/domain/user/2.0
     def self.all
+      users = []
       response = perform(ACTIONS[:retrieve_all])
       check_response(response)
+      doc = Nokogiri::XML(response.body)
+      doc.css("entry").each do |user_entry|
+        u = User.new
+        u.user_name = user_entry.css("apps|login").first.attributes["userName"].value
+        u.given_name = user_entry.css("apps|name").first.attributes["givenName"].value
+        u.family_name = user_entry.css("apps|name").first.attributes["familyName"].value
+        users << u
+      end
+      users
     end
 
     def save
-      # TODO
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
         xml.send(:'atom:entry', 'xmlns:atom' => 'http://www.w3.org/2005/Atom', 'xmlns:apps' => 'http://schemas.google.com/apps/2006') {
           xml.send(:'atom:category', 'scheme' => 'http://schemas.google.com/g/2005#kind', 'term' => 'http://schemas.google.com/apps/2006#user')
@@ -72,7 +81,6 @@ module RubyProvisioningApi
       user = User.new(params)
       user.save
     end
-
 
 
     # FIX:will work only when find will return a User object
@@ -111,7 +119,7 @@ module RubyProvisioningApi
 
     def update(old_user_name)
       params = Marshal.load(Marshal.dump(ACTIONS[:update]))
-      params[:url].gsub!("userName",old_user_name)
+      params[:url].gsub!("userName", old_user_name)
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
         xml.send(:'atom:entry', 'xmlns:atom' => 'http://www.w3.org/2005/Atom', 'xmlns:apps' => 'http://schemas.google.com/apps/2006') {
           xml.send(:'atom:category', 'scheme' => 'http://schemas.google.com/g/2005#kind', 'term' => 'http://schemas.google.com/apps/2006#user')
