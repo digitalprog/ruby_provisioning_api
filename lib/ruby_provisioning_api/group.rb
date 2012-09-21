@@ -15,7 +15,7 @@ module RubyProvisioningApi
       :retrieve => { method: "GET" , url: "#{GROUP_PATH}/groupId" }
     }
     
-    GROUP_ATTRIBUTES = [:groupId,:groupName,:description,:emailPermission]
+    GROUP_ATTRIBUTES = ['groupId','groupName','description','emailPermission']
 
 
     # Group initialization
@@ -39,7 +39,7 @@ module RubyProvisioningApi
       # Perform the request & Check if the response contains an error
       check_response(perform(ACTIONS[:retrieve_all]))       
       # Parse the response
-      xml = Nokogiri::XML(response.body)
+      xml = Nokogiri::XML(perform(ACTIONS[:retrieve_all]).body)
       # Prepare a Groups array
       groups = []
       xml.children.css("entry").each do |entry|
@@ -61,7 +61,7 @@ module RubyProvisioningApi
       begin
         Group.find(group_id)
         update = true
-      rescue "RubyProvisioningApi::EntityDoesNotExist"
+      rescue Exception => e
       end
       # Creating the XML request
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
