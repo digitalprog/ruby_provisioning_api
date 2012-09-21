@@ -12,7 +12,8 @@ module RubyProvisioningApi
       :delete =>  { method: "DELETE" , url: "#{GROUP_PATH}/groupId"},
       :retrieve_all => { method: "GET" , url: "#{GROUP_PATH}" },
       :retrieve_groups => { method: "GET" , url: "#{GROUP_PATH}/?member=memberId" },
-      :retrieve => { method: "GET" , url: "#{GROUP_PATH}/groupId" }
+      :retrieve => { method: "GET" , url: "#{GROUP_PATH}/groupId" },
+      :add_member => { method: "POST" , url: "#{GROUP_PATH}/groupId/member" }
     }
     
     GROUP_ATTRIBUTES = ['groupId','groupName','description','emailPermission']
@@ -168,6 +169,51 @@ module RubyProvisioningApi
       end
       # Return the array of Groups
       groups
+    end
+
+    # Adding a Member to a Group POST https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member
+    def add_member(member_id)
+      user = User.find(member_id)
+      # Creating the XML request
+      builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+        xml.send(:'atom:entry', 'xmlns:atom' => 'http://www.w3.org/2005/Atom', 'xmlns:apps' => 'http://schemas.google.com/apps/2006') {
+          xml.send(:'atom:category', 'scheme' => 'http://schemas.google.com/g/2005#kind', 'term' => 'http://schemas.google.com/apps/2006#emailList')
+          xml.send(:'apps:property', 'name' => 'memberId', 'value' => member_id) 
+        }
+      end
+      # Creating a deep copy of ACTION object
+      params = Marshal.load(Marshal.dump(ACTIONS[:add_member]))
+      # Replacing placeholder groupId with correct group_id
+      params[:url].gsub!("groupId",group_id)
+      # Perform the request & Check if the response contains an error
+      Entity.check_response(Entity.perform(params,builder.to_xml))  
+    end
+
+    # Retrieving all members for a group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member[?[start=]&[includeSuspendedUsers=true|false]]
+    def members
+      User.users(group_id)
+    end
+    # Retrieve member for a group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId
+    def member(member_id)
+    end
+
+    # Deleting a member from a group DELETE https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId
+    def delete_member(member_id)
+    end
+
+    def add_owner(owner_id)
+    end
+
+    def owners
+    end
+
+    def owner?
+    end
+
+    def member?
+    end
+
+    def delete_owner(owner_id)
     end
 
   end
