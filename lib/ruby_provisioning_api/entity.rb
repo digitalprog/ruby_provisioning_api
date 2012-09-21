@@ -28,7 +28,7 @@ module RubyProvisioningApi
         xml = Nokogiri::XML(response.body)
         error_code = xml.xpath('//error').first.attributes["errorCode"].value
         error_description = xml.xpath('//error').first.attributes["reason"].value        
-        RubyProvisioningApi.const_set(error_description, Class.new(RubyProvisioningApi::Error))
+        RubyProvisioningApi.const_set(error_description, Class.new(RubyProvisioningApi::Error)) unless RubyProvisioningApi.const_defined? error_description
         raise "RubyProvisioningApi::#{error_description}".classify.constantize
       end
       true
