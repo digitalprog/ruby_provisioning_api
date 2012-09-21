@@ -4,7 +4,7 @@ module RubyProvisioningApi
     BASE_ENTITY_URL = 'https://apps-apis.google.com'
     BASE_PATH = '/a/feeds'
 
-    def self.perform(action,params = nil)
+    def self.perform(action, params = nil)
       connection = RubyProvisioningApi.connection
       client = connection.client(BASE_ENTITY_URL)
       method = action[:method]
@@ -34,7 +34,6 @@ module RubyProvisioningApi
       end
       true
     end
-
 
   end
 end
