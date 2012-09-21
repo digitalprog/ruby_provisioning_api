@@ -193,12 +193,18 @@ module RubyProvisioningApi
     def members
       User.users(group_id)
     end
+
     # Retrieve member for a group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId
     def member(member_id)
     end
+    
+    def member?
+    end
+
 
     # Deleting a member from a group DELETE https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId
     def delete_member(member_id)
+
     end
 
     def add_owner(owner_id)
@@ -210,8 +216,7 @@ module RubyProvisioningApi
     def owner?
     end
 
-    def member?
-    end
+
 
     def delete_owner(owner_id)
     end
