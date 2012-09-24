@@ -72,12 +72,12 @@ module RubyProvisioningApi
         }
       end
       if User.present?(user_name_was)
-        # UPDATE old record
+        # UPDATING an old record
         params = Marshal.load(Marshal.dump(ACTIONS[:update]))
         params[:url].gsub!("userName", user_name_was)
         response = self.class.perform(params, builder.to_xml)
       else
-        # SAVE new record
+        # SAVING a new record
         response = self.class.perform(ACTIONS[:create], builder.to_xml)
       end
       User.check_response(response)
@@ -89,16 +89,13 @@ module RubyProvisioningApi
       user.save
     end
 
-    # FIX:will work only when find will return a User object
     def update_attributes(params)
-      #old_user_name = self.user_name
       if params[:user_name] and params[:user_name] != self.user_name
         user_name_will_change!
         self.user_name = params[:user_name]
       end
       self.family_name = params[:family_name] if params[:family_name]
       self.given_name = params[:given_name] if params[:given_name]
-      #update(old_user_name)
       save
     end
 
