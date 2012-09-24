@@ -34,5 +34,14 @@ module RubyProvisioningApi
       true
     end
 
+    def self.present?(id)
+      begin
+        self.find(id)
+        true
+      rescue
+        false
+      end
+    end
+    
   end
 end

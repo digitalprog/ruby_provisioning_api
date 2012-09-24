@@ -42,15 +42,6 @@ module RubyProvisioningApi
       u
     end
 
-    def self.present?(user_name)
-      begin
-        User.find(user_name)
-        true
-      rescue
-        false
-      end
-    end
-
     # Retrieve all users in a domain GET https://apps-apis.google.com/a/feeds/domain/user/2.0
     def self.all
       users = []
