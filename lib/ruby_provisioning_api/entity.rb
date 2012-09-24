@@ -18,6 +18,10 @@ module RubyProvisioningApi
       end
     end
 
+    def self.deep_copy(element)
+      Marshal.load(Marshal.dump(element))
+    end
+
     def response_error?(response)
       (400..600).include?(response.status)
     end

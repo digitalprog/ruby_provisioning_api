@@ -82,7 +82,7 @@ module RubyProvisioningApi
       else
         #Acting on an existing object
         # Creating a deep copy of ACTION object
-        params = Marshal.load(Marshal.dump(ACTIONS[:update]))
+        params = Entity.deep_copy(ACTIONS[:update])
         # Replacing placeholder groupId with correct group_id
         params[:url].gsub!("groupId",group_id)
         # Perform the request & Check if the response contains an error
@@ -108,7 +108,7 @@ module RubyProvisioningApi
     # @param [String] group_id group identification
     def self.find(group_id)
       # Creating a deep copy of ACTION object
-      params = Marshal.load(Marshal.dump(ACTIONS[:retrieve]))
+      params = Entity.deep_copy(ACTIONS[:retrieve])
       # Replacing place holder groupId with correct group_id
       params[:url].gsub!("groupId",group_id)
       response = perform(params)
@@ -149,11 +149,11 @@ module RubyProvisioningApi
     # @return [Boolean] true of false depending the status of the operation
     def delete
       # Creating a deep copy of ACTION object
-      params = Marshal.load(Marshal.dump(ACTIONS[:delete]))
+      params = Entity.deep_copy(ACTIONS[:delete])
       # Replacing placeholder groupId with correct group_id
       params[:url].gsub!("groupId",group_id)
       # Perform the request & Check if the response contains an error
-      Entity.check_response(Entity.perform(params))
+      self.class.check_response(self.class.perform(params))
     end
 
     # Retrieve all groups for a given member
@@ -162,7 +162,7 @@ module RubyProvisioningApi
     # @param [String] member_id member identification
     def self.groups(member_id)
       # Creating a deep copy of ACTION object
-      params = Marshal.load(Marshal.dump(ACTIONS[:retrieve_groups]))
+      params = Entity.deep_copy(ACTIONS[:retrieve_groups])
       # Replacing place holder groupId with correct group_id
       params[:url].gsub!("memberId",member_id)
       response = perform(params)
@@ -200,7 +200,7 @@ module RubyProvisioningApi
         }
       end
       # Creating a deep copy of ACTION object
-      params = Marshal.load(Marshal.dump(ACTIONS[:add_member]))
+      params = Entity.deep_copy(ACTIONS[:add_member])
       # Replacing placeholder groupId with correct group_id
       params[:url].gsub!("groupId",group_id)
       # Perform the request & Check if the response contains an error
@@ -213,7 +213,7 @@ module RubyProvisioningApi
     # @param [String] member_id member identification
     def has_member?(member_id)
       # Creating a deep copy of ACTION object
-      params = Marshal.load(Marshal.dump(ACTIONS[:has_member]))
+      params = Entity.deep_copy(ACTIONS[:has_member])
       # Replacing placeholder groupId with correct group_id
       params[:url].gsub!("groupId",group_id)
       # Replacing placeholder groupId with correct group_id
@@ -229,7 +229,7 @@ module RubyProvisioningApi
     def delete_member(member_id)
       member = Member.find(member_id)
       # Creating a deep copy of ACTION object
-      params = Marshal.load(Marshal.dump(ACTIONS[:delete_member]))
+      params = Entity.deep_copy(ACTIONS[:delete_member])
       # Replacing placeholder groupId with correct group_id
       params[:url].gsub!("groupId",group_id)
       # Replacing placeholder memberId with correct member_id

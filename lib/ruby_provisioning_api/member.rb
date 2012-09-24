@@ -27,7 +27,7 @@ module RubyProvisioningApi
     # @return [Array<User>] all users which are members for a group
     def members
       # Creating a deep copy of ACTION object
-      params = Marshal.load(Marshal.dump(ACTIONS[:members]))
+      params = Entity.deep_copy(ACTIONS[:members])
       # Replacing placeholder groupId with correct group_id
       params[:url].gsub!("groupId",group_id)
       # Perform the request & Check if the response contains an error
