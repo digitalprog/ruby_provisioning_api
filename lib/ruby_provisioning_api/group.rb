@@ -1,6 +1,8 @@
 module RubyProvisioningApi
 
-  class Group < Entity
+  class Group 
+    extend Entity
+    include Member
 
     include ActiveModel::Validations
     include ActiveModel::Dirty
@@ -19,19 +21,24 @@ module RubyProvisioningApi
       :retrieve_groups => { method: "GET" , url: "#{GROUP_PATH}/?member=memberId" },
       :retrieve => { method: "GET" , url: "#{GROUP_PATH}/groupId" },
       :add_member => { method: "POST" , url: "#{GROUP_PATH}/groupId/member" },
-      :delete_member => { method: "DELETE" , url: "#{GROUP_PATH}/groupId/member/memberId" }
+      :delete_member => { method: "DELETE" , url: "#{GROUP_PATH}/groupId/member/memberId" },
+      :has_member => {method: "GET", url: "#{GROUP_PATH}/groupId/member/memberId"}
     }
     
-
+    # @param [Hash] attributes the options to create a Group with.
+    # @option attributes [String] :group_id group identification
+    # @option attributes [String] :group_name name of the group
+    # @option attributes [String] :description description of the group
+    # @option attributes [String] :email_permission Owner or Member    
     def initialize(attributes = {})
       attributes.each do |name, value|
         send("#{name}=", value)
       end
     end
 
-    # Retrieve all groups in a domain  
-    # Action : GET https://apps-apis.google.com/a/feeds/group/2.0/domain[?[start=]]
-    #
+    # Retrieve all groups in the domain  
+    # @see https://developers.google.com/google-apps/provisioning/#retrieving_all_groups_in_a_domain GET https://apps-apis.google.com/a/feeds/group/2.0/domain[?[start=]]
+    # @return [Array<Group>] all groups in the domain 
     def self.all
       # Perform the request & Check if the response contains an error
       check_response(perform(ACTIONS[:retrieve_all]))       
@@ -51,8 +58,9 @@ module RubyProvisioningApi
       groups
     end
 
-
-   # Save(Create) a group POST https://apps-apis.google.com/a/feeds/group/2.0/domain
+    # Save a group 
+    # @see https://developers.google.com/google-apps/provisioning/#creating_a_group POST https://apps-apis.google.com/a/feeds/group/2.0/domain
+    # @return [Boolean] true of false depending the status of the operation
     def save
       return false unless valid?
       # If group is present, this is an update
@@ -82,15 +90,22 @@ module RubyProvisioningApi
       end
     end
 
-    # Create a group POST https://apps-apis.google.com/a/feeds/group/2.0/domain
-    # Group initialization
-    # Params:
-    # groupId, groupName, description, emailPermission
+    # Initialize and save a group 
+    # @see https://developers.google.com/google-apps/provisioning/#creating_a_group POST https://apps-apis.google.com/a/feeds/group/2.0/domain
+    # @return [Boolean] true of false depending the status of the operation
+    # @param [Hash] params the options to create a Group with.
+    # @option params [String] :group_id group identification
+    # @option params [String] :group_name name of the group
+    # @option params [String] :description description of the group
+    # @option params [String] :email_permission Owner or Member    
     def self.create(params = {})
       group = Group.new(params).save    
     end
 
-    # Retrieve a group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId
+    # Retrieve a group
+    # @see https://developers.google.com/google-apps/provisioning/#retrieving_a_group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId    
+    # @return [Group] Group object
+    # @param [String] group_id group identification
     def self.find(group_id)
       # Creating a deep copy of ACTION object
       params = Marshal.load(Marshal.dump(ACTIONS[:retrieve]))
@@ -108,8 +123,14 @@ module RubyProvisioningApi
       group
     end
 
-    # Update group information   PUT https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId
-    def update_attributes(params)
+    # Update group 
+    # @see https://developers.google.com/google-apps/provisioning/#updating_a_group PUT https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId  
+    # @return [Boolean] true of false depending the status of the operation
+    # @param [Hash] params the options to create a Group with.
+    # @option params [String] :group_name name of the group
+    # @option params [String] :description description of the group
+    # @option params [String] :email_permission Owner or Member   
+    def update_attributes(params = {})
       self.group_name = params[:group_name] if params[:group_name]
       self.description = params[:description] if params[:description]
       self.email_permission = params[:email_permission] if params[:email_permission]
@@ -175,18 +196,14 @@ module RubyProvisioningApi
       Entity.check_response(Entity.perform(params,builder.to_xml))  
     end
 
-    # Retrieving all members for a group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member[?[start=]&[includeSuspendedUsers=true|false]]
-    def members
-      Member.members(group_id)
-    end
 
     # Retrieve member for a group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId
-    def member(member_id)
-    end
+    # def member(member_id)
+    # end
     
-    def member?(member_id)
-      Member.member?(member_id,"fake")
-    end
+    # def member?(member_id)
+    #   Member.member?(member_id,"fake")
+    # end
 
 
     # Deleting a member from a group DELETE https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId
@@ -211,7 +228,17 @@ module RubyProvisioningApi
     def owner?
     end
 
-
+    def has_member?(member_id)
+      # GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId
+      # Creating a deep copy of ACTION object
+      params = Marshal.load(Marshal.dump(ACTIONS[:has_member]))
+      # Replacing placeholder groupId with correct group_id
+      params[:url].gsub!("groupId",group_id)
+      # Replacing placeholder groupId with correct group_id
+      params[:url].gsub!("memberId",member_id)
+      # Perform the request & Check if the response contains an error
+      self.class.check_response(self.class.perform(params))   
+    end
 
     def delete_owner(owner_id)
     end

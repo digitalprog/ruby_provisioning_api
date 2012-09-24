@@ -2,6 +2,7 @@ module RubyProvisioningApi
 
   class User
     extend Entity
+    extend Member
 
     include ActiveModel::Validations
     include ActiveModel::Dirty
@@ -12,13 +13,16 @@ module RubyProvisioningApi
     validates :user_name, :family_name, :given_name, :presence => true
 
     USER_PATH = "/#{RubyProvisioningApi.configuration[:domain]}/user/2.0"
+    GROUP_PATH = "/group/2.0/#{RubyProvisioningApi.configuration[:domain]}"
+
 
     ACTIONS = {
         :create => {method: "POST", url: "#{USER_PATH}"},
         :retrieve_all => {method: "GET", url: "#{USER_PATH}"},
         :retrieve => {:method => "GET", :url => "#{USER_PATH}/userName"},
         :delete => {:method => "DELETE", :url => "#{USER_PATH}/userName"},
-        :update => {:method => "PUT", :url => "#{USER_PATH}/userName"}
+        :update => {:method => "PUT", :url => "#{USER_PATH}/userName"},
+        :member_of => {method: "GET", url: "#{GROUP_PATH}/groupId/member/memberId"}
     }
 
 
@@ -128,6 +132,18 @@ module RubyProvisioningApi
 
     # TODO
     #Retrieve all groups for a member GET https://apps-apis.google.com/a/feeds/group/2.0/domain/?member=memberId[&directOnly=true|false]
+
+    def is_member_of?(group_id)
+      # GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId
+      # Creating a deep copy of ACTION object
+      params = Marshal.load(Marshal.dump(ACTIONS[:member_of]))
+      # Replacing placeholder groupId with correct group_id
+      params[:url].gsub!("groupId",group_id)
+      # Replacing placeholder groupId with correct group_id
+      params[:url].gsub!("memberId",user_name)
+      # Perform the request & Check if the response contains an error
+      self.class.check_response(self.class.perform(params))   
+    end
 
   end
 
