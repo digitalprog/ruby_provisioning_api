@@ -3,6 +3,7 @@ module RubyProvisioningApi
   class Group 
     extend Entity
     include Member
+    include Owner
 
     include ActiveModel::Validations
     include ActiveModel::Dirty
@@ -22,7 +23,8 @@ module RubyProvisioningApi
       :retrieve => { method: "GET" , url: "#{GROUP_PATH}/groupId" },
       :add_member => { method: "POST" , url: "#{GROUP_PATH}/groupId/member" },
       :delete_member => { method: "DELETE" , url: "#{GROUP_PATH}/groupId/member/memberId" },
-      :has_member => {method: "GET", url: "#{GROUP_PATH}/groupId/member/memberId"}
+      :has_member => {method: "GET", url: "#{GROUP_PATH}/groupId/member/memberId"},
+      :delete_owner => {method: "DELETE" , url: "#{GROUP_PATH}/groupId/owner/ownerEmail"}
     }
     
     # @param [Hash] attributes the options to create a Group with.
@@ -228,7 +230,8 @@ module RubyProvisioningApi
     # @return [Boolean] true of false depending the status of the operation
     # @param [String] member_id member identification
     def delete_member(member_id)
-      member = Member.find(member_id)
+      # TODO: is it necessary to find the member?
+      # member = User.find(member_id)
       # Creating a deep copy of ACTION object
       params = Entity.deep_copy(ACTIONS[:delete_member])
       # Replacing placeholder groupId with correct group_id
@@ -239,21 +242,45 @@ module RubyProvisioningApi
       self.class.check_response(self.class.perform(params)) 
     end
 
-    # Retrieve member for a group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId
-    # def member(member_id)
-    # end
-    
-    # def add_owner(owner_id)
-    # end
+    # Add owner to group
+    # @see https://developers.google.com/google-apps/provisioning/#assigning_an_owner_to_a_group POST https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/owner
+    # @return [Boolean] true of false depending the status of the operation
+    # @param [String] owner_id owner identification    
+    def add_owner(owner_id)
+    end
 
-    # def owners
-    # end
 
-    # def owner?
-    # end
+    # Group ownership of a given member
+    # @see https://developers.google.com/google-apps/provisioning/#querying_if_a_user_or_group_is_owner GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/owner/ownerEmail
+    # @return [Boolean] true if user is a owner of group
+    # @param [String] owner_id owner identification
+    def has_owner?(owner_id)
+      # Creating a deep copy of ACTION object
+      params = Entity.deep_copy(ACTIONS[:has_member])
+      # Replacing placeholder groupId with correct group_id
+      params[:url].gsub!("groupId",group_id)
+      # Replacing placeholder groupId with correct group_id
+      params[:url].gsub!("memberId",member_id)
+      # Perform the request & Check if the response contains an error
+      self.class.check_response(self.class.perform(params))   
+    end
 
-    # def delete_owner(owner_id)
-    # end
+    # Delete group ownership of a given member
+    # @see https://developers.google.com/google-apps/provisioning/#deleting_an_owner_from_a_group DELETE https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/owner/ownerEmail
+    # @return [Boolean] true of false depending the status of the operation
+    # @param [String] owner_id owner identification
+    def delete_owner(owner_id)
+      # TODO: is it necessary to find the owner?
+      # owner = User.find(owner_id)
+      # Creating a deep copy of ACTION object
+      params = Entity.deep_copy(ACTIONS[:delete_owner])
+      # Replacing placeholder groupId with correct group_id
+      params[:url].gsub!("groupId",group_id)
+      # Replacing placeholder memberId with correct member_id
+      params[:url].gsub!("ownerEmail",owner_id)
+      # Perform the request & Check if the response contains an error
+      self.class.check_response(self.class.perform(params))       
+    end
 
   end
 end	

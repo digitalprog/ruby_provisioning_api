@@ -3,6 +3,7 @@ module RubyProvisioningApi
   class User
     extend Entity
     extend Member
+    extend Owner
 
     include ActiveModel::Validations
     include ActiveModel::Dirty
