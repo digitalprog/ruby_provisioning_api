@@ -1,10 +1,15 @@
 module RubyProvisioningApi
+
   class Group < Entity
+
+    include ActiveModel::Validations
+    include ActiveModel::Dirty
 
     attr_accessor :group_id, :group_name, :description, :email_permission
     attr_reader :GROUP_PATH
 
     GROUP_PATH = "/group/2.0/#{RubyProvisioningApi.configuration[:domain]}"
+    GROUP_ATTRIBUTES = ['groupId','groupName','description','emailPermission']
 
     ACTIONS = { 
       :create =>  { method: "POST" , url: "#{GROUP_PATH}"},
@@ -13,29 +18,20 @@ module RubyProvisioningApi
       :retrieve_all => { method: "GET" , url: "#{GROUP_PATH}" },
       :retrieve_groups => { method: "GET" , url: "#{GROUP_PATH}/?member=memberId" },
       :retrieve => { method: "GET" , url: "#{GROUP_PATH}/groupId" },
-      :add_member => { method: "POST" , url: "#{GROUP_PATH}/groupId/member" }
+      :add_member => { method: "POST" , url: "#{GROUP_PATH}/groupId/member" },
+      :delete_member => { method: "DELETE" , url: "#{GROUP_PATH}/groupId/member/memberId" }
     }
     
-    GROUP_ATTRIBUTES = ['groupId','groupName','description','emailPermission']
 
-
-    # Group initialization
-    # Params:
-    # groupId, groupName, description, emailPermission
-    def initialize(params = nil)
-      if params.nil? || (params.has_key?(:group_id) && params.has_key?(:group_name) && params.has_key?(:description) && params.has_key?(:email_permission))
-        if params
-          self.group_id = params[:group_id] 
-          self.group_name = params[:group_name] 
-          self.description = params[:description] 
-          self.email_permission = params[:email_permission]
-        end
-      else
-        raise InvalidArgument
+    def initialize(attributes = {})
+      attributes.each do |name, value|
+        send("#{name}=", value)
       end
     end
 
-    # Retrieve all groups in a domain  GET https://apps-apis.google.com/a/feeds/group/2.0/domain[?[start=]]
+    # Retrieve all groups in a domain  
+    # Action : GET https://apps-apis.google.com/a/feeds/group/2.0/domain[?[start=]]
+    #
     def self.all
       # Perform the request & Check if the response contains an error
       check_response(perform(ACTIONS[:retrieve_all]))       
@@ -58,17 +54,14 @@ module RubyProvisioningApi
 
    # Save(Create) a group POST https://apps-apis.google.com/a/feeds/group/2.0/domain
     def save
-      update = false
-      begin
-        Group.find(group_id)
-        update = true
-      rescue Exception => e
-      end
+      return false unless valid?
+      # If group is present, this is an update
+      update = Group.present?(group_id)
       # Creating the XML request
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
         xml.send(:'atom:entry', 'xmlns:atom' => 'http://www.w3.org/2005/Atom', 'xmlns:apps' => 'http://schemas.google.com/apps/2006') {
           xml.send(:'atom:category', 'scheme' => 'http://schemas.google.com/g/2005#kind', 'term' => 'http://schemas.google.com/apps/2006#emailList')
-          xml.send(:'apps:property', 'name' => 'groupId', 'value' => group_id) if !update
+          xml.send(:'apps:property', 'name' => 'groupId', 'value' => group_id) if update
           xml.send(:'apps:property', 'name' => 'groupName', 'value' => group_name)
           xml.send(:'apps:property', 'name' => 'description', 'value' => description)
           xml.send(:'apps:property', 'name' => 'emailPermission', 'value' => email_permission)
@@ -94,14 +87,7 @@ module RubyProvisioningApi
     # Params:
     # groupId, groupName, description, emailPermission
     def self.create(params = {})
-      if params.has_key?(:group_id) && params.has_key?(:group_name) && params.has_key?(:description) && params.has_key?(:email_permission)
-        # Set attributes
-        group = Group.new(:group_id => params[:group_id], :group_name => params[:group_name], :description => params[:description], :email_permission => params[:email_permission])
-        # Save group
-        group.save
-      else
-        raise InvalidArgument
-      end       
+      group = Group.new(params).save    
     end
 
     # Retrieve a group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId
@@ -191,20 +177,29 @@ module RubyProvisioningApi
 
     # Retrieving all members for a group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member[?[start=]&[includeSuspendedUsers=true|false]]
     def members
-      User.users(group_id)
+      Member.members(group_id)
     end
 
     # Retrieve member for a group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId
     def member(member_id)
     end
     
-    def member?
+    def member?(member_id)
+      Member.member?(member_id,"fake")
     end
 
 
     # Deleting a member from a group DELETE https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId
     def delete_member(member_id)
-
+      member = Member.find(member_id)
+      # Creating a deep copy of ACTION object
+      params = Marshal.load(Marshal.dump(ACTIONS[:delete_member]))
+      # Replacing placeholder groupId with correct group_id
+      params[:url].gsub!("groupId",group_id)
+      # Replacing placeholder memberId with correct member_id
+      params[:url].gsub!("memberId",member_id)
+      # Perform the request & Check if the response contains an error
+      Entity.check_response(Entity.perform(params)) 
     end
 
     def add_owner(owner_id)
