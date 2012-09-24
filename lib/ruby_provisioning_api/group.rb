@@ -78,7 +78,7 @@ module RubyProvisioningApi
       if !update
         #Acting on a new object
         # Check if the response contains an error
-        Entity.check_response(Entity.perform(ACTIONS[:create],builder.to_xml)) 
+        self.class.check_response(self.class.perform(ACTIONS[:create],builder.to_xml)) 
       else
         #Acting on an existing object
         # Creating a deep copy of ACTION object
@@ -86,7 +86,7 @@ module RubyProvisioningApi
         # Replacing placeholder groupId with correct group_id
         params[:url].gsub!("groupId",group_id)
         # Perform the request & Check if the response contains an error
-        Entity.check_response(Entity.perform(params,builder.to_xml))  
+        self.class.check_response(self.class.perform(params,builder.to_xml))  
       end
     end
 
@@ -204,7 +204,7 @@ module RubyProvisioningApi
       # Replacing placeholder groupId with correct group_id
       params[:url].gsub!("groupId",group_id)
       # Perform the request & Check if the response contains an error
-      Entity.check_response(Entity.perform(params,builder.to_xml))  
+      self.class.check_response(self.class.perform(params,builder.to_xml))  
     end
 
     # Group membership of a given member
@@ -235,7 +235,7 @@ module RubyProvisioningApi
       # Replacing placeholder memberId with correct member_id
       params[:url].gsub!("memberId",member_id)
       # Perform the request & Check if the response contains an error
-      Entity.check_response(Entity.perform(params)) 
+      self.class.check_response(self.class.perform(params)) 
     end
 
     # Retrieve member for a group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId
