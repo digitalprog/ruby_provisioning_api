@@ -31,9 +31,10 @@ module RubyProvisioningApi
       # Replacing placeholder groupId with correct group_id
       params[:url].gsub!("groupId",group_id)
       # Perform the request & Check if the response contains an error
-      # TODO: missing check_response because it's redundant
+      response = self.class.perform(params)
+      self.class.check_response(response)
       # Parse the response
-      xml = Nokogiri::XML(self.class.perform(params).body)
+      xml = Nokogiri::XML(response.body)
       # Prepare a User array
       users = []
       xml.children.css("entry").each do |entry|

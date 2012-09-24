@@ -40,10 +40,11 @@ module RubyProvisioningApi
     # @see https://developers.google.com/google-apps/provisioning/#retrieving_all_groups_in_a_domain GET https://apps-apis.google.com/a/feeds/group/2.0/domain[?[start=]]
     # @return [Array<Group>] all groups in the domain 
     def self.all
+      response = perform(ACTIONS[:retrieve_all])
       # Perform the request & Check if the response contains an error
-      check_response(perform(ACTIONS[:retrieve_all]))       
+      check_response(response)       
       # Parse the response
-      xml = Nokogiri::XML(perform(ACTIONS[:retrieve_all]).body)
+      xml = Nokogiri::XML(response.body)
       # Prepare a Groups array
       groups = []
       xml.children.css("entry").each do |entry|
