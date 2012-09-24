@@ -242,10 +242,6 @@ module RubyProvisioningApi
     # def member(member_id)
     # end
     
-    # def member?(member_id)
-    #   Member.member?(member_id,"fake")
-    # end
-
     # def add_owner(owner_id)
     # end
 
