@@ -12,7 +12,7 @@ module RubyProvisioningApi
 
     # @param [String] message the message of the exception
     def initialize(message = nil)
-      @message = message.to_s || self.class.to_s.split("::").last.underscore.humanize
+      @message = message || self.class.to_s.split("::").last.underscore.humanize
     end
 
     def to_s

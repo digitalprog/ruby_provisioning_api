@@ -13,8 +13,6 @@ module RubyProvisioningApi
     validates :user_name, :family_name, :given_name, :presence => true
 
     USER_PATH = "/#{RubyProvisioningApi.configuration[:domain]}/user/2.0"
-    GROUP_PATH = "/group/2.0/#{RubyProvisioningApi.configuration[:domain]}"
-
 
     ACTIONS = {
         :create => {method: "POST", url: "#{USER_PATH}"},
@@ -22,9 +20,8 @@ module RubyProvisioningApi
         :retrieve => {:method => "GET", :url => "#{USER_PATH}/userName"},
         :delete => {:method => "DELETE", :url => "#{USER_PATH}/userName"},
         :update => {:method => "PUT", :url => "#{USER_PATH}/userName"},
-        :member_of => {method: "GET", url: "#{GROUP_PATH}/groupId/member/memberId"}
+        :member_of => {method: "GET", url: "#{Group::GROUP_PATH}/groupId/member/memberId"}
     }
-
 
     def initialize(attributes = {})
       attributes.each do |name, value|
@@ -75,12 +72,12 @@ module RubyProvisioningApi
         }
       end
       if User.present?(user_name_was)
-        # UPDATE old record
+        # UPDATING an old record
         params = Marshal.load(Marshal.dump(ACTIONS[:update]))
         params[:url].gsub!("userName", user_name_was)
         response = self.class.perform(params, builder.to_xml)
       else
-        # SAVE new record
+        # SAVING a new record
         response = self.class.perform(ACTIONS[:create], builder.to_xml)
       end
       User.check_response(response)
@@ -92,16 +89,13 @@ module RubyProvisioningApi
       user.save
     end
 
-    # FIX:will work only when find will return a User object
     def update_attributes(params)
-      #old_user_name = self.user_name
       if params[:user_name] and params[:user_name] != self.user_name
         user_name_will_change!
         self.user_name = params[:user_name]
       end
       self.family_name = params[:family_name] if params[:family_name]
       self.given_name = params[:given_name] if params[:given_name]
-      #update(old_user_name)
       save
     end
 
