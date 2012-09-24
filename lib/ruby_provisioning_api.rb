@@ -5,7 +5,6 @@ require 'faraday'
 require 'nokogiri'
 require 'active_support/all'
 require 'active_model'
-require 'active_record/persistence'
 
 module RubyProvisioningApi
   class << self
