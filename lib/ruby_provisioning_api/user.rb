@@ -120,10 +120,6 @@ module RubyProvisioningApi
       Group.groups(user_name)
     end
 
-    # Returns all the users of a specific group
-    def users(group_id)
-    end
-
     # TODO
     #Retrieve all groups for a member GET https://apps-apis.google.com/a/feeds/group/2.0/domain/?member=memberId[&directOnly=true|false]
 
