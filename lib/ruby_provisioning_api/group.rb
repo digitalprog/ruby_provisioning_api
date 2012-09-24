@@ -123,7 +123,7 @@ module RubyProvisioningApi
       group
     end
 
-    # Update group 
+    # Update attributes of a group 
     # @see https://developers.google.com/google-apps/provisioning/#updating_a_group PUT https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId  
     # @return [Boolean] true of false depending the status of the operation
     # @param [Hash] params the options to create a Group with.
@@ -137,11 +137,16 @@ module RubyProvisioningApi
       update
     end
 
+    # Update group 
+    # @see https://developers.google.com/google-apps/provisioning/#updating_a_group PUT https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId  
+    # @return [Boolean] true of false depending the status of the operation
     def update
       save 
     end
 
-    # Delete group  DELETE https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId
+    # Delete group 
+    # @see https://developers.google.com/google-apps/provisioning/#deleting_a_member_from_an_group DELETE https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId 
+    # @return [Boolean] true of false depending the status of the operation
     def delete
       # Creating a deep copy of ACTION object
       params = Marshal.load(Marshal.dump(ACTIONS[:delete]))
@@ -151,7 +156,10 @@ module RubyProvisioningApi
       Entity.check_response(Entity.perform(params))
     end
 
-    # Retrieve all groups for a member GET https://apps-apis.google.com/a/feeds/group/2.0/domain/?member=memberId[&directOnly=true|false]
+    # Retrieve all groups for a given member
+    # @see https://developers.google.com/google-apps/provisioning/#retrieving_all_groups_for_a_member GET https://apps-apis.google.com/a/feeds/group/2.0/domain/?member=memberId[&directOnly=true|false]  
+    # @return [Array<Group>] all groups for a given member
+    # @param [String] member_id member identification
     def self.groups(member_id)
       # Creating a deep copy of ACTION object
       params = Marshal.load(Marshal.dump(ACTIONS[:retrieve_groups]))
@@ -178,7 +186,10 @@ module RubyProvisioningApi
       groups
     end
 
-    # Adding a Member to a Group POST https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member
+    # Add member to group
+    # @see https://developers.google.com/google-apps/provisioning/#adding_a_member_to_a_group POST https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member  
+    # @return [Boolean] true of false depending the status of the operation
+    # @param [String] member_id member identification
     def add_member(member_id)
       user = User.find(member_id)
       # Creating the XML request
@@ -196,17 +207,25 @@ module RubyProvisioningApi
       Entity.check_response(Entity.perform(params,builder.to_xml))  
     end
 
+    # Group membership of a given member
+    # @see https://developers.google.com/google-apps/provisioning/#retrieving_all_members_of_a_group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId
+    # @return [Boolean] true if user is a member of group
+    # @param [String] member_id member identification
+    def has_member?(member_id)
+      # Creating a deep copy of ACTION object
+      params = Marshal.load(Marshal.dump(ACTIONS[:has_member]))
+      # Replacing placeholder groupId with correct group_id
+      params[:url].gsub!("groupId",group_id)
+      # Replacing placeholder groupId with correct group_id
+      params[:url].gsub!("memberId",member_id)
+      # Perform the request & Check if the response contains an error
+      self.class.check_response(self.class.perform(params))   
+    end
 
-    # Retrieve member for a group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId
-    # def member(member_id)
-    # end
-    
-    # def member?(member_id)
-    #   Member.member?(member_id,"fake")
-    # end
-
-
-    # Deleting a member from a group DELETE https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId
+    # Delete group membership of a given member
+    # @see https://developers.google.com/google-apps/provisioning/#deleting_member_from_an_group DELETE https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId
+    # @return [Boolean] true of false depending the status of the operation
+    # @param [String] member_id member identification
     def delete_member(member_id)
       member = Member.find(member_id)
       # Creating a deep copy of ACTION object
@@ -219,29 +238,25 @@ module RubyProvisioningApi
       Entity.check_response(Entity.perform(params)) 
     end
 
-    def add_owner(owner_id)
-    end
+    # Retrieve member for a group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId
+    # def member(member_id)
+    # end
+    
+    # def member?(member_id)
+    #   Member.member?(member_id,"fake")
+    # end
 
-    def owners
-    end
+    # def add_owner(owner_id)
+    # end
 
-    def owner?
-    end
+    # def owners
+    # end
 
-    def has_member?(member_id)
-      # GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId
-      # Creating a deep copy of ACTION object
-      params = Marshal.load(Marshal.dump(ACTIONS[:has_member]))
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("groupId",group_id)
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("memberId",member_id)
-      # Perform the request & Check if the response contains an error
-      self.class.check_response(self.class.perform(params))   
-    end
+    # def owner?
+    # end
 
-    def delete_owner(owner_id)
-    end
+    # def delete_owner(owner_id)
+    # end
 
   end
 end	
