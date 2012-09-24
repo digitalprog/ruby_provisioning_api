@@ -13,8 +13,6 @@ module RubyProvisioningApi
     validates :user_name, :family_name, :given_name, :presence => true
 
     USER_PATH = "/#{RubyProvisioningApi.configuration[:domain]}/user/2.0"
-    GROUP_PATH = "/group/2.0/#{RubyProvisioningApi.configuration[:domain]}"
-
 
     ACTIONS = {
         :create => {method: "POST", url: "#{USER_PATH}"},
@@ -22,9 +20,8 @@ module RubyProvisioningApi
         :retrieve => {:method => "GET", :url => "#{USER_PATH}/userName"},
         :delete => {:method => "DELETE", :url => "#{USER_PATH}/userName"},
         :update => {:method => "PUT", :url => "#{USER_PATH}/userName"},
-        :member_of => {method: "GET", url: "#{GROUP_PATH}/groupId/member/memberId"}
+        :member_of => {method: "GET", url: "#{Group::GROUP_PATH}/groupId/member/memberId"}
     }
-
 
     def initialize(attributes = {})
       attributes.each do |name, value|
