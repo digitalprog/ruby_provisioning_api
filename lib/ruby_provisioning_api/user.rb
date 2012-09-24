@@ -96,6 +96,8 @@ module RubyProvisioningApi
       end
       self.family_name = params[:family_name] if params[:family_name]
       self.given_name = params[:given_name] if params[:given_name]
+      self.quota = params[:quota] if params[:quota]
+      self.suspended = params[:suspended] if params[:suspended]
       save
     end
 
@@ -104,7 +106,8 @@ module RubyProvisioningApi
     end
 
     #TODO: To suspend a user account using the protocol, change the user's `suspended` value to `true` and make a `PUT` request with the updated entry.
-    def self.suspend
+    def suspend
+      update_attributes(:suspended => true)
     end
 
     #Delete user DELETE https://apps-apis.google.com/a/feeds/domain/user/2.0/userName
@@ -132,11 +135,11 @@ module RubyProvisioningApi
       # Creating a deep copy of ACTION object
       params = Marshal.load(Marshal.dump(ACTIONS[:member_of]))
       # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("groupId",group_id)
+      params[:url].gsub!("groupId", group_id)
       # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("memberId",user_name)
+      params[:url].gsub!("memberId", user_name)
       # Perform the request & Check if the response contains an error
-      self.class.check_response(self.class.perform(params))   
+      self.class.check_response(self.class.perform(params))
     end
 
   end
