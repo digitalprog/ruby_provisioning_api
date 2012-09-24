@@ -6,14 +6,13 @@ module RubyProvisioningApi
   # *NOTE:* Exceptions raised by google provisioning api protocol in Entity::check_response are generated on the fly and
   # are also descendants of the Error class.
   #
+  #
+  #
   class Error < StandardError
 
-    # Params:
-    # [+command+] prova1
-    # command2: prova2
-    # @return [Object]
-    def initialize
-      @message = self.class.to_s.split("::").last.underscore.humanize
+    # @param [String] message the message of the exception
+    def initialize(message = nil)
+      @message = message.to_s || self.class.to_s.split("::").last.underscore.humanize
     end
 
     def to_s
