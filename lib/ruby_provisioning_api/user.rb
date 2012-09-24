@@ -20,6 +20,7 @@ module RubyProvisioningApi
         :update => {:method => "PUT", :url => "#{USER_PATH}/userName"}
     }
 
+
     def initialize(attributes = {})
       attributes.each do |name, value|
         send("#{name}=", value)
@@ -35,7 +36,7 @@ module RubyProvisioningApi
       response = perform(params)
       check_response(response)
       doc = Nokogiri::XML(response.body)
-      u = User.new
+      u = new
       u.user_name = doc.css("apps|login").first.attributes["userName"].value
       u.family_name = doc.css("apps|name").first.attributes["familyName"].value
       u.given_name = doc.css("apps|name").first.attributes["givenName"].value
@@ -49,7 +50,7 @@ module RubyProvisioningApi
       check_response(response)
       doc = Nokogiri::XML(response.body)
       doc.css("entry").each do |user_entry|
-        u = User.new
+        u = new
         u.user_name = user_entry.css("apps|login").first.attributes["userName"].value
         u.given_name = user_entry.css("apps|name").first.attributes["givenName"].value
         u.family_name = user_entry.css("apps|name").first.attributes["familyName"].value
