@@ -4,6 +4,7 @@ require 'yaml'
 require 'faraday'
 require 'nokogiri'
 require 'active_support/all'
+require 'active_model'
 
 module RubyProvisioningApi
   class << self

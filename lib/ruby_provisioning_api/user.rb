@@ -1,7 +1,14 @@
 module RubyProvisioningApi
+
   class User < Entity
 
-    attr_accessor :user_name, :family_name, :given_name
+    include ActiveModel::Validations
+    include ActiveModel::Dirty
+
+    attr_accessor :user_name, :family_name, :given_name, :suspended, :quota
+    alias_method :suspended?, :suspended
+    define_attribute_methods [:user_name]
+    validates :user_name, :family_name, :given_name, :presence => true
 
     USER_PATH = "/#{RubyProvisioningApi.configuration[:domain]}/user/2.0"
 
@@ -13,19 +20,12 @@ module RubyProvisioningApi
         :update => {:method => "PUT", :url => "#{USER_PATH}/userName"}
     }
 
-    # User initialization
-    # Params:
-    # user_name, given_name, fmaily_name or none of them
-    def initialize(params = nil)
-      if params.nil? || (params.has_key?(:user_name) && params.has_key?(:given_name) && params.has_key?(:family_name))
-        if params
-          self.user_name = params[:user_name]
-          self.given_name = params[:given_name]
-          self.family_name = params[:family_name]
-        end
-      else
-        raise InvalidArgument
+    def initialize(attributes = {})
+      attributes.each do |name, value|
+        send("#{name}=", value)
       end
+      self.quota = "1024" if quota.nil?
+      self.suspended = false if suspended.nil?
     end
 
     # Retrieve a user account GET https://apps-apis.google.com/a/feeds/domain/user/2.0/userName
@@ -40,6 +40,15 @@ module RubyProvisioningApi
       u.family_name = doc.css("apps|name").first.attributes["familyName"].value
       u.given_name = doc.css("apps|name").first.attributes["givenName"].value
       u
+    end
+
+    def self.present?(user_name)
+      begin
+        User.find(user_name)
+        true
+      rescue
+        false
+      end
     end
 
     # Retrieve all users in a domain GET https://apps-apis.google.com/a/feeds/domain/user/2.0
@@ -59,15 +68,24 @@ module RubyProvisioningApi
     end
 
     def save
+      return false unless valid?
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
         xml.send(:'atom:entry', 'xmlns:atom' => 'http://www.w3.org/2005/Atom', 'xmlns:apps' => 'http://schemas.google.com/apps/2006') {
           xml.send(:'atom:category', 'scheme' => 'http://schemas.google.com/g/2005#kind', 'term' => 'http://schemas.google.com/apps/2006#user')
-          xml.send(:'apps:login', 'userName' => user_name, 'password' => '51eea05d46317fadd5cad6787a8f562be90b4446', 'suspended' => false)
-          xml.send(:'apps:quota', 'limit' => "1024")
+          xml.send(:'apps:login', 'userName' => user_name, 'password' => '51eea05d46317fadd5cad6787a8f562be90b4446', 'suspended' => suspended)
+          xml.send(:'apps:quota', 'limit' => quota)
           xml.send(:'apps:name', 'familyName' => family_name, 'givenName' => given_name)
         }
       end
-      response = self.class.perform(ACTIONS[:create], builder.to_xml)
+      if User.present?(user_name_was)
+        # UPDATE old record
+        params = Marshal.load(Marshal.dump(ACTIONS[:update]))
+        params[:url].gsub!("userName", user_name_was)
+        response = self.class.perform(params, builder.to_xml)
+      else
+        # SAVE new record
+        response = self.class.perform(ACTIONS[:create], builder.to_xml)
+      end
       User.check_response(response)
     end
 
@@ -77,14 +95,17 @@ module RubyProvisioningApi
       user.save
     end
 
-
     # FIX:will work only when find will return a User object
     def update_attributes(params)
-      old_user_name = self.user_name
-      self.user_name = params[:user_name] if params[:user_name]
+      #old_user_name = self.user_name
+      if params[:user_name] and params[:user_name] != self.user_name
+        user_name_will_change!
+        self.user_name = params[:user_name]
+      end
       self.family_name = params[:family_name] if params[:family_name]
       self.given_name = params[:given_name] if params[:given_name]
-      update(old_user_name)
+      #update(old_user_name)
+      save
     end
 
     #TODO: To restore a user account using the protocol, change a suspended user's `suspended` value to `false` and make a `PUT` request with the updated entry.
@@ -115,20 +136,6 @@ module RubyProvisioningApi
     # TODO
     #Retrieve all groups for a member GET https://apps-apis.google.com/a/feeds/group/2.0/domain/?member=memberId[&directOnly=true|false]
 
-    private
-
-    def update(old_user_name)
-      params = Marshal.load(Marshal.dump(ACTIONS[:update]))
-      params[:url].gsub!("userName", old_user_name)
-      builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
-        xml.send(:'atom:entry', 'xmlns:atom' => 'http://www.w3.org/2005/Atom', 'xmlns:apps' => 'http://schemas.google.com/apps/2006') {
-          xml.send(:'atom:category', 'scheme' => 'http://schemas.google.com/g/2005#kind', 'term' => 'http://schemas.google.com/apps/2006#user')
-          xml.send(:'apps:login', 'userName' => user_name, 'password' => '51eea05d46317fadd5cad6787a8f562be90b4446', 'suspended' => false)
-          xml.send(:'apps:name', 'familyName' => family_name, 'givenName' => given_name)
-        }
-      end
-      response = self.class.perform(params, builder.to_xml)
-      User.check_response(response)
-    end
   end
+
 end
