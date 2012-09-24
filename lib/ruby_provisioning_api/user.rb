@@ -1,6 +1,7 @@
 module RubyProvisioningApi
 
-  class User < Entity
+  class User
+    extend Entity
 
     include ActiveModel::Validations
     include ActiveModel::Dirty

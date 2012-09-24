@@ -1,10 +1,10 @@
 module RubyProvisioningApi
-  class Entity
+  module Entity
 
     BASE_ENTITY_URL = 'https://apps-apis.google.com'
     BASE_PATH = '/a/feeds'
 
-    def self.perform(action, params = nil)
+    def perform(action, params = nil)
       connection = RubyProvisioningApi.connection
       client = connection.client(BASE_ENTITY_URL)
       method = action[:method]
@@ -18,12 +18,11 @@ module RubyProvisioningApi
       end
     end
 
-    # private
-    def self.response_error?(response)
+    def response_error?(response)
       (400..600).include?(response.status)
     end
 
-    def self.check_response(response)
+    def check_response(response)
       if (400..600).include?(response.status)
         xml = Nokogiri::XML(response.body)
         error_code = xml.xpath('//error').first.attributes["errorCode"].value
@@ -34,7 +33,7 @@ module RubyProvisioningApi
       true
     end
 
-    def self.present?(id)
+    def present?(id)
       begin
         self.find(id)
         true
