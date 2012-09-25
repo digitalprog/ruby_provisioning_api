@@ -1,10 +1,10 @@
 module RubyProvisioningApi
 
-  # @attr [String] user_name user's username
-  # @attr [String] given_name user's first name
-  # @attr [String] family_name user's last name
-  # @attr [Boolean] suspended user's state (suspended if true, active if false)
-  # @attr [String] quota user's disk space quota
+  # @attr [String] user_name User's username
+  # @attr [String] given_name User's first name
+  # @attr [String] family_name User's last name
+  # @attr [Boolean] suspended User's state (suspended if true, active if false)
+  # @attr [String] quota User's disk space quota
   #
   class User
     extend Entity
@@ -31,10 +31,10 @@ module RubyProvisioningApi
     }
 
     # @param [Hash] attributes the options to create a User with.
-    # @option attributes [String] :user_name user identification
-    # @option attributes [String] :given_name user's first name
-    # @option attributes [String] :family_name user's last name
-    # @option attributes [String] :quota user's disk space quota (default is 1024)
+    # @option attributes [String] :user_name User identification
+    # @option attributes [String] :given_name User's first name
+    # @option attributes [String] :family_name User's last name
+    # @option attributes [String] :quota User's disk space quota (default is 1024)
     # @option attributes [Boolean] :suspended true if user is suspended, false otherwise (default is false)
     #
     def initialize(attributes = {})
@@ -46,10 +46,10 @@ module RubyProvisioningApi
     end
 
     # Retrieve all users in the domain
-    # @note This method executes a <b>GET</b> request to <a href="https://apps-apis.google.com/a/feeds/domain/user/2.0">https://apps-apis.google.com/a/feeds/domain/user/2.0</a>
+    # @note This method executes a <b>GET</b> request to <i>apps-apis.google.com/a/feeds/domain/user/2.0</i>
     #
     # @example Retrieve all users in the current domain
-    #   RubyProvisioningApi::User.all
+    #   RubyProvisioningApi::User.all # => [Array<User>]
     #
     # @see https://developers.google.com/google-apps/provisioning/#retrieving_all_users_in_a_domain
     # @return [Array<User>] all users in the domain
@@ -71,7 +71,17 @@ module RubyProvisioningApi
       users
     end
 
-    # Retrieve a user account GET https://apps-apis.google.com/a/feeds/domain/user/2.0/userName
+    # Retrieve a user account
+    # @note This method executes a <b>GET</b> request to <i>https://apps-apis.google.com/a/feeds/domain/user/2.0/userName</i>
+    #
+    # @example Retrieve the user account for "test"
+    #   user = RubyProvisioningApi::User.find("test") # => [User]
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#retrieving_user_accounts
+    # @param [String] user_name
+    # @return [User]
+    # @raise [Error] if user does not exist
+    #
     def self.find(user_name)
       params = Marshal.load(Marshal.dump(ACTIONS[:retrieve]))
       params[:url].gsub!("userName", user_name)
@@ -149,28 +159,24 @@ module RubyProvisioningApi
       response = self.class.perform(params)
     end
 
-
-
-
-
-
-
-
-
-
-
-
     # Returns all the groups which the user is subscribed to
     # TODO: move this inside member
     def groups
       Group.groups(user_name)
     end
 
-    # TODO
-    #Retrieve all groups for a member GET https://apps-apis.google.com/a/feeds/group/2.0/domain/?member=memberId[&directOnly=true|false]
-
+    # Check if the user is a member of the given group
+    # @note This method executes a <b>GET</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId</i>
+    #
+    # @example Find a user and check if is member of the group 'test'
+    #   user = RubyProvisioningApi::User.find("username")
+    #   user.is_member_of? "test" # => true
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#retrieving_all_members_of_a_group
+    # @return [Boolean] true if the user is member of the group, false otherwise
+    # @raise [Error] if group_id does not exist
+    #
     def is_member_of?(group_id)
-      # GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId
       # Creating a deep copy of ACTION object
       params = Marshal.load(Marshal.dump(ACTIONS[:member_of]))
       # Replacing placeholder groupId with correct group_id
@@ -178,7 +184,12 @@ module RubyProvisioningApi
       # Replacing placeholder groupId with correct group_id
       params[:url].gsub!("memberId", user_name)
       # Perform the request & Check if the response contains an error
-      self.class.check_response(self.class.perform(params))
+      begin
+        self.class.check_response(self.class.perform(params))
+      rescue
+        Group.find(group_id)
+        false
+      end
     end
 
   end
