@@ -31,7 +31,7 @@ module RubyProvisioningApi
       :delete_member => { method: "DELETE" , url: "#{GROUP_PATH}/groupId/member/memberId" },
       :has_member => {method: "GET", url: "#{GROUP_PATH}/groupId/member/memberId"},
       :has_owner => {method: "GET", url: "#{GROUP_PATH}/groupId/owner/ownerId"},
-      :delete_owner => {method: "DELETE" , url: "#{GROUP_PATH}/groupId/owner/ownerEmail"}
+      :delete_owner => {method: "DELETE" , url: "#{GROUP_PATH}/groupId/owner/ownerId"}
     }
     
     # @param [Hash] attributes the options to create a Group with.
@@ -87,10 +87,7 @@ module RubyProvisioningApi
     #
     #      
     def self.find(group_id)
-      # Creating a deep copy of ACTION object
-      params = deep_copy(ACTIONS[:retrieve])
-      # Replacing place holder groupId with correct group_id
-      params[:url].gsub!("groupId",group_id)
+      params = prepare_params_for(:retrieve, "groupId" => group_id)
       response = perform(params)
       # Check if the response contains an error
       check_response(response)
@@ -153,10 +150,7 @@ module RubyProvisioningApi
         self.class.check_response(self.class.perform(ACTIONS[:create],builder.to_xml)) 
       else
         #Acting on an existing object
-        # Creating a deep copy of ACTION object
-        params = self.class.deep_copy(ACTIONS[:update])
-        # Replacing placeholder groupId with correct group_id
-        params[:url].gsub!("groupId",group_id)
+        params = self.class.prepare_params_for(:update, "groupId" => group_id)
         # Perform the request & Check if the response contains an error
         self.class.check_response(self.class.perform(params,builder.to_xml))  
       end
@@ -213,10 +207,7 @@ module RubyProvisioningApi
     # @raise [Error] if group does not exist
     # 
     def delete
-      # Creating a deep copy of ACTION object
-      params = self.class.deep_copy(ACTIONS[:delete])
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("groupId",group_id)
+      params = self.class.prepare_params_for(:delete, "groupId" => group_id)
       # Perform the request & Check if the response contains an error
       self.class.check_response(self.class.perform(params))
     end
@@ -233,10 +224,7 @@ module RubyProvisioningApi
     # @raise [Error] if member(user) does not exist
     #
     def self.groups(member_id)
-      # Creating a deep copy of ACTION object
-      params = deep_copy(ACTIONS[:retrieve_groups])
-      # Replacing place holder groupId with correct group_id
-      params[:url].gsub!("memberId",member_id)
+      params = self.class.prepare_params_for(:retrieve_groups, "memberId" => memberId)
       response = perform(params)
       # Perform the request & Check if the response contains an error
       check_response(response)     
@@ -279,10 +267,7 @@ module RubyProvisioningApi
           xml.send(:'apps:property', 'name' => 'memberId', 'value' => member_id) 
         }
       end
-      # Creating a deep copy of ACTION object
-      params = self.class.deep_copy(ACTIONS[:add_member])
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("groupId",group_id)
+      params = self.class.prepare_params_for(:add_member, "groupId" => groupId)
       # Perform the request & Check if the response contains an error
       self.class.check_response(self.class.perform(params,builder.to_xml))  
     end
@@ -300,12 +285,7 @@ module RubyProvisioningApi
     # @raise [Error] if member(user) does not exist
     #
     def has_member?(member_id)
-      # Creating a deep copy of ACTION object
-      params = self.class.deep_copy(ACTIONS[:has_member])
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("groupId",group_id)
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("memberId",member_id)
+      params = self.class.prepare_params_for(:has_member, { "groupId" => group_id, "memberId" => member_id })
       begin
         # Perform the request & Check if the response contains an error
         self.class.check_response(self.class.perform(params))
@@ -329,12 +309,7 @@ module RubyProvisioningApi
     # @raise [Error] if member(user) does not exist
     #
     def delete_member(member_id)
-      # Creating a deep copy of ACTION object
-      params = self.class.deep_copy(ACTIONS[:delete_member])
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("groupId",group_id)
-      # Replacing placeholder memberId with correct member_id
-      params[:url].gsub!("memberId",member_id)
+      params = self.class.prepare_params_for(:delete_member, { "groupId" => group_id, "memberId" => member_id })
       # Perform the request & Check if the response contains an error
       self.class.check_response(self.class.perform(params)) 
     end
@@ -360,10 +335,7 @@ module RubyProvisioningApi
           xml.send(:'apps:property', 'name' => 'email', 'value' => owner_id) 
         }
       end
-      # Creating a deep copy of ACTION object
-      params = self.class.deep_copy(ACTIONS[:add_owner])
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("groupId",group_id)
+      params = self.class.prepare_params_for(:add_owner, "groupId" => group_id )
       # Perform the request & Check if the response contains an error
       self.class.check_response(self.class.perform(params,builder.to_xml))  
     end
@@ -380,12 +352,7 @@ module RubyProvisioningApi
     # @raise [Error] if owner(user) does not exist
     #
     def has_owner?(owner_id)
-      # Creating a deep copy of ACTION object
-      params = self.class.deep_copy(ACTIONS[:has_owner])
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("groupId",group_id)
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("ownerId",owner_id)
+      params = self.class.prepare_params_for(:has_owner, {"groupId" => group_id, "ownerId" => owner_id} )
       begin
         # Perform the request & Check if the response contains an error
         self.class.check_response(self.class.perform(params))
@@ -409,12 +376,7 @@ module RubyProvisioningApi
     # @raise [Error] if owner(user) does not exist
     #
     def delete_owner(owner_id)
-      # Creating a deep copy of ACTION object
-      params = self.class.deep_copy(ACTIONS[:delete_owner])
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("groupId",group_id)
-      # Replacing placeholder memberId with correct member_id
-      params[:url].gsub!("ownerEmail",owner_id)
+      params = self.class.prepare_params_for(:delete_owner, {"groupId" => group_id, "ownerId" => owner_id} )
       # Perform the request & Check if the response contains an error
       self.class.check_response(self.class.perform(params))       
     end
