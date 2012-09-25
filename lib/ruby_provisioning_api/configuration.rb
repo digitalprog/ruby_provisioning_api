@@ -8,7 +8,7 @@ module RubyProvisioningApi
     		# For rails env
       # @ldap_config_file = "#{Rails.root}/config/google_apps.yml"
       # Temporary patch. Insert your config directory here.
-      config_file = "/home/damiano/192/ruby_provisioning_api/lib/ruby_provisioning_api/config/google_apps.yml"
+      config_file = "{YOUR_DIRECTORY}/ruby_provisioning_api/lib/ruby_provisioning_api/config/google_apps.yml"
       # Get necessary data from configuration files
       if File.exist?(config_file)
         @config = YAML.load_file(config_file)
