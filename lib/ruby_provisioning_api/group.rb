@@ -85,7 +85,7 @@ module RubyProvisioningApi
       else
         #Acting on an existing object
         # Creating a deep copy of ACTION object
-        params = Entity.deep_copy(ACTIONS[:update])
+        params = self.class.deep_copy(ACTIONS[:update])
         # Replacing placeholder groupId with correct group_id
         params[:url].gsub!("groupId",group_id)
         # Perform the request & Check if the response contains an error
@@ -111,7 +111,7 @@ module RubyProvisioningApi
     # @param [String] group_id group identification
     def self.find(group_id)
       # Creating a deep copy of ACTION object
-      params = Entity.deep_copy(ACTIONS[:retrieve])
+      params = deep_copy(ACTIONS[:retrieve])
       # Replacing place holder groupId with correct group_id
       params[:url].gsub!("groupId",group_id)
       response = perform(params)
@@ -152,7 +152,7 @@ module RubyProvisioningApi
     # @return [Boolean] true of false depending the status of the operation
     def delete
       # Creating a deep copy of ACTION object
-      params = Entity.deep_copy(ACTIONS[:delete])
+      params = self.class.deep_copy(ACTIONS[:delete])
       # Replacing placeholder groupId with correct group_id
       params[:url].gsub!("groupId",group_id)
       # Perform the request & Check if the response contains an error
@@ -165,7 +165,7 @@ module RubyProvisioningApi
     # @param [String] member_id member identification
     def self.groups(member_id)
       # Creating a deep copy of ACTION object
-      params = Entity.deep_copy(ACTIONS[:retrieve_groups])
+      params = deep_copy(ACTIONS[:retrieve_groups])
       # Replacing place holder groupId with correct group_id
       params[:url].gsub!("memberId",member_id)
       response = perform(params)
@@ -203,7 +203,7 @@ module RubyProvisioningApi
         }
       end
       # Creating a deep copy of ACTION object
-      params = Entity.deep_copy(ACTIONS[:add_member])
+      params = self.class.deep_copy(ACTIONS[:add_member])
       # Replacing placeholder groupId with correct group_id
       params[:url].gsub!("groupId",group_id)
       # Perform the request & Check if the response contains an error
@@ -216,7 +216,7 @@ module RubyProvisioningApi
     # @param [String] member_id member identification
     def has_member?(member_id)
       # Creating a deep copy of ACTION object
-      params = Entity.deep_copy(ACTIONS[:has_member])
+      params = self.class.deep_copy(ACTIONS[:has_member])
       # Replacing placeholder groupId with correct group_id
       params[:url].gsub!("groupId",group_id)
       # Replacing placeholder groupId with correct group_id
@@ -233,7 +233,7 @@ module RubyProvisioningApi
       # TODO: is it necessary to find the member?
       # member = User.find(member_id)
       # Creating a deep copy of ACTION object
-      params = Entity.deep_copy(ACTIONS[:delete_member])
+      params = self.class.deep_copy(ACTIONS[:delete_member])
       # Replacing placeholder groupId with correct group_id
       params[:url].gsub!("groupId",group_id)
       # Replacing placeholder memberId with correct member_id
@@ -256,7 +256,7 @@ module RubyProvisioningApi
     # @param [String] owner_id owner identification
     def has_owner?(owner_id)
       # Creating a deep copy of ACTION object
-      params = Entity.deep_copy(ACTIONS[:has_member])
+      params = self.class.deep_copy(ACTIONS[:has_member])
       # Replacing placeholder groupId with correct group_id
       params[:url].gsub!("groupId",group_id)
       # Replacing placeholder groupId with correct group_id
@@ -273,7 +273,7 @@ module RubyProvisioningApi
       # TODO: is it necessary to find the owner?
       # owner = User.find(owner_id)
       # Creating a deep copy of ACTION object
-      params = Entity.deep_copy(ACTIONS[:delete_owner])
+      params = self.class.deep_copy(ACTIONS[:delete_owner])
       # Replacing placeholder groupId with correct group_id
       params[:url].gsub!("groupId",group_id)
       # Replacing placeholder memberId with correct member_id

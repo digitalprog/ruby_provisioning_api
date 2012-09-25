@@ -18,7 +18,7 @@ module RubyProvisioningApi
       end
     end
 
-    def self.deep_copy(element)
+    def deep_copy(element)
       Marshal.load(Marshal.dump(element))
     end
 
