@@ -5,6 +5,7 @@ module RubyProvisioningApi
   # @attr [String] family_name user's last name
   # @attr [Boolean] suspended user's state (suspended if true, active if false)
   # @attr [String] quota user's disk space quota
+  #
   class User
     extend Entity
     extend Member
@@ -35,12 +36,39 @@ module RubyProvisioningApi
     # @option attributes [String] :family_name user's last name
     # @option attributes [String] :quota user's disk space quota (default is 1024)
     # @option attributes [Boolean] :suspended true if user is suspended, false otherwise (default is false)
+    #
     def initialize(attributes = {})
       attributes.each do |name, value|
         send("#{name}=", value)
       end
       self.quota = "1024" if quota.nil?
       self.suspended = false if suspended.nil?
+    end
+
+    # Retrieve all users in the domain
+    # @note This method executes a <b>GET</b> request to <a href="https://apps-apis.google.com/a/feeds/domain/user/2.0">https://apps-apis.google.com/a/feeds/domain/user/2.0</a>
+    #
+    # @example Retrieve all users in the current domain
+    #   RubyProvisioningApi::User.all
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#retrieving_all_users_in_a_domain
+    # @return [Array<User>] all users in the domain
+    #
+    def self.all
+      users = []
+      response = perform(ACTIONS[:retrieve_all])
+      check_response(response)
+      doc = Nokogiri::XML(response.body)
+      doc.css("entry").each do |user_entry|
+        u = new
+        u.user_name = user_entry.css("apps|login").first.attributes["userName"].value
+        u.suspended = doc.css("apps|login").first.attributes["suspended"].value
+        u.given_name = user_entry.css("apps|name").first.attributes["givenName"].value
+        u.family_name = user_entry.css("apps|name").first.attributes["familyName"].value
+        u.quota = doc.css("apps|quota").first.attributes["limit"].value
+        users << u
+      end
+      users
     end
 
     # Retrieve a user account GET https://apps-apis.google.com/a/feeds/domain/user/2.0/userName
@@ -57,24 +85,6 @@ module RubyProvisioningApi
       u.given_name = doc.css("apps|name").first.attributes["givenName"].value
       u.quota = doc.css("apps|quota").first.attributes["limit"].value
       u
-    end
-
-    # Retrieve all users in a domain GET https://apps-apis.google.com/a/feeds/domain/user/2.0
-    def self.all
-      users = []
-      response = perform(ACTIONS[:retrieve_all])
-      check_response(response)
-      doc = Nokogiri::XML(response.body)
-      doc.css("entry").each do |user_entry|
-        u = new
-        u.user_name = user_entry.css("apps|login").first.attributes["userName"].value
-        u.suspended = doc.css("apps|login").first.attributes["suspended"].value
-        u.given_name = user_entry.css("apps|name").first.attributes["givenName"].value
-        u.family_name = user_entry.css("apps|name").first.attributes["familyName"].value
-        u.quota = doc.css("apps|quota").first.attributes["limit"].value
-        users << u
-      end
-      users
     end
 
     def save(save_options = {:validate => true})
@@ -133,11 +143,22 @@ module RubyProvisioningApi
     end
 
     #Delete user DELETE https://apps-apis.google.com/a/feeds/domain/user/2.0/userName
-    def delete(user_name)
+    def delete
       params = Marshal.load(Marshal.dump(ACTIONS[:delete]))
       params[:url].gsub!("userName", user_name)
-      response = perform(params)
+      response = self.class.perform(params)
     end
+
+
+
+
+
+
+
+
+
+
+
 
     # Returns all the groups which the user is subscribed to
     # TODO: move this inside member
