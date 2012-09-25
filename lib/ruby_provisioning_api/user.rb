@@ -1,5 +1,10 @@
 module RubyProvisioningApi
 
+  # @attr [String] user_name user's username
+  # @attr [String] given_name user's first name
+  # @attr [String] family_name user's last name
+  # @attr [Boolean] suspended user's state (suspended if true, active if false)
+  # @attr [String] quota user's disk space quota
   class User
     extend Entity
     extend Member
@@ -24,6 +29,12 @@ module RubyProvisioningApi
         :member_of => {method: "GET", url: "#{Group::GROUP_PATH}/groupId/member/memberId"}
     }
 
+    # @param [Hash] attributes the options to create a User with.
+    # @option attributes [String] :user_name user identification
+    # @option attributes [String] :given_name user's first name
+    # @option attributes [String] :family_name user's last name
+    # @option attributes [String] :quota user's disk space quota (default is 1024)
+    # @option attributes [Boolean] :suspended true if user is suspended, false otherwise (default is false)
     def initialize(attributes = {})
       attributes.each do |name, value|
         send("#{name}=", value)
@@ -66,8 +77,10 @@ module RubyProvisioningApi
       users
     end
 
-    def save
-      return false unless valid?
+    def save(save_options = {:validate => true})
+      if save_options[:validate]
+        return false unless valid?
+      end
       builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
         xml.send(:'atom:entry', 'xmlns:atom' => 'http://www.w3.org/2005/Atom', 'xmlns:apps' => 'http://schemas.google.com/apps/2006') {
           xml.send(:'atom:category', 'scheme' => 'http://schemas.google.com/g/2005#kind', 'term' => 'http://schemas.google.com/apps/2006#user')
@@ -94,25 +107,29 @@ module RubyProvisioningApi
       user.save
     end
 
+    # TODO: documentare che con update attributes non si può fare la sospensione e il restore di utenti
+    #       per queste operazioni si usano i metodi appositi suspend e restore.
     def update_attributes(params)
-      if params[:user_name] and params[:user_name] != self.user_name
+      if params.has_key? :user_name and params[:user_name] != self.user_name
         user_name_will_change!
         self.user_name = params[:user_name]
       end
-      self.family_name = params[:family_name] if params[:family_name]
-      self.given_name = params[:given_name] if params[:given_name]
-      self.quota = params[:quota] if params[:quota]
-      self.suspended = params[:suspended] if params[:suspended]
+      self.family_name = params[:family_name] if params.has_key? :family_name
+      self.given_name = params[:given_name] if params.has_key? :given_name
+      self.quota = params[:quota] if params.has_key? :quota
       save
     end
 
     #TODO: To restore a user account using the protocol, change a suspended user's `suspended` value to `false` and make a `PUT` request with the updated entry.
-    def self.restore
+    def restore
+      self.suspended = false
+      save(:validate => false)
     end
 
     #TODO: To suspend a user account using the protocol, change the user's `suspended` value to `true` and make a `PUT` request with the updated entry.
     def suspend
-      update_attributes(:suspended => true)
+      self.suspended = true
+      save(:validate => false)
     end
 
     #Delete user DELETE https://apps-apis.google.com/a/feeds/domain/user/2.0/userName
