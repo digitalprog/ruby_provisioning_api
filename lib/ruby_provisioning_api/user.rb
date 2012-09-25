@@ -111,8 +111,7 @@ module RubyProvisioningApi
       end
       if User.present?(user_name_was)
         # UPDATING an old record
-        params = Marshal.load(Marshal.dump(ACTIONS[:update]))
-        params[:url].gsub!("userName", user_name_was)
+        params = self.class.prepare_params_for(:update, "userName" => user_name_was)
         response = self.class.perform(params, builder.to_xml)
       else
         # SAVING a new record

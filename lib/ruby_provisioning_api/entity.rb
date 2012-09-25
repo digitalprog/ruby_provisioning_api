@@ -45,6 +45,15 @@ module RubyProvisioningApi
         false
       end
     end
-    
+
+    def prepare_params_for(action, options = {})
+      options.stringify_keys!
+      params = Marshal.load(Marshal.dump(self::ACTIONS[action]))
+      options.each_pair do |k,v|
+        params[:url].gsub!(k, v)
+      end
+      params
+    end
+
   end
 end
