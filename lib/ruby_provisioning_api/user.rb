@@ -41,8 +41,10 @@ module RubyProvisioningApi
       doc = Nokogiri::XML(response.body)
       u = new
       u.user_name = doc.css("apps|login").first.attributes["userName"].value
+      u.suspended = doc.css("apps|login").first.attributes["suspended"].value
       u.family_name = doc.css("apps|name").first.attributes["familyName"].value
       u.given_name = doc.css("apps|name").first.attributes["givenName"].value
+      u.quota = doc.css("apps|quota").first.attributes["limit"].value
       u
     end
 
@@ -55,8 +57,10 @@ module RubyProvisioningApi
       doc.css("entry").each do |user_entry|
         u = new
         u.user_name = user_entry.css("apps|login").first.attributes["userName"].value
+        u.suspended = doc.css("apps|login").first.attributes["suspended"].value
         u.given_name = user_entry.css("apps|name").first.attributes["givenName"].value
         u.family_name = user_entry.css("apps|name").first.attributes["familyName"].value
+        u.quota = doc.css("apps|quota").first.attributes["limit"].value
         users << u
       end
       users
@@ -112,7 +116,7 @@ module RubyProvisioningApi
     end
 
     #Delete user DELETE https://apps-apis.google.com/a/feeds/domain/user/2.0/userName
-    def self.delete(user_name)
+    def delete(user_name)
       params = Marshal.load(Marshal.dump(ACTIONS[:delete]))
       params[:url].gsub!("userName", user_name)
       response = perform(params)
