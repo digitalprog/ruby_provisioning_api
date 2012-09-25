@@ -1,6 +1,6 @@
 module RubyProvisioningApi
   
-  module Member
+  module Owner
     
     GROUP_PATH = "/group/2.0/#{RubyProvisioningApi.configuration[:domain]}"
     USER_ATTRIBUTES = ['userName','password','suspended','quota','familyName','givenName']
@@ -22,10 +22,10 @@ module RubyProvisioningApi
       # super(member_id)
     # end
 
-    # Retrieve all users which are members for a group
-    # @see https://developers.google.com/google-apps/provisioning/#retrieving_all_members_of_a_group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member[?[start=]&[includeSuspendedUsers=true|false]] 
+    # Retrieve all users which are owner for a group
+    # @see https://developers.google.com/google-apps/provisioning/#querying_for_all_owners_of_a_group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/owner[?[start=]] 
     # @return [Array<User>] all users which are members for a group
-    def members
+    def owners
       # Creating a deep copy of ACTION object
       params = Entity.deep_copy(ACTIONS[:members])
       # Replacing placeholder groupId with correct group_id

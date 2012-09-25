@@ -3,6 +3,7 @@ module RubyProvisioningApi
   class User
     extend Entity
     extend Member
+    extend Owner
 
     include ActiveModel::Validations
     include ActiveModel::Dirty
@@ -121,10 +122,6 @@ module RubyProvisioningApi
     # TODO: move this inside member
     def groups
       Group.groups(user_name)
-    end
-
-    # Returns all the users of a specific group
-    def users(group_id)
     end
 
     # TODO
