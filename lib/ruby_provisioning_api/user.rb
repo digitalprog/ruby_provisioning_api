@@ -97,6 +97,26 @@ module RubyProvisioningApi
       u
     end
 
+    # Save a user account
+    # If the user account exists it will be updated, if not, a new user account will be created
+    #
+    # @note This method executes a <b>POST</b> request to <i>apps-apis.google.com/a/feeds/domain/user/2.0</i> for the create action
+    # @note This method executes a <b>PUT</b> request to <i>apps-apis.google.com/a/feeds/domain/user/2.0/userName</i> for the update action
+    #
+    # @example Create a user account in multiple steps
+    #   user = RubyProvisioningApi::User.new
+    #   user.user_name = "test" # => "test"
+    #   user.given_name = "foo" # => "foo"
+    #   user.family_name = "bar" # => "bar"
+    #   user.save # => true
+    #
+    # @example Create a user account in a unique step
+    #
+    # TODO: completare documentazione
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#creating_a_user_account
+    # @see https://developers.google.com/google-apps/provisioning/#updating_a_user_account
+    #
     def save(save_options = {:validate => true})
       if save_options[:validate]
         return false unless valid?
