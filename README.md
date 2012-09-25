@@ -19,6 +19,7 @@ Or install it yourself as:
 ## Usage
 
 TODO: Write usage instructions here
+http://rdoc.info/github/digitalprog/ruby_provisioning_api/master/frames
 
 ## Contributing
 
