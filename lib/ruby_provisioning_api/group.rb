@@ -27,8 +27,10 @@ module RubyProvisioningApi
       :retrieve_groups => { method: "GET" , url: "#{GROUP_PATH}/?member=memberId" },
       :retrieve => { method: "GET" , url: "#{GROUP_PATH}/groupId" },
       :add_member => { method: "POST" , url: "#{GROUP_PATH}/groupId/member" },
+      :add_owner => { method: "POST" , url: "#{GROUP_PATH}/groupId/owner" },
       :delete_member => { method: "DELETE" , url: "#{GROUP_PATH}/groupId/member/memberId" },
       :has_member => {method: "GET", url: "#{GROUP_PATH}/groupId/member/memberId"},
+      :has_owner => {method: "GET", url: "#{GROUP_PATH}/groupId/owner/ownerId"},
       :delete_owner => {method: "DELETE" , url: "#{GROUP_PATH}/groupId/owner/ownerEmail"}
     }
     
@@ -304,8 +306,13 @@ module RubyProvisioningApi
       params[:url].gsub!("groupId",group_id)
       # Replacing placeholder groupId with correct group_id
       params[:url].gsub!("memberId",member_id)
-      # Perform the request & Check if the response contains an error
-      self.class.check_response(self.class.perform(params))   
+      begin
+        # Perform the request & Check if the response contains an error
+        self.class.check_response(self.class.perform(params))
+      rescue
+        User.find(owner_id)
+        false
+      end    
     end
 
 
@@ -345,6 +352,20 @@ module RubyProvisioningApi
     # @raise [Error] if owner(user) does not exist
     #       
     def add_owner(owner_id)
+      user = User.find(owner_id)
+      # Creating the XML request
+      builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+        xml.send(:'atom:entry', 'xmlns:atom' => 'http://www.w3.org/2005/Atom', 'xmlns:apps' => 'http://schemas.google.com/apps/2006') {
+          xml.send(:'atom:category', 'scheme' => 'http://schemas.google.com/g/2005#kind', 'term' => 'http://schemas.google.com/apps/2006#emailList')
+          xml.send(:'apps:property', 'name' => 'email', 'value' => owner_id) 
+        }
+      end
+      # Creating a deep copy of ACTION object
+      params = self.class.deep_copy(ACTIONS[:add_owner])
+      # Replacing placeholder groupId with correct group_id
+      params[:url].gsub!("groupId",group_id)
+      # Perform the request & Check if the response contains an error
+      self.class.check_response(self.class.perform(params,builder.to_xml))  
     end
 
     # Group ownership of a given owner
@@ -355,18 +376,23 @@ module RubyProvisioningApi
     #   group.has_owner?("foo") # => [True]
     #
     # @see https://developers.google.com/google-apps/provisioning/#querying_if_a_user_or_group_is_owner
-    # @return [Boolean] true if user is a owner of the group
+    # @return [Boolean] true if user is a owner of the group, false otherwise
     # @raise [Error] if owner(user) does not exist
     #
     def has_owner?(owner_id)
       # Creating a deep copy of ACTION object
-      params = self.class.deep_copy(ACTIONS[:has_member])
+      params = self.class.deep_copy(ACTIONS[:has_owner])
       # Replacing placeholder groupId with correct group_id
       params[:url].gsub!("groupId",group_id)
       # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("memberId",member_id)
-      # Perform the request & Check if the response contains an error
-      self.class.check_response(self.class.perform(params))   
+      params[:url].gsub!("ownerId",owner_id)
+      begin
+        # Perform the request & Check if the response contains an error
+        self.class.check_response(self.class.perform(params))
+      rescue
+        User.find(owner_id)
+        false
+      end   
     end
 
 
