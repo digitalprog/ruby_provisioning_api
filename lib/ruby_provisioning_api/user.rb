@@ -30,14 +30,14 @@ module RubyProvisioningApi
         :member_of => {method: "GET", url: "#{Group::GROUP_PATH}/groupId/member/memberId"}
     }
 
-    # @param [Hash] attributes the options to create a User with.
-    # @option attributes [String] :user_name User identification
-    # @option attributes [String] :given_name User's first name
-    # @option attributes [String] :family_name User's last name
-    # @option attributes [String] :quota User's disk space quota (default is 1024)
-    # @option attributes [Boolean] :suspended true if user is suspended, false otherwise (default is false)
+    # @param [Hash] params the options to create a User with.
+    # @option params [String] :user_name User identification
+    # @option params [String] :given_name User's first name
+    # @option params [String] :family_name User's last name
+    # @option params [String] :quota User's disk space quota (optional, default is 1024)
+    # @option params [Boolean] :suspended true if user is suspended, false otherwise (optional, default is false)
     #
-    def initialize(attributes = {})
+    def initialize(params = {})
       attributes.each do |name, value|
         send("#{name}=", value)
       end
@@ -85,8 +85,7 @@ module RubyProvisioningApi
       extract_user(doc)
     end
 
-    # Save a user account
-    # If the user account exists it will be updated, if not, a new user account will be created
+    # Save a user account. If the user account exists it will be updated, if not, a new user account will be created
     #
     # @note This method executes a <b>POST</b> request to <i>apps-apis.google.com/a/feeds/domain/user/2.0</i> for the create action
     # @note This method executes a <b>PUT</b> request to <i>apps-apis.google.com/a/feeds/domain/user/2.0/userName</i> for the update action
@@ -99,11 +98,23 @@ module RubyProvisioningApi
     #   user.save # => true
     #
     # @example Create a user account in a unique step
+    #   user = RubyProvisioningApi::User.new(:user_name => "test",
+    #                                        :given_name => "foo",
+    #                                        :family_name => "bar",
+    #                                        :quota => "2000") # => [User]
+    #   user.save # => true
     #
-    # TODO: completare documentazione
+    # @example Update a user account
+    #   user = RubyProvisioningApi::User.find("test") # => [User]
+    #   user.given_name = "foo2" # => "foo2"
+    #   user.save # => true
     #
     # @see https://developers.google.com/google-apps/provisioning/#creating_a_user_account
     # @see https://developers.google.com/google-apps/provisioning/#updating_a_user_account
+    # @param [Hash] save_options
+    # @option save_options [Boolean] :validate skip validations before save if false, validate otherwise (defaults to true)
+    # @return [Boolean] true if saved, false if not valid or not saved
+    # @raise [Error] if the user already exists (user_name must be unique)
     #
     def save(save_options = {:validate => true})
       if save_options[:validate]
@@ -128,8 +139,26 @@ module RubyProvisioningApi
       User.check_response(response)
     end
 
-    # Create POST https://apps-apis.google.com/a/feeds/domain/user/2.0
-    def self.create(params)
+    # Initialize and save a user.
+    # @param [Hash] params the options to create a User with.
+    # @option params [String] :user_name User identification
+    # @option params [String] :given_name User's first name
+    # @option params [String] :family_name User's last name
+    # @option params [String] :quota User's disk space quota (optional, default is 1024)
+    # @option params [Boolean] :suspended true if user is suspended, false otherwise (optional, default is false)
+    # @note This method executes a <b>POST</b> request to <i>apps-apis.google.com/a/feeds/domain/user/2.0</i>
+    #
+    # @example Create the user "test"
+    #   user = RubyProvisioningApi::User.create(:user_name => "test",
+    #                                           :given_name => "foo",
+    #                                           :family_name => "bar",
+    #                                           :quota => "2000") # => true
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#creating_a_user_account
+    # @return [Boolean] true if created, false if not valid or not created
+    # @raise [Error] if user already exists (user_name must be unique)
+    #
+    def self.create(params = {})
       user = User.new(params)
       user.save
     end
