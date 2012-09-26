@@ -1,5 +1,10 @@
 module RubyProvisioningApi
 
+  # @attr [String] group_id Group identification
+  # @attr [String] group_name Group name
+  # @attr [String] description Group description
+  # @attr [String] email_permission Group permission: Owner or Member 
+  #
   class Group 
     extend Entity
     include Member
@@ -22,25 +27,33 @@ module RubyProvisioningApi
       :retrieve_groups => { method: "GET" , url: "#{GROUP_PATH}/?member=memberId" },
       :retrieve => { method: "GET" , url: "#{GROUP_PATH}/groupId" },
       :add_member => { method: "POST" , url: "#{GROUP_PATH}/groupId/member" },
+      :add_owner => { method: "POST" , url: "#{GROUP_PATH}/groupId/owner" },
       :delete_member => { method: "DELETE" , url: "#{GROUP_PATH}/groupId/member/memberId" },
       :has_member => {method: "GET", url: "#{GROUP_PATH}/groupId/member/memberId"},
-      :delete_owner => {method: "DELETE" , url: "#{GROUP_PATH}/groupId/owner/ownerEmail"}
+      :has_owner => {method: "GET", url: "#{GROUP_PATH}/groupId/owner/ownerId"},
+      :delete_owner => {method: "DELETE" , url: "#{GROUP_PATH}/groupId/owner/ownerId"}
     }
     
     # @param [Hash] attributes the options to create a Group with.
-    # @option attributes [String] :group_id group identification
-    # @option attributes [String] :group_name name of the group
-    # @option attributes [String] :description description of the group
-    # @option attributes [String] :email_permission Owner or Member    
+    # @option attributes [String] :group_id Group identification
+    # @option attributes [String] :group_name Group name
+    # @option attributes [String] :description Group description 
+    # @option attributes [String] :email_permission Group permission: Owner or Member     
     def initialize(attributes = {})
       attributes.each do |name, value|
         send("#{name}=", value)
       end
     end
 
-    # Retrieve all groups in the domain  
-    # @see https://developers.google.com/google-apps/provisioning/#retrieving_all_groups_in_a_domain GET https://apps-apis.google.com/a/feeds/group/2.0/domain[?[start=]]
-    # @return [Array<Group>] all groups in the domain 
+    # Retrieve all groups in the domain 
+    # @note This method executes a <b>GET</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain[?[start=]]</i>
+    #
+    # @example Retrieve all group in the current domain
+    #   RubyProvisioningApi::Group.all # => [Array<Group>]
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#retrieving_all_groups_in_a_domain
+    # @return [Array<Group>] all groups in the domain
+    #
     def self.all
       response = perform(ACTIONS[:retrieve_all])
       # Perform the request & Check if the response contains an error
@@ -61,9 +74,62 @@ module RubyProvisioningApi
       groups
     end
 
-    # Save a group 
-    # @see https://developers.google.com/google-apps/provisioning/#creating_a_group POST https://apps-apis.google.com/a/feeds/group/2.0/domain
-    # @return [Boolean] true of false depending the status of the operation
+    # Retrieve a group
+    # @param [String] group_id Group identification
+    # @note This method executes a <b>GET</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain/groupId </i>
+    #
+    # @example Find the group "foo"
+    #   group = RubyProvisioningApi::Group.find("foo") # => [Group]
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#retrieving_a_group
+    # @return [Group] the group found
+    # @raise [Error] if group does not exist
+    #
+    #      
+    def self.find(group_id)
+      params = prepare_params_for(:retrieve, "groupId" => group_id)
+      response = perform(params)
+      # Check if the response contains an error
+      check_response(response)
+      # Parse the response
+      xml = Nokogiri::XML(response.body)
+      group = Group.new
+      for attribute_name in ['groupId','groupName','description','emailPermission']
+        group.send("#{attribute_name.underscore}=",xml.children.css("entry apps|property[name='#{attribute_name}']").attribute("value").value)
+      end
+      group
+    end
+
+    # Initialize and save a group 
+    # @param [Hash] params the options to create a Group with.
+    # @option params [String] :group_id Group identification
+    # @option params [String] :group_name Group name
+    # @option params [String] :description Group description 
+    # @option params [String] :email_permission Group permission: Owner or Member 
+    # @note This method executes a <b>POST</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain</i>
+    #
+    # @example Create the group "foo"
+    #   group = RubyProvisioningApi::Group.create( :group_id => "foo", :group_name => "foo name" , :description => "bar", :email_permission => "Owner") # => True
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#creating_a_group
+    # @return [Boolean] true if created, false if not valid or not created
+    # @raise [Error] if group already exists
+    #
+    #    
+    def self.create(params = {})
+      group = Group.new(params).save    
+    end
+
+    # Save a group
+    # @note This method executes a <b>POST</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain</i>
+    #
+    # @example Save the group "foo"
+    #   group = RubyProvisioningApi::Group.new( :group_id => "foo", :group_name => "foo name" , :description => "bar", :email_permission => "Owner" ).save # => True
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#creating_a_group
+    # @return [Boolean] true if saved, false if not valid or not saved
+    # @raise [Error] if group already exists
+    #
     def save
       return false unless valid?
       # If group is present, this is an update
@@ -84,90 +150,81 @@ module RubyProvisioningApi
         self.class.check_response(self.class.perform(ACTIONS[:create],builder.to_xml)) 
       else
         #Acting on an existing object
-        # Creating a deep copy of ACTION object
-        params = self.class.deep_copy(ACTIONS[:update])
-        # Replacing placeholder groupId with correct group_id
-        params[:url].gsub!("groupId",group_id)
+        params = self.class.prepare_params_for(:update, "groupId" => group_id)
         # Perform the request & Check if the response contains an error
         self.class.check_response(self.class.perform(params,builder.to_xml))  
       end
     end
 
-    # Initialize and save a group 
-    # @see https://developers.google.com/google-apps/provisioning/#creating_a_group POST https://apps-apis.google.com/a/feeds/group/2.0/domain
-    # @return [Boolean] true of false depending the status of the operation
-    # @param [Hash] params the options to create a Group with.
-    # @option params [String] :group_id group identification
-    # @option params [String] :group_name name of the group
-    # @option params [String] :description description of the group
-    # @option params [String] :email_permission Owner or Member    
-    def self.create(params = {})
-      group = Group.new(params).save    
-    end
-
-    # Retrieve a group
-    # @see https://developers.google.com/google-apps/provisioning/#retrieving_a_group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId    
-    # @return [Group] Group object
-    # @param [String] group_id group identification
-    def self.find(group_id)
-      # Creating a deep copy of ACTION object
-      params = deep_copy(ACTIONS[:retrieve])
-      # Replacing place holder groupId with correct group_id
-      params[:url].gsub!("groupId",group_id)
-      response = perform(params)
-      # Check if the response contains an error
-      check_response(response)
-      # Parse the response
-      xml = Nokogiri::XML(response.body)
-      group = Group.new
-      for attribute_name in ['groupId','groupName','description','emailPermission']
-        group.send("#{attribute_name.underscore}=",xml.children.css("entry apps|property[name='#{attribute_name}']").attribute("value").value)
-      end
-      group
+    # Update a group
+    # @note This method executes a <b>PUT</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain/groupId</i>
+    #
+    # @example Update the group "test" description from "foo" to "bar"
+    #   group = RubyProvisioningApi::Group.find("test") # => True
+    #   group.description # => "foo"
+    #   group.description = "bar" # => "bar"
+    #   group.update # => True
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#updating_a_group
+    # @return [Boolean] true if updated, false otherwise
+    # @raise [Error] if group does not exist
+    #
+    def update
+      save 
     end
 
     # Update attributes of a group 
-    # @see https://developers.google.com/google-apps/provisioning/#updating_a_group PUT https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId  
-    # @return [Boolean] true of false depending the status of the operation
-    # @param [Hash] params the options to create a Group with.
-    # @option params [String] :group_name name of the group
-    # @option params [String] :description description of the group
-    # @option params [String] :email_permission Owner or Member   
+    # @param [Hash] params the options to update a Group
+    # @option params [String] :group_name Group name
+    # @option params [String] :description Group description 
+    # @option params [String] :email_permission Group permission: Owner or Member 
+    # @note This method executes a <b>PUT</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain/groupId</i>
+    #
+    # @example Update the group "test"
+    #   group = RubyProvisioningApi::Group.find("test")
+    #   group.update_attributes(:group_id => "foo", :group_name => "foo name" , :description => "bar", :email_permission => "Owner") # => True
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#updating_a_group
+    # @return [Boolean] true if updated, false if not valid or not updated
+    # @raise [Error] if group does not exist
+    #    
     def update_attributes(params = {})
       self.group_name = params[:group_name] if params[:group_name]
       self.description = params[:description] if params[:description]
       self.email_permission = params[:email_permission] if params[:email_permission]
       update
-    end
+    end    
 
-    # Update group 
-    # @see https://developers.google.com/google-apps/provisioning/#updating_a_group PUT https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId  
-    # @return [Boolean] true of false depending the status of the operation
-    def update
-      save 
-    end
-
-    # Delete group 
-    # @see https://developers.google.com/google-apps/provisioning/#deleting_a_member_from_an_group DELETE https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId 
-    # @return [Boolean] true of false depending the status of the operation
+    # Delete group  
+    # @note This method executes a <b>DELETE</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain/groupId </i>
+    #
+    # @example Delete the group "test"
+    #   group = RubyProvisioningApi::Group.find("test")
+    #   group.delete
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#deleting_a_group
+    # @return [Boolean] true if deleted, false otherwise
+    # @raise [Error] if group does not exist
+    # 
     def delete
-      # Creating a deep copy of ACTION object
-      params = self.class.deep_copy(ACTIONS[:delete])
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("groupId",group_id)
+      params = self.class.prepare_params_for(:delete, "groupId" => group_id)
       # Perform the request & Check if the response contains an error
       self.class.check_response(self.class.perform(params))
     end
 
-    # Retrieve all groups for a given member
-    # @see https://developers.google.com/google-apps/provisioning/#retrieving_all_groups_for_a_member GET https://apps-apis.google.com/a/feeds/group/2.0/domain/?member=memberId[&directOnly=true|false]  
+    # Retrieve all groups for a given member 
+    # @param [String] member_id Member identification
+    # @note This method executes a <b>GET</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain/?member=memberId[&directOnly=true|false]</i>
+    #
+    # @example Retrieve all groups for a member "foo"
+    #   groups = RubyProvisioningApi::Group.groups("foo") # => [Array<Group>]
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#retrieving_all_groups_for_a_member
     # @return [Array<Group>] all groups for a given member
-    # @param [String] member_id member identification
+    # @raise [Error] if member(user) does not exist
+    #
     def self.groups(member_id)
-      # Creating a deep copy of ACTION object
-      params = deep_copy(ACTIONS[:retrieve_groups])
-      # Replacing place holder groupId with correct group_id
-      params[:url].gsub!("memberId",member_id)
+      params = self.class.prepare_params_for(:retrieve_groups, "memberId" => memberId)
       response = perform(params)
       # Perform the request & Check if the response contains an error
       check_response(response)     
@@ -189,10 +246,18 @@ module RubyProvisioningApi
       groups
     end
 
-    # Add member to group
-    # @see https://developers.google.com/google-apps/provisioning/#adding_a_member_to_a_group POST https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member  
-    # @return [Boolean] true of false depending the status of the operation
-    # @param [String] member_id member identification
+    # Add member to group 
+    # @param [String] member_id Member identification
+    # @note This method executes a <b>POST</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member </i>
+    #
+    # @example Add member "foo" to group "bar"
+    #   group = RubyProvisioningApi::Group.find("bar") # => [Group]
+    #   group.add_member("foo") # => [True]
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#adding_a_member_to_a_group
+    # @return [Boolean] true if added as a member, false otherwise
+    # @raise [Error] if member(user) does not exist
+    #
     def add_member(member_id)
       user = User.find(member_id)
       # Creating the XML request
@@ -202,82 +267,116 @@ module RubyProvisioningApi
           xml.send(:'apps:property', 'name' => 'memberId', 'value' => member_id) 
         }
       end
-      # Creating a deep copy of ACTION object
-      params = self.class.deep_copy(ACTIONS[:add_member])
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("groupId",group_id)
+      params = self.class.prepare_params_for(:add_member, "groupId" => groupId)
       # Perform the request & Check if the response contains an error
       self.class.check_response(self.class.perform(params,builder.to_xml))  
     end
 
     # Group membership of a given member
-    # @see https://developers.google.com/google-apps/provisioning/#retrieving_all_members_of_a_group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId
-    # @return [Boolean] true if user is a member of group
-    # @param [String] member_id member identification
+    # @param [String] member_id Member identification
+    # @note This method executes a <b>GET</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId</i>
+    #
+    # @example Check if user "foo" is member to the group "bar"
+    #   group = RubyProvisioningApi::Group.find("bar") # => [Group]
+    #   group.has_member?("foo") # => [True]
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#retrieving_all_members_of_a_group
+    # @return [Boolean] true if user is a member of the group
+    # @raise [Error] if member(user) does not exist
+    #
     def has_member?(member_id)
-      # Creating a deep copy of ACTION object
-      params = self.class.deep_copy(ACTIONS[:has_member])
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("groupId",group_id)
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("memberId",member_id)
-      # Perform the request & Check if the response contains an error
-      self.class.check_response(self.class.perform(params))   
+      params = self.class.prepare_params_for(:has_member, { "groupId" => group_id, "memberId" => member_id })
+      begin
+        # Perform the request & Check if the response contains an error
+        self.class.check_response(self.class.perform(params))
+      rescue
+        User.find(owner_id)
+        false
+      end    
     end
 
+
     # Delete group membership of a given member
-    # @see https://developers.google.com/google-apps/provisioning/#deleting_member_from_an_group DELETE https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId
-    # @return [Boolean] true of false depending the status of the operation
-    # @param [String] member_id member identification
+    # @param [String] member_id Member identification
+    # @note This method executes a <b>DELETE</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member/memberId</i>
+    #
+    # @example Delete user "foo" membership from group "bar"
+    #   group = RubyProvisioningApi::Group.find("bar") # => [Group]
+    #   group.delete_member("foo") # => [True]
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#deleting_member_from_an_group
+    # @return [Boolean] true if deleted, false otherwise
+    # @raise [Error] if member(user) does not exist
+    #
     def delete_member(member_id)
-      # TODO: is it necessary to find the member?
-      # member = User.find(member_id)
-      # Creating a deep copy of ACTION object
-      params = self.class.deep_copy(ACTIONS[:delete_member])
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("groupId",group_id)
-      # Replacing placeholder memberId with correct member_id
-      params[:url].gsub!("memberId",member_id)
+      params = self.class.prepare_params_for(:delete_member, { "groupId" => group_id, "memberId" => member_id })
       # Perform the request & Check if the response contains an error
       self.class.check_response(self.class.perform(params)) 
     end
 
-    # Add owner to group
-    # @see https://developers.google.com/google-apps/provisioning/#assigning_an_owner_to_a_group POST https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/owner
-    # @return [Boolean] true of false depending the status of the operation
-    # @param [String] owner_id owner identification    
+    # Add owner to group 
+    # @param [String] owner_id Owner identification
+    # @note This method executes a <b>POST</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain/groupId/owner</i>
+    #
+    # @example Add owner "foo" to group "bar"
+    #   group = RubyProvisioningApi::Group.find("bar") # => [Group]
+    #   group.add_owner("foo") # => [True]
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#assigning_an_owner_to_a_group
+    # @return [Boolean] true if added as a owner, false otherwise
+    # @raise [Error] if owner(user) does not exist
+    #       
     def add_owner(owner_id)
-    end
-
-
-    # Group ownership of a given member
-    # @see https://developers.google.com/google-apps/provisioning/#querying_if_a_user_or_group_is_owner GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/owner/ownerEmail
-    # @return [Boolean] true if user is a owner of group
-    # @param [String] owner_id owner identification
-    def has_owner?(owner_id)
-      # Creating a deep copy of ACTION object
-      params = self.class.deep_copy(ACTIONS[:has_member])
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("groupId",group_id)
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("memberId",member_id)
+      user = User.find(owner_id)
+      # Creating the XML request
+      builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+        xml.send(:'atom:entry', 'xmlns:atom' => 'http://www.w3.org/2005/Atom', 'xmlns:apps' => 'http://schemas.google.com/apps/2006') {
+          xml.send(:'atom:category', 'scheme' => 'http://schemas.google.com/g/2005#kind', 'term' => 'http://schemas.google.com/apps/2006#emailList')
+          xml.send(:'apps:property', 'name' => 'email', 'value' => owner_id) 
+        }
+      end
+      params = self.class.prepare_params_for(:add_owner, "groupId" => group_id )
       # Perform the request & Check if the response contains an error
-      self.class.check_response(self.class.perform(params))   
+      self.class.check_response(self.class.perform(params,builder.to_xml))  
     end
 
-    # Delete group ownership of a given member
-    # @see https://developers.google.com/google-apps/provisioning/#deleting_an_owner_from_a_group DELETE https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/owner/ownerEmail
-    # @return [Boolean] true of false depending the status of the operation
-    # @param [String] owner_id owner identification
+    # Group ownership of a given owner
+    # @param [String] owner_id Owner identification
+    # @note This method executes a <b>GET</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain/groupId/owner/ownerEmail
+    # @example Check if user "foo" is owner to the group "bar"
+    #   group = RubyProvisioningApi::Group.find("bar") # => [Group]
+    #   group.has_owner?("foo") # => [True]
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#querying_if_a_user_or_group_is_owner
+    # @return [Boolean] true if user is a owner of the group, false otherwise
+    # @raise [Error] if owner(user) does not exist
+    #
+    def has_owner?(owner_id)
+      params = self.class.prepare_params_for(:has_owner, {"groupId" => group_id, "ownerId" => owner_id} )
+      begin
+        # Perform the request & Check if the response contains an error
+        self.class.check_response(self.class.perform(params))
+      rescue
+        User.find(owner_id)
+        false
+      end   
+    end
+
+
+    # Delete group ownership of a given owner
+    # @param [String] owner_id Owner identification
+    # @note This method executes a <b>DELETE</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain/groupId/owner/ownerEmail</i>
+    #
+    # @example Delete user "foo" ownership from group "bar"
+    #   group = RubyProvisioningApi::Group.find("bar") # => [Group]
+    #   group.delete_owner("foo") # => [True]
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#deleting_an_owner_from_a_group
+    # @return [Boolean] true if deleted, false otherwise
+    # @raise [Error] if owner(user) does not exist
+    #
     def delete_owner(owner_id)
-      # TODO: is it necessary to find the owner?
-      # owner = User.find(owner_id)
-      # Creating a deep copy of ACTION object
-      params = self.class.deep_copy(ACTIONS[:delete_owner])
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("groupId",group_id)
-      # Replacing placeholder memberId with correct member_id
-      params[:url].gsub!("ownerEmail",owner_id)
+      params = self.class.prepare_params_for(:delete_owner, {"groupId" => group_id, "ownerId" => owner_id} )
       # Perform the request & Check if the response contains an error
       self.class.check_response(self.class.perform(params))       
     end

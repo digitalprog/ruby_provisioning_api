@@ -18,9 +18,7 @@ module RubyProvisioningApi
       end
     end
 
-    def deep_copy(element)
-      Marshal.load(Marshal.dump(element))
-    end
+
 
     def response_error?(response)
       (400..600).include?(response.status)
@@ -45,6 +43,19 @@ module RubyProvisioningApi
         false
       end
     end
-    
+
+    def prepare_params_for(action, options = {})
+      options.stringify_keys!
+      params = deep_copy(self::ACTIONS[action])
+      options.each_pair do |k,v|
+        params[:url].gsub!(k, v)
+      end
+      params
+    end
+
+    def deep_copy(element)
+      Marshal.load(Marshal.dump(element))
+    end
+
   end
 end
