@@ -1,13 +1,6 @@
 module RubyProvisioningApi
   
   module Member
-    
-    GROUP_PATH = "/group/2.0/#{RubyProvisioningApi.configuration[:domain]}"
-    USER_ATTRIBUTES = ['userName','password','suspended','quota','familyName','givenName']
-    ACTIONS = {
-        :member => {method: "GET", url: "#{GROUP_PATH}/groupId/member/memberId"},
-        :members => {method: "GET", url: "#{GROUP_PATH}/groupId/member"},
-    }
 
     def self.included(base)
       base.extend(ClassMethods)
@@ -22,31 +15,45 @@ module RubyProvisioningApi
       # super(member_id)
     # end
 
-    # Retrieve all users which are members for a group
-    # @see https://developers.google.com/google-apps/provisioning/#retrieving_all_members_of_a_group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member[?[start=]&[includeSuspendedUsers=true|false]] 
-    # @return [Array<User>] all users which are members for a group
-    def members
-      # Creating a deep copy of ACTION object
-      params = Entity.deep_copy(ACTIONS[:members])
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("groupId",group_id)
-      # Perform the request & Check if the response contains an error
+    # Retrieve members for a group
+    # @note This method executes a <b>GET</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member[?[start=]&[includeSuspendedUsers=true|false]]</i>
+    #
+    # @example Retrieve all members for the group "foo"
+    #   RubyProvisioningApi::Group.find("foo").members # => [Array<User>]
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#retrieving_all_members_of_a_group
+    # @return [Array<User>] all members for a group
+    #
+    def members   
+      member_ids.map{ |member| User.find(member) }
+    end
+
+    # Retrieve member ids for a group
+    # @note This method executes a <b>GET</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member[?[start=]&[includeSuspendedUsers=true|false]]</i>
+    #
+    # @example Retrieve all member ids for the group "foo"
+    #   RubyProvisioningApi::Group.find("foo").member_ids # => [Array<String>]
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#retrieving_all_members_of_a_group
+    # @return [Array<User>] all member ids for a group
+    #
+    def member_ids
+      params = self.class.prepare_params_for(:members, "groupId" => group_id)
       response = self.class.perform(params)
       self.class.check_response(response)
       # Parse the response
       xml = Nokogiri::XML(response.body)
       # Prepare a User array
-      users = []
+      users_ids = []
       xml.children.css("entry").each do |entry|
         # If the member is a user
         if entry.css("apps|property[name]")[0].attributes["value"].value.eql?("User")
-          # Get the user_name
-          user_name = entry.css("apps|property[name]")[1].attributes["value"].value.split("@")[0]
-          users << User.find(user_name)
+          # Fill the array with the username
+          users_ids << entry.css("apps|property[name]")[1].attributes["value"].value.split("@")[0]
         end
       end
-      # Return the array of users (members)
-      users      
+      # Return the array of users ids (members)
+      users_ids         
     end
 
   end

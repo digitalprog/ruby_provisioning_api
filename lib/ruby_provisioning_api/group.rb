@@ -31,7 +31,9 @@ module RubyProvisioningApi
       :delete_member => { method: "DELETE" , url: "#{GROUP_PATH}/groupId/member/memberId" },
       :has_member => {method: "GET", url: "#{GROUP_PATH}/groupId/member/memberId"},
       :has_owner => {method: "GET", url: "#{GROUP_PATH}/groupId/owner/ownerId"},
-      :delete_owner => {method: "DELETE" , url: "#{GROUP_PATH}/groupId/owner/ownerId"}
+      :delete_owner => {method: "DELETE" , url: "#{GROUP_PATH}/groupId/owner/ownerId"},
+      :member => {method: "GET", url: "#{GROUP_PATH}/groupId/member/memberId"},
+      :members => {method: "GET", url: "#{GROUP_PATH}/groupId/member"}
     }
     
     # @param [Hash] params the options to create a Group with.
@@ -226,7 +228,7 @@ module RubyProvisioningApi
     # @raise [Error] if member(user) does not exist
     #
     def self.groups(member_id)
-      params = self.class.prepare_params_for(:retrieve_groups, "memberId" => memberId)
+      params = prepare_params_for(:retrieve_groups, "memberId" => member_id)
       response = perform(params)
       # Perform the request & Check if the response contains an error
       check_response(response)     
@@ -269,7 +271,7 @@ module RubyProvisioningApi
           xml.send(:'apps:property', 'name' => 'memberId', 'value' => member_id) 
         }
       end
-      params = self.class.prepare_params_for(:add_member, "groupId" => groupId)
+      params = self.class.prepare_params_for(:add_member, "groupId" => group_id)
       # Perform the request & Check if the response contains an error
       self.class.check_response(self.class.perform(params,builder.to_xml))  
     end
