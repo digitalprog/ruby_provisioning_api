@@ -194,15 +194,25 @@ module RubyProvisioningApi
       save
     end
 
-    #TODO: To restore a user account using the protocol, change a suspended user's `suspended` value to `false` and make a `PUT` request with the updated entry.
-    def restore
-      self.suspended = false
+    # Suspend a user account
+    # @note This method executes a <b>PUT</b> request to <i>apps-apis.google.com/a/feeds/domain/user/2.0/userName</i> for the update action
+    #
+    # @example Suspend the user account of the user "foo"
+    #   user = RubyProvisioningApi::User.find("foo") # => [User]
+    #   user.suspend # => true
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#suspending_a_user_account
+    # @return [Boolean] true if the operation succeeded, false otherwise
+    #
+    def suspend
+      self.suspended = true
       save(:validate => false)
     end
 
-    #TODO: To suspend a user account using the protocol, change the user's `suspended` value to `true` and make a `PUT` request with the updated entry.
-    def suspend
-      self.suspended = true
+    #TODO: To restore a user account using the protocol, change a suspended user's `suspended` value to `false` and make a `PUT` request with the updated entry.
+    #
+    def restore
+      self.suspended = false
       save(:validate => false)
     end
 
