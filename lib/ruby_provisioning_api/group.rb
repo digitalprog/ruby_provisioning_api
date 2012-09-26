@@ -128,7 +128,7 @@ module RubyProvisioningApi
     #
     # @see https://developers.google.com/google-apps/provisioning/#creating_a_group
     # @return [Boolean] true if saved, false if not valid or not saved
-    # @raise [Error] if group already exists
+    # @raise [Error] if group already exists (group_id must be unique)
     #
     def save
       return false unless valid?
