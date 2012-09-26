@@ -36,7 +36,7 @@ module RubyProvisioningApi
     #   RubyProvisioningApi::Group.find("foo").owner_ids # => [Array<String>]
     #
     # @see https://developers.google.com/google-apps/provisioning/#querying_for_all_owners_of_a_group
-    # @return [Array<User>] all owner ids for a group
+    # @return [Array<String>] all owner ids for a group
     #
     def owner_ids
       params = self.class.prepare_params_for(:owners, "groupId" => group_id)
