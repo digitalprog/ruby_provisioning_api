@@ -140,7 +140,7 @@ module RubyProvisioningApi
     end
 
     # Initialize and save a user.
-    # @param [Hash] params the options to create a User with.
+    # @param [Hash] params the options to create a User with
     # @option params [String] :user_name User identification
     # @option params [String] :given_name User's first name
     # @option params [String] :family_name User's last name
@@ -163,8 +163,26 @@ module RubyProvisioningApi
       user.save
     end
 
-    # TODO: documentare che con update attributes non si può fare la sospensione e il restore di utenti
-    #       per queste operazioni si usano i metodi appositi suspend e restore.
+    # Update user attributes (except suspend) and save
+    #
+    # @param [Hash] params the options to update the User with
+    # @option params [String] :user_name User identification
+    # @option params [String] :given_name User's first name
+    # @option params [String] :family_name User's last name
+    # @option params [String] :quota User's disk space quota
+    #
+    # @note This method executes a <b>PUT</b> request to <i>apps-apis.google.com/a/feeds/domain/user/2.0/userName</i> for the update action
+    # @note With {User#update_attributes update_attributes} it's not possible to suspend or restore a user account. For these actions take a look
+    #       at the {User#suspend suspend} and {User#restore restore} methods.
+    #
+    # @example Change the family name and the given_name of a user
+    #   user = RubyProvisioningApi::User.find("foo") # => [User]
+    #   user.update_attributes(:family_name => "smith", :given_name => "john") # => true
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#updating_a_user_account
+    # @return [Boolean] true if updated, false if not valid or not updated
+    # @raise [Error] if user already exists (user_name must be unique)
+    #
     def update_attributes(params)
       if params.has_key? :user_name and params[:user_name] != self.user_name
         user_name_will_change!
