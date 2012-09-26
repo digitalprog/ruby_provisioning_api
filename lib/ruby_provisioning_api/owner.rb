@@ -1,13 +1,7 @@
 module RubyProvisioningApi
   
   module Owner
-    
-    GROUP_PATH = "/group/2.0/#{RubyProvisioningApi.configuration[:domain]}"
-    USER_ATTRIBUTES = ['userName','password','suspended','quota','familyName','givenName']
-    ACTIONS = {
-        :member => {method: "GET", url: "#{GROUP_PATH}/groupId/member/memberId"},
-        :members => {method: "GET", url: "#{GROUP_PATH}/groupId/member"},
-    }
+
 
     def self.included(base)
       base.extend(ClassMethods)
@@ -22,31 +16,45 @@ module RubyProvisioningApi
       # super(member_id)
     # end
 
-    # Retrieve all users which are owner for a group
-    # @see https://developers.google.com/google-apps/provisioning/#querying_for_all_owners_of_a_group GET https://apps-apis.google.com/a/feeds/group/2.0/domain/groupId/owner[?[start=]] 
-    # @return [Array<User>] all users which are members for a group
-    def owners
-      # Creating a deep copy of ACTION object
-      params = Entity.deep_copy(ACTIONS[:members])
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("groupId",group_id)
-      # Perform the request & Check if the response contains an error
+    # Retrieve owners for a group
+    # @note This method executes a <b>GET</b> request to apps-apis.google.com/a/feeds/group/2.0/domain/groupId/owner[?[start=]]</i>
+    #
+    # @example Retrieve all owners for the group "foo"
+    #   RubyProvisioningApi::Group.find("foo").owners # => [Array<User>]
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#querying_for_all_owners_of_a_group
+    # @return [Array<User>] all owners for a group
+    #
+    def owners   
+      owner_ids.map{ |owner| User.find(owner) }
+    end
+
+    # Retrieve owner ids for a group
+    # @note This method executes a <b>GET</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain/groupId/owner[?[start=]]</i>
+    #
+    # @example Retrieve all owner ids for the group "foo"
+    #   RubyProvisioningApi::Group.find("foo").owner_ids # => [Array<String>]
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#querying_for_all_owners_of_a_group
+    # @return [Array<User>] all owner ids for a group
+    #
+    def owner_ids
+      params = self.class.prepare_params_for(:owners, "groupId" => group_id)
       response = self.class.perform(params)
       self.class.check_response(response)
       # Parse the response
       xml = Nokogiri::XML(response.body)
       # Prepare a User array
-      users = []
+      users_ids = []
       xml.children.css("entry").each do |entry|
         # If the member is a user
-        if entry.css("apps|property[name]")[0].attributes["value"].value.eql?("User")
-          # Get the user_name
-          user_name = entry.css("apps|property[name]")[1].attributes["value"].value.split("@")[0]
-          users << User.find(user_name)
+        if entry.css("apps|property[name]")[1].attributes["value"].value.eql?("User")
+          # Fill the array with the username
+          users_ids << entry.css("apps|property[name]")[0].attributes["value"].value.split("@")[0]
         end
       end
-      # Return the array of users (members)
-      users      
+      # Return the array of users ids (members)
+      users_ids    
     end
 
   end

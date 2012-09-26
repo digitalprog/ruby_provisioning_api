@@ -33,7 +33,9 @@ module RubyProvisioningApi
       :has_owner => {method: "GET", url: "#{GROUP_PATH}/groupId/owner/ownerId"},
       :delete_owner => {method: "DELETE" , url: "#{GROUP_PATH}/groupId/owner/ownerId"},
       :member => {method: "GET", url: "#{GROUP_PATH}/groupId/member/memberId"},
-      :members => {method: "GET", url: "#{GROUP_PATH}/groupId/member"}
+      :members => {method: "GET", url: "#{GROUP_PATH}/groupId/member"},
+      :owner => {method: "GET", url: "#{GROUP_PATH}/groupId/owner/ownerId"},
+      :owners => {method: "GET", url: "#{GROUP_PATH}/groupId/owner"}
     }
     
     # @param [Hash] attributes the options to create a Group with.
