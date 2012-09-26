@@ -45,7 +45,7 @@ module RubyProvisioningApi
     # @option params [String] :email_permission Group permission: Owner or Member
     #
     def initialize(params = {})
-      attributes.each do |name, value|
+      params.each do |name, value|
         send("#{name}=", value)
       end
     end
