@@ -60,13 +60,7 @@ module RubyProvisioningApi
       check_response(response)
       doc = Nokogiri::XML(response.body)
       doc.css("entry").each do |user_entry|
-        u = new
-        u.user_name = user_entry.css("apps|login").first.attributes["userName"].value
-        u.suspended = doc.css("apps|login").first.attributes["suspended"].value
-        u.given_name = user_entry.css("apps|name").first.attributes["givenName"].value
-        u.family_name = user_entry.css("apps|name").first.attributes["familyName"].value
-        u.quota = doc.css("apps|quota").first.attributes["limit"].value
-        users << u
+        users << extract_user(user_entry)
       end
       users
     end
@@ -88,13 +82,7 @@ module RubyProvisioningApi
       response = perform(params)
       check_response(response)
       doc = Nokogiri::XML(response.body)
-      u = new
-      u.user_name = doc.css("apps|login").first.attributes["userName"].value
-      u.suspended = doc.css("apps|login").first.attributes["suspended"].value
-      u.family_name = doc.css("apps|name").first.attributes["familyName"].value
-      u.given_name = doc.css("apps|name").first.attributes["givenName"].value
-      u.quota = doc.css("apps|quota").first.attributes["limit"].value
-      u
+      extract_user(doc)
     end
 
     def save(save_options = {:validate => true})
@@ -190,6 +178,18 @@ module RubyProvisioningApi
         Group.find(group_id)
         false
       end
+    end
+
+    private
+
+    def self.extract_user(doc)
+      u = new
+      u.user_name = doc.css("apps|login").first.attributes["userName"].value
+      u.suspended = doc.css("apps|login").first.attributes["suspended"].value
+      u.family_name = doc.css("apps|name").first.attributes["familyName"].value
+      u.given_name = doc.css("apps|name").first.attributes["givenName"].value
+      u.quota = doc.css("apps|quota").first.attributes["limit"].value
+      u
     end
 
   end
