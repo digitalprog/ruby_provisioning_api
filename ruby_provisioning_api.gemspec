@@ -18,7 +18,7 @@ Gem::Specification.new do |gem|
   gem.version       = RubyProvisioningApi::VERSION
   gem.add_dependency 'faraday'
   gem.add_dependency 'nokogiri'
-  gem.add_dependency('active_support','~> 3.2.8')
+  gem.add_dependency 'activesupport'
   gem.add_dependency 'activemodel'
 
 end
