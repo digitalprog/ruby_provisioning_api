@@ -18,8 +18,6 @@ module RubyProvisioningApi
       end
     end
 
-
-
     def response_error?(response)
       (400..600).include?(response.status)
     end
