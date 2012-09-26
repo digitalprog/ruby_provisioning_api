@@ -38,12 +38,13 @@ module RubyProvisioningApi
       :owners => {method: "GET", url: "#{GROUP_PATH}/groupId/owner"}
     }
     
-    # @param [Hash] attributes the options to create a Group with.
-    # @option attributes [String] :group_id Group identification
-    # @option attributes [String] :group_name Group name
-    # @option attributes [String] :description Group description 
-    # @option attributes [String] :email_permission Group permission: Owner or Member     
-    def initialize(attributes = {})
+    # @param [Hash] params the options to create a Group with.
+    # @option params [String] :group_id Group identification
+    # @option params [String] :group_name Group name
+    # @option params [String] :description Group description
+    # @option params [String] :email_permission Group permission: Owner or Member
+    #
+    def initialize(params = {})
       attributes.each do |name, value|
         send("#{name}=", value)
       end
@@ -88,7 +89,6 @@ module RubyProvisioningApi
     # @see https://developers.google.com/google-apps/provisioning/#retrieving_a_group
     # @return [Group] the group found
     # @raise [Error] if group does not exist
-    #
     #      
     def self.find(group_id)
       params = prepare_params_for(:retrieve, "groupId" => group_id)
@@ -113,12 +113,14 @@ module RubyProvisioningApi
     # @note This method executes a <b>POST</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain</i>
     #
     # @example Create the group "foo"
-    #   group = RubyProvisioningApi::Group.create( :group_id => "foo", :group_name => "foo name" , :description => "bar", :email_permission => "Owner") # => True
+    #   group = RubyProvisioningApi::Group.create(:group_id => "foo",
+    #                                             :group_name => "foo name" ,
+    #                                             :description => "bar",
+    #                                             :email_permission => "Owner") # => true
     #
     # @see https://developers.google.com/google-apps/provisioning/#creating_a_group
     # @return [Boolean] true if created, false if not valid or not created
-    # @raise [Error] if group already exists
-    #
+    # @raise [Error] if group already exists (group_id must be unique)
     #    
     def self.create(params = {})
       group = Group.new(params).save    
@@ -128,7 +130,7 @@ module RubyProvisioningApi
     # @note This method executes a <b>POST</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain</i>
     #
     # @example Save the group "foo"
-    #   group = RubyProvisioningApi::Group.new( :group_id => "foo", :group_name => "foo name" , :description => "bar", :email_permission => "Owner" ).save # => True
+    #   group = RubyProvisioningApi::Group.new( :group_id => "foo", :group_name => "foo name" , :description => "bar", :email_permission => "Owner" ).save # => true
     #
     # @see https://developers.google.com/google-apps/provisioning/#creating_a_group
     # @return [Boolean] true if saved, false if not valid or not saved
@@ -164,10 +166,10 @@ module RubyProvisioningApi
     # @note This method executes a <b>PUT</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain/groupId</i>
     #
     # @example Update the group "test" description from "foo" to "bar"
-    #   group = RubyProvisioningApi::Group.find("test") # => True
+    #   group = RubyProvisioningApi::Group.find("test") # => true
     #   group.description # => "foo"
     #   group.description = "bar" # => "bar"
-    #   group.update # => True
+    #   group.update # => true
     #
     # @see https://developers.google.com/google-apps/provisioning/#updating_a_group
     # @return [Boolean] true if updated, false otherwise
@@ -186,7 +188,7 @@ module RubyProvisioningApi
     #
     # @example Update the group "test"
     #   group = RubyProvisioningApi::Group.find("test")
-    #   group.update_attributes(:group_id => "foo", :group_name => "foo name" , :description => "bar", :email_permission => "Owner") # => True
+    #   group.update_attributes(:group_id => "foo", :group_name => "foo name" , :description => "bar", :email_permission => "Owner") # => true
     #
     # @see https://developers.google.com/google-apps/provisioning/#updating_a_group
     # @return [Boolean] true if updated, false if not valid or not updated
@@ -256,7 +258,7 @@ module RubyProvisioningApi
     #
     # @example Add member "foo" to group "bar"
     #   group = RubyProvisioningApi::Group.find("bar") # => [Group]
-    #   group.add_member("foo") # => [True]
+    #   group.add_member("foo") # => [true]
     #
     # @see https://developers.google.com/google-apps/provisioning/#adding_a_member_to_a_group
     # @return [Boolean] true if added as a member, false otherwise
@@ -282,7 +284,7 @@ module RubyProvisioningApi
     #
     # @example Check if user "foo" is member to the group "bar"
     #   group = RubyProvisioningApi::Group.find("bar") # => [Group]
-    #   group.has_member?("foo") # => [True]
+    #   group.has_member?("foo") # => [true]
     #
     # @see https://developers.google.com/google-apps/provisioning/#retrieving_all_members_of_a_group
     # @return [Boolean] true if user is a member of the group
@@ -306,7 +308,7 @@ module RubyProvisioningApi
     #
     # @example Delete user "foo" membership from group "bar"
     #   group = RubyProvisioningApi::Group.find("bar") # => [Group]
-    #   group.delete_member("foo") # => [True]
+    #   group.delete_member("foo") # => [true]
     #
     # @see https://developers.google.com/google-apps/provisioning/#deleting_member_from_an_group
     # @return [Boolean] true if deleted, false otherwise
@@ -324,7 +326,7 @@ module RubyProvisioningApi
     #
     # @example Add owner "foo" to group "bar"
     #   group = RubyProvisioningApi::Group.find("bar") # => [Group]
-    #   group.add_owner("foo") # => [True]
+    #   group.add_owner("foo") # => [true]
     #
     # @see https://developers.google.com/google-apps/provisioning/#assigning_an_owner_to_a_group
     # @return [Boolean] true if added as a owner, false otherwise
@@ -349,7 +351,7 @@ module RubyProvisioningApi
     # @note This method executes a <b>GET</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain/groupId/owner/ownerEmail
     # @example Check if user "foo" is owner to the group "bar"
     #   group = RubyProvisioningApi::Group.find("bar") # => [Group]
-    #   group.has_owner?("foo") # => [True]
+    #   group.has_owner?("foo") # => [true]
     #
     # @see https://developers.google.com/google-apps/provisioning/#querying_if_a_user_or_group_is_owner
     # @return [Boolean] true if user is a owner of the group, false otherwise
@@ -373,7 +375,7 @@ module RubyProvisioningApi
     #
     # @example Delete user "foo" ownership from group "bar"
     #   group = RubyProvisioningApi::Group.find("bar") # => [Group]
-    #   group.delete_owner("foo") # => [True]
+    #   group.delete_owner("foo") # => [true]
     #
     # @see https://developers.google.com/google-apps/provisioning/#deleting_an_owner_from_a_group
     # @return [Boolean] true if deleted, false otherwise
