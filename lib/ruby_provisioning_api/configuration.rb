@@ -6,7 +6,7 @@ module RubyProvisioningApi
     attr_reader :config
 
     def initialize
-      #@config_file = "/home/davide/sites/ruby_provisioning_api/lib/ruby_provisioning_api/config/google_apps.yml"
+      #@config_file = "{YOUR_DIRECTORY}/config/google_apps.yml"
       config_file = "#{Rails.root}/config/google_apps.yml"
 
       if File.exist?(config_file)
