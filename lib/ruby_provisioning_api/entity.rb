@@ -1,9 +1,6 @@
 module RubyProvisioningApi
   module Entity
 
-    BASE_APPS_URL = 'https://apps-apis.google.com'
-    BASE_PATH = '/a/feeds'
-
     def perform(action, params = nil)
       connection = RubyProvisioningApi.connection
       client = connection.client(RubyProvisioningApi.configuration.base_apps_url)
