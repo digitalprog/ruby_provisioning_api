@@ -5,7 +5,7 @@ module RubyProvisioningApi
 
     def initialize
       client = client('https://www.google.com')
-      response = client.post '/accounts/ClientLogin', {:Email => "#{RubyProvisioningApi.configuration[:username]}@#{RubyProvisioningApi.configuration[:domain]}", :Passwd => RubyProvisioningApi.configuration[:password], :accountType =>  "HOSTED", :service => "apps"}
+      response = client.post '/accounts/ClientLogin', {:Email => "#{RubyProvisioningApi.configuration.config[:username]}@#{RubyProvisioningApi.configuration.config[:domain]}", :Passwd => RubyProvisioningApi.configuration.config[:password], :accountType =>  "HOSTED", :service => "apps"}
       # Set the token
       @token = response.body.split("\n").last.split('Auth=').last
     end
