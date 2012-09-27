@@ -6,7 +6,7 @@ module RubyProvisioningApi
 
     # Adds configuration ability to the gem
     def configuration
-      @configuration ||= RubyProvisioningApi::Configuration.new#.config
+      @configuration ||= RubyProvisioningApi::Configuration.new
     end
 
     def configure
