@@ -2,7 +2,7 @@ module RubyProvisioningApi
 
   class Configuration
 
-    attr_accessor :config_file, :user_path, :group_path, :user_actions, :group_actions
+    attr_accessor :config_file, :user_path, :group_path, :user_actions, :group_actions, :base_apps_url, :base_path
     attr_reader :config
 
     class << self
@@ -61,7 +61,8 @@ module RubyProvisioningApi
       else
         raise "RubyProvisioningApi: File #{config_file} not found, maybe you forgot to define it ?"
       end
-
+      @base_apps_url = 'https://apps-apis.google.com'
+      @base_path = '/a/feeds'
       @user_path = "/#{@config[:domain]}/user/2.0"
       @group_path = "/group/2.0/#{@config[:domain]}"
       @user_actions = {

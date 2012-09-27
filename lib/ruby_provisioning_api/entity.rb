@@ -1,17 +1,17 @@
 module RubyProvisioningApi
   module Entity
 
-    BASE_ENTITY_URL = 'https://apps-apis.google.com'
+    BASE_APPS_URL = 'https://apps-apis.google.com'
     BASE_PATH = '/a/feeds'
 
     def perform(action, params = nil)
       connection = RubyProvisioningApi.connection
-      client = connection.client(BASE_ENTITY_URL)
+      client = connection.client(RubyProvisioningApi.configuration.base_apps_url)
       method = action[:method]
       url = action[:url]
 
       response = client.send(action[:method].downcase) do |req|
-        req.url "#{BASE_ENTITY_URL}#{BASE_PATH}#{action[:url]}"
+        req.url "#{RubyProvisioningApi.configuration.base_apps_url}#{RubyProvisioningApi.configuration.base_path}#{action[:url]}"
         req.headers['Content-Type'] = 'application/atom+xml'
         req.headers['Authorization'] = "GoogleLogin auth=#{connection.token}"
         req.body = params if params
@@ -44,7 +44,7 @@ module RubyProvisioningApi
 
     def prepare_params_for(action, options = {})
       options.stringify_keys!
-      params = deep_copy(Configuration.send("#{self.name.demodulize.underscore}_actions")[action])
+      params = deep_copy(RubyProvisioningApi.configuration.send("#{self.name.demodulize.underscore}_actions")[action])
       options.each_pair do |k,v|
         params[:url].gsub!(k, v)
       end
