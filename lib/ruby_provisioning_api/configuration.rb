@@ -2,7 +2,8 @@ module RubyProvisioningApi
 
   class Configuration
 
-    attr_accessor :config, :user_path, :group_path, :user_actions, :group_actions
+    attr_accessor :config_file, :user_path, :group_path, :user_actions, :group_actions
+    attr_reader :config
 
     class << self
 
@@ -52,7 +53,7 @@ module RubyProvisioningApi
       # For rails env
       # @ldap_config_file = "#{Rails.root}/config/google_apps.yml"
       # Temporary patch. Insert your config directory here.
-      config_file = "/home/davide/sites/ruby_provisioning_api/lib/ruby_provisioning_api/config/google_apps.yml"
+      @config_file = "/home/davide/sites/ruby_provisioning_api/lib/ruby_provisioning_api/config/google_apps.yml"
       #config_file = "#{Rails.root}/config/google_apps.yml"
       # Get necessary data from configuration files
       if File.exist?(config_file)
