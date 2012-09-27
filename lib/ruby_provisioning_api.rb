@@ -11,9 +11,6 @@ module RubyProvisioningApi
 
     attr_accessor :configuration
     attr_reader :connection
-    
-    attr_reader :root_path
-    attr_reader :lib_path
 
     def new
       RubyProvisioningApi::Connection.new
@@ -31,15 +28,6 @@ module RubyProvisioningApi
     def connection 
       @connection ||= RubyProvisioningApi::Connection.new
     end
-
-    private
-    def root_path
-          @root_path = File.expand_path "..", __FILE__
-    end
-      
-    def lib_path
-      @lib_path = File.expand_path "../ruby_provisioning_api", __FILE__
-     end
 
   end
 end
