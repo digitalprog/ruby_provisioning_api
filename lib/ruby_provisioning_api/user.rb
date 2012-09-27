@@ -38,7 +38,7 @@ module RubyProvisioningApi
     # @option params [Boolean] :suspended true if user is suspended, false otherwise (optional, default is false)
     #
     def initialize(params = {})
-      attributes.each do |name, value|
+      params.each do |name, value|
         send("#{name}=", value)
       end
       self.quota = "1024" if quota.nil?
