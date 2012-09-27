@@ -19,17 +19,6 @@ module RubyProvisioningApi
     define_attribute_methods [:user_name]
     validates :user_name, :family_name, :given_name, :presence => true
 
-    USER_PATH = "/#{RubyProvisioningApi.configuration[:domain]}/user/2.0"
-
-    ACTIONS = {
-        :create => {method: "POST", url: "#{USER_PATH}"},
-        :retrieve_all => {method: "GET", url: "#{USER_PATH}"},
-        :retrieve => {:method => "GET", :url => "#{USER_PATH}/userName"},
-        :delete => {:method => "DELETE", :url => "#{USER_PATH}/userName"},
-        :update => {:method => "PUT", :url => "#{USER_PATH}/userName"},
-        :member_of => {method: "GET", url: "#{Group::GROUP_PATH}/groupId/member/memberId"}
-    }
-
     # @param [Hash] params the options to create a User with.
     # @option params [String] :user_name User identification
     # @option params [String] :given_name User's first name
@@ -56,7 +45,7 @@ module RubyProvisioningApi
     #
     def self.all
       users = []
-      response = perform(ACTIONS[:retrieve_all])
+      response = perform(Configuration.user_actions[:retrieve_all])
       check_response(response)
       doc = Nokogiri::XML(response.body)
       doc.css("entry").each do |user_entry|
@@ -77,7 +66,7 @@ module RubyProvisioningApi
     # @raise [Error] if user does not exist
     #
     def self.find(user_name)
-      params = Marshal.load(Marshal.dump(ACTIONS[:retrieve]))
+      params = Marshal.load(Marshal.dump(Configuration.user_actions[:retrieve]))
       params[:url].gsub!("userName", user_name)
       response = perform(params)
       check_response(response)
@@ -134,7 +123,7 @@ module RubyProvisioningApi
         response = self.class.perform(params, builder.to_xml)
       else
         # SAVING a new record
-        response = self.class.perform(ACTIONS[:create], builder.to_xml)
+        response = self.class.perform(Configuration.user_actions[:create], builder.to_xml)
       end
       User.check_response(response)
     end
@@ -226,7 +215,7 @@ module RubyProvisioningApi
 
     #Delete user DELETE https://apps-apis.google.com/a/feeds/domain/user/2.0/userName
     def delete
-      params = Marshal.load(Marshal.dump(ACTIONS[:delete]))
+      params = Marshal.load(Marshal.dump(Configuration.user_actions[:delete]))
       params[:url].gsub!("userName", user_name)
       response = self.class.perform(params)
     end
@@ -250,7 +239,7 @@ module RubyProvisioningApi
     #
     def is_member_of?(group_id)
       # Creating a deep copy of ACTION object
-      params = Marshal.load(Marshal.dump(ACTIONS[:member_of]))
+      params = Marshal.load(Marshal.dump(Configuration.user_actions[:member_of]))
       # Replacing placeholder groupId with correct group_id
       params[:url].gsub!("groupId", group_id)
       # Replacing placeholder groupId with correct group_id

@@ -14,29 +14,8 @@ module RubyProvisioningApi
     include ActiveModel::Dirty
 
     attr_accessor :group_id, :group_name, :description, :email_permission
-    attr_reader :GROUP_PATH
 
-    GROUP_PATH = "/group/2.0/#{RubyProvisioningApi.configuration[:domain]}"
     GROUP_ATTRIBUTES = ['groupId','groupName','description','emailPermission']
-
-    ACTIONS = { 
-      :create =>  { method: "POST" , url: "#{GROUP_PATH}"},
-      :update =>  { method: "PUT" , url: "#{GROUP_PATH}/groupId"},
-      :delete =>  { method: "DELETE" , url: "#{GROUP_PATH}/groupId"},
-      :retrieve_all => { method: "GET" , url: "#{GROUP_PATH}" },
-      :retrieve_groups => { method: "GET" , url: "#{GROUP_PATH}/?member=memberId" },
-      :retrieve => { method: "GET" , url: "#{GROUP_PATH}/groupId" },
-      :add_member => { method: "POST" , url: "#{GROUP_PATH}/groupId/member" },
-      :add_owner => { method: "POST" , url: "#{GROUP_PATH}/groupId/owner" },
-      :delete_member => { method: "DELETE" , url: "#{GROUP_PATH}/groupId/member/memberId" },
-      :has_member => {method: "GET", url: "#{GROUP_PATH}/groupId/member/memberId"},
-      :has_owner => {method: "GET", url: "#{GROUP_PATH}/groupId/owner/ownerId"},
-      :delete_owner => {method: "DELETE" , url: "#{GROUP_PATH}/groupId/owner/ownerId"},
-      :member => {method: "GET", url: "#{GROUP_PATH}/groupId/member/memberId"},
-      :members => {method: "GET", url: "#{GROUP_PATH}/groupId/member"},
-      :owner => {method: "GET", url: "#{GROUP_PATH}/groupId/owner/ownerId"},
-      :owners => {method: "GET", url: "#{GROUP_PATH}/groupId/owner"}
-    }
     
     # @param [Hash] params the options to create a Group with.
     # @option params [String] :group_id Group identification
@@ -60,7 +39,7 @@ module RubyProvisioningApi
     # @return [Array<Group>] all groups in the domain
     #
     def self.all
-      response = perform(ACTIONS[:retrieve_all])
+      response = perform(Configuration.user_actions[:retrieve_all])
       # Perform the request & Check if the response contains an error
       check_response(response)       
       # Parse the response
@@ -153,7 +132,7 @@ module RubyProvisioningApi
       if !update
         #Acting on a new object
         # Check if the response contains an error
-        self.class.check_response(self.class.perform(ACTIONS[:create],builder.to_xml)) 
+        self.class.check_response(self.class.perform(Configuration.user_actions[:create],builder.to_xml))
       else
         #Acting on an existing object
         params = self.class.prepare_params_for(:update, "groupId" => group_id)
