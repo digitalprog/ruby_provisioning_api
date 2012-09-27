@@ -39,7 +39,7 @@ module RubyProvisioningApi
     # @return [Array<Group>] all groups in the domain
     #
     def self.all
-      response = perform(Configuration.user_actions[:retrieve_all])
+      response = perform(RubyProvisioningApi.configuration.group_actions[:retrieve_all])
       # Perform the request & Check if the response contains an error
       check_response(response)       
       # Parse the response
@@ -132,7 +132,7 @@ module RubyProvisioningApi
       if !update
         #Acting on a new object
         # Check if the response contains an error
-        self.class.check_response(self.class.perform(Configuration.user_actions[:create],builder.to_xml))
+        self.class.check_response(self.class.perform(RubyProvisioningApi.configuration.group_actions[:create],builder.to_xml))
       else
         #Acting on an existing object
         params = self.class.prepare_params_for(:update, "groupId" => group_id)

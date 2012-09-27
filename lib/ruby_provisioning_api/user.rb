@@ -66,8 +66,7 @@ module RubyProvisioningApi
     # @raise [Error] if user does not exist
     #
     def self.find(user_name)
-      params = Marshal.load(Marshal.dump(Configuration.user_actions[:retrieve]))
-      params[:url].gsub!("userName", user_name)
+      params = prepare_params_for(:retrieve, "userName" => userName)
       response = perform(params)
       check_response(response)
       doc = Nokogiri::XML(response.body)
@@ -215,8 +214,7 @@ module RubyProvisioningApi
 
     #Delete user DELETE https://apps-apis.google.com/a/feeds/domain/user/2.0/userName
     def delete
-      params = Marshal.load(Marshal.dump(Configuration.user_actions[:delete]))
-      params[:url].gsub!("userName", user_name)
+      params = self.class.prepare_params_for(:delete, "userName" => user_name)
       response = self.class.perform(params)
     end
 
@@ -238,13 +236,7 @@ module RubyProvisioningApi
     # @raise [Error] if group_id does not exist
     #
     def is_member_of?(group_id)
-      # Creating a deep copy of ACTION object
-      params = Marshal.load(Marshal.dump(Configuration.user_actions[:member_of]))
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("groupId", group_id)
-      # Replacing placeholder groupId with correct group_id
-      params[:url].gsub!("memberId", user_name)
-      # Perform the request & Check if the response contains an error
+      params = self.class.prepare_params_for(:group_id, {"groupId" => group_id, "memberId" => user_name} )
       begin
         self.class.check_response(self.class.perform(params))
       rescue
