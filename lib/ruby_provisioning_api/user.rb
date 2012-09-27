@@ -45,7 +45,7 @@ module RubyProvisioningApi
     #
     def self.all
       users = []
-      response = perform(Configuration.user_actions[:retrieve_all])
+      response = perform(RubyProvisioningApi.configuration.user_actions[:retrieve_all])
       check_response(response)
       doc = Nokogiri::XML(response.body)
       doc.css("entry").each do |user_entry|
@@ -122,7 +122,7 @@ module RubyProvisioningApi
         response = self.class.perform(params, builder.to_xml)
       else
         # SAVING a new record
-        response = self.class.perform(Configuration.user_actions[:create], builder.to_xml)
+        response = self.class.perform(RubyProvisioningApi.configuration.user_actions[:create], builder.to_xml)
       end
       User.check_response(response)
     end
