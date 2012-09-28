@@ -212,14 +212,30 @@ module RubyProvisioningApi
       save(:validate => false)
     end
 
-    #Delete user DELETE https://apps-apis.google.com/a/feeds/domain/user/2.0/userName
+    # Delete a user account
+    # @note This method executes a <b>DELETE</b> request to <i>apps-apis.google.com/a/feeds/domain/user/2.0/userName</i>
+    #
+    # @example Delete the user "foo"
+    #   user = RubyProvisioningApi::User.find("foo") # => [User]
+    #   user.delete # => true
+    #
+    # @see https://developers.google.com/google-apps/provisioning/#deleting_a_user_account
+    # @return [Boolean] true if the operation succeeded, false otherwise
+    #
     def delete
       params = self.class.prepare_params_for(:delete, "userName" => user_name)
       response = self.class.perform(params)
     end
 
     # Returns all the groups which the user is subscribed to
-    # TODO: move this inside member
+    #
+    # @example List all the groups which the user "foo" is subscribed to
+    #   user = RubyProvisioningApi::User.find("foo") # => [User]
+    #   user.groups # => [Array<Group>]
+    #
+    # @see For more info see: Group.groups
+    # @return [Array<Group>]
+    #
     def groups
       Group.groups(user_name)
     end
