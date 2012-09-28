@@ -1,6 +1,6 @@
 # RubyProvisioningApi
 
-TODO: Write a gem description
+
 
 ## Installation
 
