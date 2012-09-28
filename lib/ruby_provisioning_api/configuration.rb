@@ -2,11 +2,10 @@ module RubyProvisioningApi
 
   class Configuration
 
-    attr_accessor :config_file, :user_path, :group_path, :user_actions, :group_actions, :base_apps_url, :base_path
-    attr_reader :config
+    attr_accessor :config_file, :base_apps_url, :base_path
+    attr_reader :config, :user_path, :group_path, :user_actions, :group_actions
 
     def initialize
-      #@config_file = "{YOUR_DIRECTORY}/config/google_apps.yml"
       config_file = "#{Rails.root}/config/google_apps.yml"
 
       if File.exist?(config_file)
