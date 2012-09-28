@@ -120,15 +120,7 @@ module RubyProvisioningApi
       # If group is present, this is an update
       update = Group.present?(group_id)
       # Creating the XML request
-      builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
-        xml.send(:'atom:entry', 'xmlns:atom' => 'http://www.w3.org/2005/Atom', 'xmlns:apps' => 'http://schemas.google.com/apps/2006') {
-          xml.send(:'atom:category', 'scheme' => 'http://schemas.google.com/g/2005#kind', 'term' => 'http://schemas.google.com/apps/2006#emailList')
-          xml.send(:'apps:property', 'name' => 'groupId', 'value' => group_id) if update
-          xml.send(:'apps:property', 'name' => 'groupName', 'value' => group_name)
-          xml.send(:'apps:property', 'name' => 'description', 'value' => description)
-          xml.send(:'apps:property', 'name' => 'emailPermission', 'value' => email_permission)
-        }
-      end
+      builder = prepare_xml_request(:group_id => group_id , :group_name => group_name, :description => description, :email_permission => email_permission, :update => update)
       if !update
         #Acting on a new object
         # Check if the response contains an error
@@ -246,12 +238,7 @@ module RubyProvisioningApi
     def add_member(member_id)
       user = User.find(member_id)
       # Creating the XML request
-      builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
-        xml.send(:'atom:entry', 'xmlns:atom' => 'http://www.w3.org/2005/Atom', 'xmlns:apps' => 'http://schemas.google.com/apps/2006') {
-          xml.send(:'atom:category', 'scheme' => 'http://schemas.google.com/g/2005#kind', 'term' => 'http://schemas.google.com/apps/2006#emailList')
-          xml.send(:'apps:property', 'name' => 'memberId', 'value' => member_id) 
-        }
-      end
+      builder = prepare_xml_request(:member_id => member_id)
       params = self.class.prepare_params_for(:add_member, "groupId" => group_id)
       # Perform the request & Check if the response contains an error
       self.class.check_response(self.class.perform(params,builder.to_xml))  
@@ -314,12 +301,7 @@ module RubyProvisioningApi
     def add_owner(owner_id)
       user = User.find(owner_id)
       # Creating the XML request
-      builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
-        xml.send(:'atom:entry', 'xmlns:atom' => 'http://www.w3.org/2005/Atom', 'xmlns:apps' => 'http://schemas.google.com/apps/2006') {
-          xml.send(:'atom:category', 'scheme' => 'http://schemas.google.com/g/2005#kind', 'term' => 'http://schemas.google.com/apps/2006#emailList')
-          xml.send(:'apps:property', 'name' => 'email', 'value' => owner_id) 
-        }
-      end
+      builder = prepare_xml_request(:owner_id => owner_id)
       params = self.class.prepare_params_for(:add_owner, "groupId" => group_id )
       # Perform the request & Check if the response contains an error
       self.class.check_response(self.class.perform(params,builder.to_xml))  
@@ -364,6 +346,24 @@ module RubyProvisioningApi
       params = self.class.prepare_params_for(:delete_owner, {"groupId" => group_id, "ownerId" => owner_id} )
       # Perform the request & Check if the response contains an error
       self.class.check_response(self.class.perform(params))       
+    end
+
+    private
+
+    def prepare_xml_request(params = {})
+      Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+        xml.send(:'atom:entry', 'xmlns:atom' => 'http://www.w3.org/2005/Atom', 'xmlns:apps' => 'http://schemas.google.com/apps/2006') {
+          xml.send(:'atom:category', 'scheme' => 'http://schemas.google.com/g/2005#kind', 'term' => 'http://schemas.google.com/apps/2006#emailList')
+          xml.send(:'apps:property', 'name' => 'email', 'value' => params[:owner_id]) if params.has_key? :owner_id
+          xml.send(:'apps:property', 'name' => 'memberId', 'value' => params[:member_id]) if params.has_key? :member_id
+
+          xml.send(:'apps:property', 'name' => 'groupId', 'value' => params[:group_id]) if ( params.has_key? :group_id && params[:update] )
+          xml.send(:'apps:property', 'name' => 'groupName', 'value' => params[:group_name]) if params.has_key? :group_name
+          xml.send(:'apps:property', 'name' => 'description', 'value' => params[:description]) if params.has_key? :description
+          xml.send(:'apps:property', 'name' => 'emailPermission', 'value' => params[:email_permission]) if params.has_key? :email_permission
+
+        }
+      end
     end
 
   end
