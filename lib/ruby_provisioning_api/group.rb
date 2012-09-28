@@ -214,12 +214,7 @@ module RubyProvisioningApi
     # @raise [Error] if member(user) does not exist
     #
     def add_member(member_id)
-      user = User.find(member_id)
-      # Creating the XML request
-      builder = prepare_xml_request(:member_id => member_id)
-      params = self.class.prepare_params_for(:add_member, "groupId" => group_id)
-      # Perform the request & Check if the response contains an error
-      self.class.check_response(self.class.perform(params,builder.to_xml))  
+      add_entity("member",member_id) 
     end
 
     # Group membership of a given member
@@ -275,12 +270,7 @@ module RubyProvisioningApi
     # @raise [Error] if owner(user) does not exist
     #       
     def add_owner(owner_id)
-      user = User.find(owner_id)
-      # Creating the XML request
-      builder = prepare_xml_request(:owner_id => owner_id)
-      params = self.class.prepare_params_for(:add_owner, "groupId" => group_id )
-      # Perform the request & Check if the response contains an error
-      self.class.check_response(self.class.perform(params,builder.to_xml))  
+      add_entity("owner",owner_id) 
     end
 
     # Group ownership of a given owner
@@ -336,6 +326,15 @@ module RubyProvisioningApi
         groups << group
       end
       groups
+    end
+
+    def add_entity(entity,entity_id)
+      user = User.find(entity_id)
+      # Creating the XML request
+      builder = prepare_xml_request("#{entity}_id".to_sym => entity_id)
+      params = self.class.prepare_params_for("add_#{entity}".to_sym, "groupId" => group_id )
+      # Perform the request & Check if the response contains an error
+      self.class.check_response(self.class.perform(params,builder.to_xml))  
     end
 
     def delete_entity(entity,entity_id)
