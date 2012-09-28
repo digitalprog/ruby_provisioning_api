@@ -66,7 +66,7 @@ module RubyProvisioningApi
     # @raise [Error] if user does not exist
     #
     def self.find(user_name)
-      params = prepare_params_for(:retrieve, "userName" => userName)
+      params = prepare_params_for(:retrieve, "userName" => user_name)
       response = perform(params)
       check_response(response)
       doc = Nokogiri::XML(response.body)
@@ -108,14 +108,7 @@ module RubyProvisioningApi
       if save_options[:validate]
         return false unless valid?
       end
-      builder = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
-        xml.send(:'atom:entry', 'xmlns:atom' => 'http://www.w3.org/2005/Atom', 'xmlns:apps' => 'http://schemas.google.com/apps/2006') {
-          xml.send(:'atom:category', 'scheme' => 'http://schemas.google.com/g/2005#kind', 'term' => 'http://schemas.google.com/apps/2006#user')
-          xml.send(:'apps:login', 'userName' => user_name, 'password' => '51eea05d46317fadd5cad6787a8f562be90b4446', 'suspended' => suspended)
-          xml.send(:'apps:quota', 'limit' => quota)
-          xml.send(:'apps:name', 'familyName' => family_name, 'givenName' => given_name)
-        }
-      end
+      builder = prepare_xml_request(user_name, suspended, quota, family_name, given_name)
       if User.present?(user_name_was)
         # UPDATING an old record
         params = self.class.prepare_params_for(:update, "userName" => user_name_was)
@@ -271,6 +264,17 @@ module RubyProvisioningApi
       u.given_name = doc.css("apps|name").first.attributes["givenName"].value
       u.quota = doc.css("apps|quota").first.attributes["limit"].value
       u
+    end
+
+    def prepare_xml_request(user_name, suspended, quota, family_name, given_name)
+      Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+        xml.send(:'atom:entry', 'xmlns:atom' => 'http://www.w3.org/2005/Atom', 'xmlns:apps' => 'http://schemas.google.com/apps/2006') {
+          xml.send(:'atom:category', 'scheme' => 'http://schemas.google.com/g/2005#kind', 'term' => 'http://schemas.google.com/apps/2006#user')
+          xml.send(:'apps:login', 'userName' => user_name, 'password' => '51eea05d46317fadd5cad6787a8f562be90b4446', 'suspended' => suspended)
+          xml.send(:'apps:quota', 'limit' => quota)
+          xml.send(:'apps:name', 'familyName' => family_name, 'givenName' => given_name)
+        }
+      end
     end
 
   end
