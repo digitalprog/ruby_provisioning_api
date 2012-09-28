@@ -349,7 +349,6 @@ module RubyProvisioningApi
           xml.send(:'atom:category', 'scheme' => 'http://schemas.google.com/g/2005#kind', 'term' => 'http://schemas.google.com/apps/2006#emailList')
           xml.send(:'apps:property', 'name' => 'email', 'value' => params[:owner_id]) if params.has_key? :owner_id
           xml.send(:'apps:property', 'name' => 'memberId', 'value' => params[:member_id]) if params.has_key? :member_id
-
           xml.send(:'apps:property', 'name' => 'groupId', 'value' => params[:group_id]) if ( params.has_key? :group_id && params[:update] )
           xml.send(:'apps:property', 'name' => 'groupName', 'value' => params[:group_name]) if params.has_key? :group_name
           xml.send(:'apps:property', 'name' => 'description', 'value' => params[:description]) if params.has_key? :description
