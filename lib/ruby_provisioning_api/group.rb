@@ -281,9 +281,7 @@ module RubyProvisioningApi
     # @raise [Error] if member(user) does not exist
     #
     def delete_member(member_id)
-      params = self.class.prepare_params_for(:delete_member, { "groupId" => group_id, "memberId" => member_id })
-      # Perform the request & Check if the response contains an error
-      self.class.check_response(self.class.perform(params)) 
+      delete_entity("member",member_id)   
     end
 
     # Add owner to group 
@@ -343,12 +341,16 @@ module RubyProvisioningApi
     # @raise [Error] if owner(user) does not exist
     #
     def delete_owner(owner_id)
-      params = self.class.prepare_params_for(:delete_owner, {"groupId" => group_id, "ownerId" => owner_id} )
-      # Perform the request & Check if the response contains an error
-      self.class.check_response(self.class.perform(params))       
+      delete_entity("owner",owner_id)   
     end
 
     private
+
+    def delete_entity(entity,entity_id)
+      params = self.class.prepare_params_for("delete_#{entity}".to_sym, { "groupId" => group_id, "#{entity}Id" => entity_id })
+      # Perform the request & Check if the response contains an error
+      self.class.check_response(self.class.perform(params)) 
+    end
 
     def prepare_xml_request(params = {})
       Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
