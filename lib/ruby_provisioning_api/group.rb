@@ -44,18 +44,8 @@ module RubyProvisioningApi
       check_response(response)       
       # Parse the response
       xml = Nokogiri::XML(response.body)
-      # Prepare a Groups array
-      groups = []
-      xml.children.css("entry").each do |entry|
-        group = Group.new
-        GROUP_ATTRIBUTES.each do |attribute_name|
-          group.send("#{attribute_name.underscore}=", entry.css("apps|property[name='#{attribute_name}']").attribute("value").value)
-        end
-        # Fill groups array        
-        groups << group
-      end
       # Return the array of Groups
-      groups
+      groups = parse_group_response(xml)
     end
 
     # Retrieve a group
@@ -207,20 +197,8 @@ module RubyProvisioningApi
       check_response(response)     
       # Parse the response
       xml = Nokogiri::XML(response.body)
-      # Prepare a Groups array
-      groups = []
-      xml.children.css("entry").each do |entry|
-        # Prepare a Group object
-        group = Group.new
-        GROUP_ATTRIBUTES.each do |attribute_name|
-          # Set group attributes
-          group.send("#{attribute_name.underscore}=", entry.css("apps|property[name='#{attribute_name}']").attribute("value").value)
-        end
-        # Fill groups array
-        groups << group
-      end
       # Return the array of Groups
-      groups
+      groups = parse_group_response(xml)
     end
 
     # Add member to group 
@@ -345,6 +323,20 @@ module RubyProvisioningApi
     end
 
     private
+
+    def self.parse_group_response(xml)
+      # Prepare a Groups array
+      groups = []
+      xml.children.css("entry").each do |entry|
+        group = Group.new
+        GROUP_ATTRIBUTES.each do |attribute_name|
+          group.send("#{attribute_name.underscore}=", entry.css("apps|property[name='#{attribute_name}']").attribute("value").value)
+        end
+        # Fill groups array        
+        groups << group
+      end
+      groups
+    end
 
     def delete_entity(entity,entity_id)
       params = self.class.prepare_params_for("delete_#{entity}".to_sym, { "groupId" => group_id, "#{entity}Id" => entity_id })
