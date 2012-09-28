@@ -24,6 +24,15 @@ Or install it yourself as:
 TODO: Write usage instructions here
 http://rdoc.info/github/digitalprog/ruby_provisioning_api/master/frames
 
+## Configuration
+
+TODO: Write configuration example with initializer here
+TODO: Write configuration options
+
+## Changelog
+
+TODO: Write changelog here
+
 ## Contributing
 
 1. Fork it
@@ -31,3 +40,7 @@ http://rdoc.info/github/digitalprog/ruby_provisioning_api/master/frames
 3. Commit your changes (`git commit -am 'Added some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## Authors
+
+This rubygem was developed by Damiano Braga and Davide Targa.
