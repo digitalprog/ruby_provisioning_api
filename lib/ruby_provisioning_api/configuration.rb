@@ -2,11 +2,11 @@ module RubyProvisioningApi
 
   class Configuration
 
-    attr_accessor :config_file, :base_apps_url, :base_path
+    attr_accessor :config_file, :base_apps_url, :base_path, :http_debug
     attr_reader :config, :user_path, :group_path, :user_actions, :group_actions
 
     def initialize
-      config_file = "#{Rails.root}/config/google_apps.yml"
+      config_file = "/home/davide/sites/ruby_provisioning_api/lib/ruby_provisioning_api/config/google_apps.yml"
 
       if File.exist?(config_file)
         @config = YAML.load_file(config_file)
@@ -14,6 +14,7 @@ module RubyProvisioningApi
         raise "RubyProvisioningApi: File #{config_file} not found, maybe you forgot to define it ?"
       end
 
+      @http_debug = false
       @base_apps_url = 'https://apps-apis.google.com'
       @base_path = '/a/feeds'
       @user_path = "/#{@config[:domain]}/user/2.0"

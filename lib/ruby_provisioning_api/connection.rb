@@ -14,8 +14,7 @@ module RubyProvisioningApi
       # TODO: move ca_file option into initializer
       client = Faraday.new(:url => url, :ssl => {:ca_file => '/usr/lib/ssl/certs/ca-certificates.crt'}) do |faraday|
         faraday.request  :url_encoded             # form-encode POST params
-        # TODO :move log level into initializer
-        # faraday.response :logger                  # log requests to STDOUT
+        faraday.response :logger if RubyProvisioningApi.configuration.http_debug # log requests to STDOUT
         faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
       end
     end
