@@ -6,7 +6,7 @@ module RubyProvisioningApi
     attr_reader :config, :user_path, :group_path, :user_actions, :group_actions
 
     def initialize
-      config_file = "#{Rails.root}/config/google_apps.yml"
+      @config_file = "#{Rails.root}/config/google_apps.yml"
 
       if File.exist?(config_file)
         @config = YAML.load_file(config_file)
