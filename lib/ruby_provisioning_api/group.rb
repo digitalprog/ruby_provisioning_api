@@ -198,7 +198,7 @@ module RubyProvisioningApi
       # Parse the response
       xml = Nokogiri::XML(response.body)
       # Return the array of Groups
-      groups = parse_group_response(xml)
+      parse_group_response(xml)
     end
 
     # Add member to group 
