@@ -2,19 +2,6 @@ module RubyProvisioningApi
   
   module Member
 
-    def self.included(base)
-      base.extend(ClassMethods)
-    end
-    # Instance methods here
-
-    
-    module ClassMethods
-      # Class methods here
-    end
-    # def self.find(member_id)
-      # super(member_id)
-    # end
-
     # Retrieve user members for a group
     # @note This method executes a <b>GET</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain/groupId/member[?[start=]&[includeSuspendedUsers=true|false]]</i>
     #
