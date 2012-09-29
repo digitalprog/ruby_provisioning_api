@@ -74,10 +74,10 @@ module RubyProvisioningApi
       entity_ids = []
       Nokogiri::XML(response.body).children.css("entry").each do |entry|
         # If the member is a user
-        name = entry.css("apps|property[name]")
-        if name.first.attributes["value"].value.eql?(entity)
+        entry_details = entry.css("apps|property[name]")
+        if entry_details[0].attributes["value"].value.eql?(entity)
           # Fill the array with the username
-          entity_ids << name.last.attributes["value"].value.split("@")[0]
+          entity_ids << entry_details[1].attributes["value"].value.split("@")[0]
         end
       end
       # Return the array of users ids (members)
