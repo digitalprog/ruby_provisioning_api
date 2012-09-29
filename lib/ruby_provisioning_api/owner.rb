@@ -84,11 +84,10 @@ module RubyProvisioningApi
       params = self.class.prepare_params_for(:owners, "groupId" => group_id)
       response = self.class.perform(params)
       self.class.check_response(response)
-      # Parse the response
-      xml = Nokogiri::XML(response.body)
       # Prepare a User array
       entity_ids = []
-      xml.children.css("entry").each do |entry|
+      # Parse the response
+      Nokogiri::XML(response.body).children.css("entry").each do |entry|
         # If the member is a user
         if entry.css("apps|property[name]")[1].attributes["value"].value.eql?(entity)
           # Fill the array with the username
