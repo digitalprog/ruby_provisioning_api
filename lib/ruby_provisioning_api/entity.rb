@@ -4,10 +4,8 @@ module RubyProvisioningApi
     def perform(action, params = nil)
       connection = RubyProvisioningApi.connection
       client = connection.client(RubyProvisioningApi.configuration.base_apps_url)
-      method = action[:method]
-      url = action[:url]
 
-      response = client.send(action[:method].downcase) do |req|
+      client.send(action[:method].downcase) do |req|
         req.url "#{RubyProvisioningApi.configuration.base_apps_url}#{RubyProvisioningApi.configuration.base_path}#{action[:url]}"
         req.headers['Content-Type'] = 'application/atom+xml'
         req.headers['Authorization'] = "GoogleLogin auth=#{connection.token}"
@@ -22,7 +20,6 @@ module RubyProvisioningApi
     def check_response(response)
       if (400..600).include?(response.status)
         xml = Nokogiri::XML(response.body)
-        error_code = xml.xpath('//error').first.attributes["errorCode"].value
         error_description = xml.xpath('//error').first.attributes["reason"].value
         RubyProvisioningApi.const_set(error_description, Class.new(RubyProvisioningApi::Error)) unless RubyProvisioningApi.const_defined? error_description
         raise "RubyProvisioningApi::#{error_description}".constantize
