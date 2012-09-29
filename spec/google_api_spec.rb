@@ -20,24 +20,109 @@ describe "Group" do
 
 	end
 
-	it "Finds a group" do
-		# Fake XML response body
-		xml_body = <<-eos
-		<?xml version='1.0' encoding='UTF-8'?>
-		<entry xmlns='http://www.w3.org/2005/Atom' xmlns:apps='http://schemas.google.com/apps/2006'>
-		<id>foo bar</id>
-		<updated>foo bar date</updated>
-		<link rel='self' type='application/atom+xml' href='foo link'/>
-		<link rel='edit' type='application/atom+xml' href='foo link'/>
-		<apps:property name='groupId' value="foo@#{RubyProvisioningApi.configuration.config[:domain]}"/><apps:property name='groupName' value='foo bar'/>
-		<apps:property name='emailPermission' value='Owner'/><apps:property name='permissionPreset' value='Custom'/>
-		<apps:property name='description' value='foo description'/></entry>
-		eos
+	def find_stub
+			# Fake XML response body
+			xml_body = <<-eos
+			<?xml version='1.0' encoding='UTF-8'?>
+			<entry xmlns='http://www.w3.org/2005/Atom' xmlns:apps='http://schemas.google.com/apps/2006'>
+			<id>foo bar</id>
+			<updated>foo bar date</updated>
+			<link rel='self' type='application/atom+xml' href='foo link'/>
+			<link rel='edit' type='application/atom+xml' href='foo link'/>
+			<apps:property name='groupId' value="foo@#{RubyProvisioningApi.configuration.config[:domain]}"/><apps:property name='groupName' value='foo bar'/>
+			<apps:property name='emailPermission' value='Owner'/><apps:property name='permissionPreset' value='Custom'/>
+			<apps:property name='description' value='foo description'/></entry>
+			eos
 
-		stub_request(:get, "https://apps-apis.google.com/a/feeds/group/2.0/#{RubyProvisioningApi.configuration.config[:domain]}/foo").
-			with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Authorization'=>"GoogleLogin auth=#{@token}", 'Content-Type'=>'application/atom+xml', 'User-Agent'=>'Ruby'}).
-			to_return(:status => 200, :body => xml_body, :headers => {})
+			stub_request(:get, "https://apps-apis.google.com/a/feeds/group/2.0/#{RubyProvisioningApi.configuration.config[:domain]}/foo").
+				with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Authorization'=>"GoogleLogin auth=#{@token}", 'Content-Type'=>'application/atom+xml', 'User-Agent'=>'Ruby'}).
+				to_return(:status => 200, :body => xml_body, :headers => {})
+	end
+
+	def all_stub
+	 stub_request(:get, "https://apps-apis.google.com/a/feeds/group/2.0/domain").
+	   with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Authorization'=>"GoogleLogin auth=#{@token}", 'Content-Type'=>'application/atom+xml', 'User-Agent'=>'Ruby'}).
+	   to_return(:status => 200, :body => "", :headers => {})
+	end
+
+	def delete_stub
+	 stub_request(:delete, "https://apps-apis.google.com/a/feeds/group/2.0/domain/foo@domain").
+	 with(:headers => {'Accept'=>'*/*', 'Authorization'=>"GoogleLogin auth=#{@token}", 'Content-Type'=>'application/atom+xml', 'User-Agent'=>'Ruby'}).
+	 to_return(:status => 200, :body => "", :headers => {})
+	end
+
+	def save_stub
+		xml_body = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<atom:entry xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns:apps=\"http://schemas.google.com/apps/2006\">\n  <atom:category scheme=\"http://schemas.google.com/g/2005#kind\" term=\"http://schemas.google.com/apps/2006#emailList\"/>\n  <apps:property name=\"groupName\" value=\"bar\"/>\n  <apps:property name=\"description\" value=\"foo description\"/>\n  <apps:property name=\"emailPermission\" value=\"Owner\"/>\n</atom:entry>\n"
+	 stub_request(:post, "https://apps-apis.google.com/a/feeds/group/2.0/domain").
+	   with(:body => xml_body,
+	        :headers => {'Accept'=>'*/*', 'Authorization'=>"GoogleLogin auth=#{@token}", 'Content-Type'=>'application/atom+xml', 'User-Agent'=>'Ruby'}).
+	   to_return(:status => 200, :body => "", :headers => {})
+	end	
+
+	def update_stub
+		xml_body = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<atom:entry xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns:apps=\"http://schemas.google.com/apps/2006\">\n  <atom:category scheme=\"http://schemas.google.com/g/2005#kind\" term=\"http://schemas.google.com/apps/2006#emailList\"/>\n  <apps:property name=\"groupName\" value=\"new name\"/>\n  <apps:property name=\"description\" value=\"new description\"/>\n  <apps:property name=\"emailPermission\" value=\"Member\"/>\n</atom:entry>\n"
+	 stub_request(:post, "https://apps-apis.google.com/a/feeds/group/2.0/domain").
+	   with(:body => xml_body,
+	        :headers => {'Accept'=>'*/*', 'Authorization'=>"GoogleLogin auth=#{@token}", 'Content-Type'=>'application/atom+xml', 'User-Agent'=>'Ruby'}).
+	   to_return(:status => 200, :body => "", :headers => {})
+	end
+
+	it "Finds a group" do
+		# define stubs
+		find_stub
 		RubyProvisioningApi::Group.find("foo")
 	end
+
+	it "Returns all the groups" do
+		# define stubs
+		all_stub
+		RubyProvisioningApi::Group.all
+	end
+
+	it "Deletes a group" do
+		# define stubs
+		find_stub
+		delete_stub
+		RubyProvisioningApi::Group.find("foo").delete
+	end
+
+	it "Initializes a group" do
+		RubyProvisioningApi::Group.new(:group_id => 'foo', :group_name =>'bar', :description => 'foo description', :email_permission => 'Owner')
+	end
+
+	it "Creates a group" do
+		# define stubs
+		save_stub
+		RubyProvisioningApi::Group.create(:group_id => 'foo', :group_name =>'bar', :description => 'foo description', :email_permission => 'Owner')
+	end
+
+	it "Saves a group" do
+		# define stubs
+		save_stub
+		RubyProvisioningApi::Group.new(:group_id => 'foo', :group_name =>'bar', :description => 'foo description', :email_permission => 'Owner').save
+	end
+
+	it "Finds and Updates a group" do
+		# define stubs
+		find_stub
+		update_stub
+		# Normal update
+		group = RubyProvisioningApi::Group.find("foo")
+		group.description = "new description"
+		group.email_permission = "Member"
+		group.group_name = "new name"
+		group.update
+		# With update_attributes
+		group = RubyProvisioningApi::Group.find("foo")
+		group.update_attributes(:description => "new description", :email_permission => "Member", :group_name => "new name")
+	end
+
+	it "Returns all groups for a given member"
+	it "Adds a member to a group"
+	it "Checks if a group has a specific member"
+	it "Deletes a member"
+	it "Adds an owner to a group"
+	it "Checks if a group has a specific owner"
+	it "Deletes an owner"
 	
 end
