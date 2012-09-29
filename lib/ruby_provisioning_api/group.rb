@@ -353,7 +353,6 @@ module RubyProvisioningApi
           xml.send(:'apps:property', 'name' => 'groupName', 'value' => params[:group_name]) if params.has_key? :group_name
           xml.send(:'apps:property', 'name' => 'description', 'value' => params[:description]) if params.has_key? :description
           xml.send(:'apps:property', 'name' => 'emailPermission', 'value' => params[:email_permission]) if params.has_key? :email_permission
-
         }
       end
     end
