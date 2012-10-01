@@ -1,4 +1,5 @@
 module RubyProvisioningApi
+
   module Entity
 
     def perform(action, params = nil)
@@ -50,4 +51,5 @@ module RubyProvisioningApi
     end
 
   end
+
 end
