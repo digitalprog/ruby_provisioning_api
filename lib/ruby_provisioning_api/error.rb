@@ -21,4 +21,12 @@ module RubyProvisioningApi
 
   end
 
+  class ConfigurationFileMissing < Error
+
+    def initialize(filename)
+      super("RubyProvisioningApi: Configuration file #{filename} not found. Did you forget to define it?")
+    end
+
+  end
+
 end
