@@ -40,7 +40,7 @@ module RubyProvisioningApi
     def prepare_params_for(action, options = {})
       options.stringify_keys!
       params = deep_copy(RubyProvisioningApi.configuration.send("#{self.name.demodulize.underscore}_actions")[action])
-      options.each_pair do |k,v|
+      options.each_pair do |k, v|
         params[:url].gsub!(k, v)
       end
       params
