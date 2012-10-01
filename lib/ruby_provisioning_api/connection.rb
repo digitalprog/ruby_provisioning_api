@@ -13,7 +13,7 @@ module RubyProvisioningApi
     def client(url)
       client_params = { :url => url }
       if RubyProvisioningApi.configuration.ca_file
-        client_params[:ssl] = {:ca_file => RubyProvisioningApi.configuration.ca_file}
+        client_params[:ssl] = {:ca_path => RubyProvisioningApi.configuration.ca_file}
       end
       client = Faraday.new(client_params) do |faraday|
         faraday.request  :url_encoded             # form-encode POST params
