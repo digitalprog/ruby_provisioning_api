@@ -13,7 +13,7 @@ module RubyProvisioningApi
     end
 
     def config_file=(filename = nil)
-      @config_file = filename || "{Rails.root}/config/google_apps.yml"
+      @config_file = filename || "#{Rails.root}/config/google_apps.yml"
       set_attributes
     end
 
