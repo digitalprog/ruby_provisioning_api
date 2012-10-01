@@ -11,7 +11,6 @@ module RubyProvisioningApi
 
     def configure
       yield(configuration)
-      @configuration = RubyProvisioningApi::Configuration.new(configuration.config_file)
     end
 
     def connection
