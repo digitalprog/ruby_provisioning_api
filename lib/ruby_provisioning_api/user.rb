@@ -8,8 +8,8 @@ module RubyProvisioningApi
   #
   class User
     extend Entity
-    extend Member
-    extend Owner
+    include Member
+    include Owner
 
     include ActiveModel::Validations
     include ActiveModel::Dirty
@@ -245,7 +245,7 @@ module RubyProvisioningApi
     # @raise [Error] if group_id does not exist
     #
     def is_member_of?(group_id)
-      params = self.class.prepare_params_for(:group_id, {"groupId" => group_id, "memberId" => user_name} )
+      params = self.class.prepare_params_for(:member_of, {"groupId" => group_id, "memberId" => user_name} )
       begin
         self.class.check_response(self.class.perform(params))
       rescue
