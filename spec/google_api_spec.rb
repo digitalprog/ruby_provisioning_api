@@ -8,6 +8,8 @@ describe "Group" do
 		FAKE_GROUP_NAME = "foo_name"
 		FAKE_DESCRIPTION = "foo_description"
 		FAKE_EMAIL_PERMISSION = "Owner"
+		FAKE_MEMBER_ID = "foo_member"
+		FAKE_OWNER_ID = "foo_owner"
 
 	before :all do
     RubyProvisioningApi.configure do |config|
@@ -104,6 +106,76 @@ describe "Group" do
 			:response_body => "", :request_body => request_body)	 
 	end	
 
+	def groups_stub(member_id = FAKE_MEMBER_ID, group_id = FAKE_GROUP_ID, group_name = FAKE_GROUP_NAME, description = FAKE_DESCRIPTION, email_permission = FAKE_EMAIL_PERMISSION)
+		response_body = <<-eos
+			<?xml version='1.0' encoding='UTF-8'?>
+			<feed xmlns='http://www.w3.org/2005/Atom' xmlns:openSearch='http://a9.com/-/spec/opensearchrss/1.0/' xmlns:apps='http://schemas.google.com/apps/2006'>
+			<id>foo id</id>
+			<updated>foo date</updated>
+			<link rel='http://schemas.google.com/g/2005#feed' type='application/atom+xml' href='foo link'/>
+			<link rel='http://schemas.google.com/g/2005#post' type='application/atom+xml' href='foo link'/>
+			<link rel='self' type='application/atom+xml' href='foo link'/>
+			<openSearch:startIndex>1</openSearch:startIndex>
+			<entry>
+			<id>fake id</id>
+			<updated>fake date</updated>
+			<link rel='self' type='application/atom+xml' href='foo link'/>
+			<link rel='edit' type='application/atom+xml' href='foo link'/>
+			<apps:property name='groupId' value="#{group_id}@#{RubyProvisioningApi.configuration.config[:domain]}"/>
+			<apps:property name='groupName' value="#{group_name}"/>
+			<apps:property name='emailPermission' value="#{email_permission}"/>
+			<apps:property name='permissionPreset' value='Custom'/>
+			<apps:property name='description' value="#{description}"/>
+			<apps:property name='permissionPreset' value='Custom'/>
+			<apps:property name='directMember' value='true'/>
+			</entry>
+			<entry>
+			<id>fake id2</id>
+			<updated>fake date</updated>
+			<link rel='self' type='application/atom+xml' href='foo link'/>
+			<link rel='edit' type='application/atom+xml' href='foo link'/>
+			<apps:property name='groupId' value="#{group_id}@#{RubyProvisioningApi.configuration.config[:domain]}"/>
+			<apps:property name='groupName' value="#{group_name}"/>
+			<apps:property name='emailPermission' value="#{email_permission}"/>
+			<apps:property name='permissionPreset' value='Custom'/>
+			<apps:property name='description' value="#{description}"/>
+			<apps:property name='permissionPreset' value='Custom'/>
+			<apps:property name='directMember' value='true'/>
+			</entry>
+			</feed> 
+		eos
+		handle_request(:method => :get, 
+			:url => "https://apps-apis.google.com/a/feeds/group/2.0/#{RubyProvisioningApi.configuration.config[:domain]}/?member=#{member_id}", 
+			:response_body => response_body, :request_body => "")	 
+	end
+
+	def add_entity_stub(entity, entity_id, group_id = FAKE_GROUP_ID)
+		request_body = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<atom:entry xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns:apps=\"http://schemas.google.com/apps/2006\">\n  <atom:category scheme=\"http://schemas.google.com/g/2005#kind\" term=\"http://schemas.google.com/apps/2006#emailList\"/>\n  "
+
+		if entity.eql? "member"
+			request_body << "<apps:property name=\"#{entity}Id\" value=\"#{entity_id}\"/>\n</atom:entry>\n"
+		else 
+			request_body << "<apps:property name=\"email\" value=\"#{entity_id}\"/>\n</atom:entry>\n"
+		end
+		handle_request(:method => :post, 
+			:url => "https://apps-apis.google.com/a/feeds/group/2.0/#{RubyProvisioningApi.configuration.config[:domain]}/#{group_id}@#{RubyProvisioningApi.configuration.config[:domain]}/#{entity}", 
+			:response_body => "", :request_body => request_body)	 
+
+
+end
+
+def delete_entity_stub(entity, entity_id, group_id = FAKE_GROUP_ID)
+	handle_request(:method => :delete, 
+		:url => "https://apps-apis.google.com/a/feeds/group/2.0/#{RubyProvisioningApi.configuration.config[:domain]}/#{group_id}@#{RubyProvisioningApi.configuration.config[:domain]}/#{entity}/#{entity_id}", 
+		:response_body => "", :request_body => "")	
+end
+
+def has_entity_stub(entity, entity_id, group_id = FAKE_GROUP_ID)
+	handle_request(:method => :get, 
+	:url => "https://apps-apis.google.com/a/feeds/group/2.0/#{RubyProvisioningApi.configuration.config[:domain]}/#{group_id}@#{RubyProvisioningApi.configuration.config[:domain]}/#{entity}/#{entity_id}", 
+	:response_body => "", :request_body => "")	
+end
+
 	it "Finds a group" do
 		# define stubs
 		find_stub
@@ -156,58 +228,82 @@ end
 		RubyProvisioningApi::Group.new(:group_id => FAKE_GROUP_NAME, :group_name => FAKE_GROUP_NAME, :description => FAKE_DESCRIPTION, :email_permission => FAKE_EMAIL_PERMISSION).save
 	end
 
-# TODO: Finish refactoring and tests
-# 	def update_stub
-# 		xml_body = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<atom:entry xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns:apps=\"http://schemas.google.com/apps/2006\">\n  <atom:category scheme=\"http://schemas.google.com/g/2005#kind\" term=\"http://schemas.google.com/apps/2006#emailList\"/>\n  <apps:property name=\"groupName\" value=\"new name\"/>\n  <apps:property name=\"description\" value=\"new description\"/>\n  <apps:property name=\"emailPermission\" value=\"Member\"/>\n</atom:entry>\n"
-# 	 stub_request(:post, "https://apps-apis.google.com/a/feeds/group/2.0/domain").
-# 	   with(:body => xml_body,
-# 	        :headers => {'Accept'=>'*/*', 'Authorization'=>"GoogleLogin auth=#{@token}", 'Content-Type'=>'application/atom+xml', 'User-Agent'=>'Ruby'}).
-# 	   to_return(:status => 200, :body => "", :headers => {})
-# 	end
+	it "Finds and Updates a group" do
+		# constants
+		NEW_FAKE_DESCRIPTION = "New Description"
+		NEW_FAKE_EMAIL_PERMISSION = "Member"
+		NEW_FAKE_GROUP_NAME = "New Name"
+		# define stubs
+		find_stub
+		save_stub(FAKE_GROUP_ID, NEW_FAKE_GROUP_NAME, NEW_FAKE_DESCRIPTION, NEW_FAKE_EMAIL_PERMISSION)
+		# Normal update
+		group = RubyProvisioningApi::Group.find(FAKE_GROUP_ID)
+		group.description = NEW_FAKE_DESCRIPTION
+		group.email_permission = NEW_FAKE_EMAIL_PERMISSION
+		group.group_name = NEW_FAKE_GROUP_NAME
+		group.update
+		# With update_attributes
+		group = RubyProvisioningApi::Group.find(FAKE_GROUP_ID)
+		group.update_attributes(:description => NEW_FAKE_DESCRIPTION, :email_permission => NEW_FAKE_EMAIL_PERMISSION, :group_name => NEW_FAKE_GROUP_NAME)
+	end
 
-# 	def groups_stub
-# 	stub_request(:get, "https://apps-apis.google.com/a/feeds/group/2.0/domain/?member=foo%20member").
-#          with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Authorization'=>"GoogleLogin auth=#{@token}", 'Content-Type'=>'application/atom+xml', 'User-Agent'=>'Ruby'}).
-#          to_return(:status => 200, :body => "", :headers => {})
-# 	end
+	it "Returns all groups for a given member" do
+		# define constants
+		# define stubs
+		groups_stub
+		groups = RubyProvisioningApi::Group.groups(FAKE_MEMBER_ID)
+		groups.each do |group|
+		# Check values
+			group.group_id.should eql "#{FAKE_GROUP_ID}@#{RubyProvisioningApi.configuration.config[:domain]}"
+			group.group_name.should eql FAKE_GROUP_NAME
+			group.description.should eql FAKE_DESCRIPTION
+			group.email_permission.should eql FAKE_EMAIL_PERMISSION
+		end
+	end
 
-# 	def add_member_stub
-# stub_request(:get, "https://apps-apis.google.com/a/feeds/group/2.0/domain/foo").
-#          with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Authorization'=>"GoogleLogin auth=#{@token}", 'Content-Type'=>'application/atom+xml', 'User-Agent'=>'Ruby'})
-# end
+	it "Adds a member to a group" do
+		# define stubs
+		find_stub
+		add_entity_stub("member",FAKE_MEMBER_ID)
+		RubyProvisioningApi::Group.find(FAKE_GROUP_ID).add_member(FAKE_MEMBER_ID)
+	end
 
-	# it "Finds and Updates a group" do
-	# 	# define stubs
-	# 	find_stub
-	# 	update_stub
-	# 	# Normal update
-	# 	group = RubyProvisioningApi::Group.find("foo")
-	# 	group.description = "new description"
-	# 	group.email_permission = "Member"
-	# 	group.group_name = "new name"
-	# 	group.update
-	# 	# With update_attributes
-	# 	group = RubyProvisioningApi::Group.find("foo")
-	# 	group.update_attributes(:description => "new description", :email_permission => "Member", :group_name => "new name")
-	# end
 
-	# it "Returns all groups for a given member" do
-	# 	# define stubs
-	# 	groups_stub
-	# 	RubyProvisioningApi::Group.groups("foo member")
-	# end
+	it "Checks if a group has a specific member" do
+		# define stubs
+		find_stub
+		has_entity_stub("member",FAKE_MEMBER_ID)
+		RubyProvisioningApi::Group.find(FAKE_GROUP_ID).has_member?(FAKE_MEMBER_ID)
+	end
 
-	# it "Adds a member to a group" do
-	# 	# define stubs
-	# 	find_stub
-	# 	add_member_stub
-	# 	# TODO: Fix
-	# 	# RubyProvisioningApi::Group.find("foo").add_member("bar")
-	# end
-	it "Checks if a group has a specific member"
-	it "Deletes a member"
-	it "Adds an owner to a group"
-	it "Checks if a group has a specific owner"
-	it "Deletes an owner"
+	it "Deletes a member" do
+		# define stubs
+		find_stub
+		delete_entity_stub("member", FAKE_MEMBER_ID)
+		RubyProvisioningApi::Group.find(FAKE_GROUP_ID).delete_member(FAKE_MEMBER_ID)
+	end
+
+
+	it "Adds an owner to a group" do
+		# define stubs
+		find_stub
+		add_entity_stub("owner",FAKE_OWNER_ID)
+		RubyProvisioningApi::Group.find(FAKE_GROUP_ID).add_owner(FAKE_OWNER_ID)
+	end
+
+
+	it "Checks if a group has a specific owner" do
+		# define stubs
+		find_stub
+		has_entity_stub("owner",FAKE_OWNER_ID)
+		RubyProvisioningApi::Group.find(FAKE_GROUP_ID).has_owner?(FAKE_OWNER_ID)
+	end
+
+	it "Deletes an owner" do
+		# define stubs
+		find_stub
+		delete_entity_stub("owner", FAKE_OWNER_ID)
+		RubyProvisioningApi::Group.find(FAKE_GROUP_ID).delete_owner(FAKE_OWNER_ID)
+	end
 	
 end
