@@ -32,7 +32,13 @@ Here a list the parameters of Ruby Provisioning Api gem that can be configured t
 the url to google apps apis (default is: "https://apps-apis.google.com")
 
 ### base_path
+
+the path to append to _base_apps_url_ to the google apps api (default is: "/a/feeds")
+
 ### http_debug
+
+console log level (for development purposes). Logs all http headers, requests and responses if _true_, doesn't log nothing if _false_ (default is false)
+
 ### ca_file
 
 
