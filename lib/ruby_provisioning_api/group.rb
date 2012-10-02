@@ -329,7 +329,7 @@ module RubyProvisioningApi
     end
 
     def add_entity(entity,entity_id)
-      user = User.find(entity_id)
+      # user = User.find(entity_id)
       # Creating the XML request
       builder = prepare_xml_request("#{entity}_id".to_sym => entity_id)
       params = self.class.prepare_params_for("add_#{entity}".to_sym, "groupId" => group_id )
