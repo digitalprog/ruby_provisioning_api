@@ -264,6 +264,7 @@ end
 	it "Adds a member to a group" do
 		# define stubs
 		find_stub
+		find_stub(FAKE_MEMBER_ID)
 		add_entity_stub("member",FAKE_MEMBER_ID)
 		RubyProvisioningApi::Group.find(FAKE_GROUP_ID).add_member(FAKE_MEMBER_ID)
 	end
@@ -287,6 +288,7 @@ end
 	it "Adds an owner to a group" do
 		# define stubs
 		find_stub
+		find_stub(FAKE_OWNER_ID)
 		add_entity_stub("owner",FAKE_OWNER_ID)
 		RubyProvisioningApi::Group.find(FAKE_GROUP_ID).add_owner(FAKE_OWNER_ID)
 	end
