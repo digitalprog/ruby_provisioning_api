@@ -1,5 +1,10 @@
 module RubyProvisioningApi
 
+  # This module defines the entity methods. It is extended by User and Group classes.
+  #
+  # In this module are defined the common operations required by either the Group and User classes.
+  # We extracted this code from these two classes to avoid code duplication.
+  #
   module Entity
 
     def perform(action, params = nil)
