@@ -4,7 +4,6 @@
 
 [Wiki](https://github.com/digitalprog/ruby_provisioning_api/wiki) | [RDocs] (http://rdoc.info/github/digitalprog/ruby_provisioning_api/frames)
 
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -25,6 +24,23 @@ TODO: Write usage instructions here
 http://rdoc.info/github/digitalprog/ruby_provisioning_api/master/frames
 
 ## Configuration
+
+Here a list the parameters of Ruby Provisioning Api gem that can be configured to fit your needs:
+
+### base_apps_url
+
+the url to google apps apis (default is: "https://apps-apis.google.com")
+
+### base_path
+
+the path to append to _base_apps_url_ to the google apps api (default is: "/a/feeds")
+
+### http_debug
+
+console log level (for development purposes). Logs all http headers, requests and responses if _true_, doesn't log nothing if _false_ (default is false)
+
+### ca_file
+
 
 TODO: Write configuration example with initializer here
 TODO: Write configuration options
