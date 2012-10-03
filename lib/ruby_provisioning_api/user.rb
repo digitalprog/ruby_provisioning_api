@@ -1,5 +1,7 @@
 module RubyProvisioningApi
 
+  # The User class describes a user account on google apps
+  #
   # @attr [String] user_name User's username
   # @attr [String] given_name User's first name
   # @attr [String] family_name User's last name
