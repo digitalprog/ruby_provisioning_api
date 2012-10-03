@@ -15,6 +15,9 @@ module RubyProvisioningApi
 
     attr_accessor :group_id, :group_name, :description, :email_permission
 
+    # Group attributes list.
+    # This constant is used to dynamically extract group's attributes from the google API response.
+    #
     GROUP_ATTRIBUTES = ['groupId','groupName','description','emailPermission']
     
     # @param [Hash] params the options to create a Group with.
