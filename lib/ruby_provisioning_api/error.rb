@@ -22,7 +22,7 @@ module RubyProvisioningApi
 
   # Raised when the configuration file (yml) can not be found in the specified path.
   #
-  # @params [String] filename The name or the full path of the file that couldn't be found
+  # @param [String] filename The name or the full path of the file that couldn't be found
   #
   class ConfigurationFileMissing < Error
 
