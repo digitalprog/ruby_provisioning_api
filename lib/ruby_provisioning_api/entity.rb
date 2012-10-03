@@ -28,6 +28,16 @@ module RubyProvisioningApi
       end
     end
 
+    def check_response(response)
+      if response_error? response
+        xml = Nokogiri::XML(response.body)
+        error_description = xml.xpath('//error').first.attributes["reason"].value
+        RubyProvisioningApi.const_set(error_description, Class.new(RubyProvisioningApi::Error)) unless RubyProvisioningApi.const_defined? error_description
+        raise "RubyProvisioningApi::#{error_description}".constantize
+      end
+      true
+    end
+
     # Checks if the response code is an HTTP error code
     #
     # @param [Faraday::Response] response The full HTTP response
@@ -35,16 +45,6 @@ module RubyProvisioningApi
     #
     def response_error?(response)
       (400..600).include?(response.status)
-    end
-
-    def check_response(response)
-      if (400..600).include?(response.status)
-        xml = Nokogiri::XML(response.body)
-        error_description = xml.xpath('//error').first.attributes["reason"].value
-        RubyProvisioningApi.const_set(error_description, Class.new(RubyProvisioningApi::Error)) unless RubyProvisioningApi.const_defined? error_description
-        raise "RubyProvisioningApi::#{error_description}".constantize
-      end
-      true
     end
 
     def present?(id)
