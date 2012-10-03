@@ -18,8 +18,6 @@ module RubyProvisioningApi
     attr_reader :config, :user_path, :group_path, :user_actions, :group_actions, :config_file
     attr_accessor :base_apps_url, :base_path, :http_debug, :ca_file
 
-    #
-    #
     def initialize
       if defined? Rails.root
         @config_file = "{Rails.root}/config/google_apps.yml"

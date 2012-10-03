@@ -7,6 +7,15 @@ module RubyProvisioningApi
   #
   module Entity
 
+    # Performs an http action to google api web services
+    #
+    # @param [Hash] action
+    # @param [String] params Body of the http request (defaults to nil)
+    # @option action [String] :method The http verb to use for the request [GET, POST, PUT, DELETE]
+    # @option action [String] :url The url to use
+    #
+    # @return [Faraday::Response] The response from google apps web services
+    #
     def perform(action, params = nil)
       connection = RubyProvisioningApi.connection
       client = connection.client(RubyProvisioningApi.configuration.base_apps_url)
@@ -19,6 +28,11 @@ module RubyProvisioningApi
       end
     end
 
+    # Checks if the response code is an HTTP error code
+    #
+    # @param [Faraday::Response] response The full HTTP response
+    # @return [Boolean] false if no error occurred, true otherwise
+    #
     def response_error?(response)
       (400..600).include?(response.status)
     end

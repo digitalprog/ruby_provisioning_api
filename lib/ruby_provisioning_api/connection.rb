@@ -16,6 +16,10 @@ module RubyProvisioningApi
       @token = response.body.split("\n").last.split('Auth=').last
     end
 
+    # Manages connections to google apps web services
+    #
+    # @params [String] url The url to connect to
+    #
     def client(url)
       client_params = { :url => url }
       if RubyProvisioningApi.configuration.ca_file
