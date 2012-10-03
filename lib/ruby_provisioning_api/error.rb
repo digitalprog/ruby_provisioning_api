@@ -14,6 +14,8 @@ module RubyProvisioningApi
       @message = message || self.class.to_s.split("::").last.underscore.humanize
     end
 
+    # Overrides Exception#to_s method to output a custom message
+    #
     def to_s
       @message
     end
@@ -22,10 +24,14 @@ module RubyProvisioningApi
 
   # Raised when the configuration file (yml) can not be found in the specified path.
   #
-  # @param [String] filename The name or the full path of the file that couldn't be found
+  # @attr [String] filename The name or the full path of the file that couldn't be found
   #
   class ConfigurationFileMissing < Error
 
+    # ConfigurationFileMissing initializer
+    #
+    # @param [String] filename The name or the full path of the file that couldn't be found
+    #
     def initialize(filename)
       super("RubyProvisioningApi: Configuration file #{filename} not found. Did you forget to define it?")
     end
