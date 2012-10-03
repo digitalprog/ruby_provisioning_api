@@ -19,6 +19,7 @@ module RubyProvisioningApi
     # Manages connections to google apps web services
     #
     # @param [String] url The url to connect to
+    # @return [Faraday::Connection]
     #
     def client(url)
       client_params = { :url => url }

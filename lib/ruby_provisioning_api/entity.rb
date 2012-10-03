@@ -28,6 +28,12 @@ module RubyProvisioningApi
       end
     end
 
+    # Checks the response from google web services
+    #
+    # @param [Faraday::Response] response The response returned by google web services
+    # @return [Boolean] true if no error occurred
+    # @raise [RubyProvisioningApi::Error] if there was an error
+    #
     def check_response(response)
       if response_error? response
         xml = Nokogiri::XML(response.body)
@@ -47,6 +53,11 @@ module RubyProvisioningApi
       (400..600).include?(response.status)
     end
 
+    # Checks if an entity (User or Group) exists
+    #
+    # @param [String] id The id of the entity to check the existence of
+    # @return [Boolean] true if the entity exists, false otherwise
+    #
     def present?(id)
       begin
         self.find(id)
@@ -56,6 +67,19 @@ module RubyProvisioningApi
       end
     end
 
+    # Prepares the parameters for a request to the google provisioning api web service.<br/>
+    # This method takes two arguments:<br/>
+    # - the first argument identifies the action name for the entity (User or Group)
+    # - the second parameter is a Hash with the substitution to apply to the default request url
+    #
+    # @example Preparing parameters to find the user "foo"
+    #   user_name = "foo"
+    #   params = prepare_params_for(:retrieve, "userName" => user_name) # => [Hash]
+    #
+    # @param [Symbol] action The action to prepare params for
+    # @param [Hash] options The substitution to the default url (i.e.: "userName" => user_name)
+    # @return [Hash] The params for the requested operation with the requested substitutions
+    #
     def prepare_params_for(action, options = {})
       options.stringify_keys!
       params = deep_copy(RubyProvisioningApi.configuration.send("#{self.name.demodulize.underscore}_actions")[action])
@@ -65,6 +89,11 @@ module RubyProvisioningApi
       params
     end
 
+    # Deep copy an object
+    #
+    # @param [Object] element The object to copy
+    # @return [Object]
+    #
     def deep_copy(element)
       Marshal.load(Marshal.dump(element))
     end
