@@ -70,7 +70,7 @@ module RubyProvisioningApi
       # Parse the response
       xml = Nokogiri::XML(response.body)
       group = Group.new
-      for attribute_name in ['groupId','groupName','description','emailPermission']
+      GROUP_ATTRIBUTES.each do |attribute_name|
         group.send("#{attribute_name.underscore}=",xml.children.css("entry apps|property[name='#{attribute_name}']").attribute("value").value)
       end
       group
