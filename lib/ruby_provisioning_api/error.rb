@@ -20,6 +20,10 @@ module RubyProvisioningApi
 
   end
 
+  # Raised when the configuration file (yml) can not be found in the specified path.
+  #
+  # @params [String] filename The name or the full path of the file that couldn't be found
+  #
   class ConfigurationFileMissing < Error
 
     def initialize(filename)
@@ -28,6 +32,8 @@ module RubyProvisioningApi
 
   end
 
+  # Raised when the configuration file is not valid (i.e.: missing configuration parameters).
+  #
   class ConfigurationError < Error
 
     def initialize
