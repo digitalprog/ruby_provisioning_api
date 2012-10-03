@@ -1,5 +1,8 @@
 module RubyProvisioningApi
 
+  # The group class describes a google apps group. Every group can have multiple members. Members can be either
+  # users or other groups.
+  #
   # @attr [String] group_id Group identification
   # @attr [String] group_name Group name
   # @attr [String] description Group description
