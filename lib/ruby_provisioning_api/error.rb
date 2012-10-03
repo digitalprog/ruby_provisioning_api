@@ -29,4 +29,11 @@ module RubyProvisioningApi
 
   end
 
+  class ConfigurationError < Error
+
+    def initialize
+      super("RubyProvisioningApi: Configuration file not valid.")
+    end
+
+  end
 end

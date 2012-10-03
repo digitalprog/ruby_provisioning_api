@@ -26,13 +26,39 @@ module RubyProvisioningApi
         @http_debug = false
         @ca_file = nil
 
-        @config = YAML.load_file(config_file)
+        @config = load_configuration(YAML.load_file config_file)
         @user_path = "/#{@config[:domain]}/user/2.0"
         @group_path = "/group/2.0/#{@config[:domain]}"
         @user_actions = default_user_actions
         @group_actions = default_group_actions
       else
         raise RubyProvisioningApi::ConfigurationFileMissing.new(config_file)
+      end
+    end
+
+    def load_configuration(config)
+      cfg = configuration_locator(config)
+      if [:username, :password, :domain].all? { |k| cfg.has_key? k }
+        return cfg
+      else
+        raise RubyProvisioningApi::ConfigurationError.new
+      end
+    end
+
+    def configuration_locator(config)
+      if defined? Rails
+        env = Rails.env.to_sym
+        return rails_configuration_locator(config, env)
+      else
+        return(config)
+      end
+    end
+
+    def rails_configuration_locator(config, env)
+      if config.has_key?(env)
+        config[env]
+      else
+        raise RubyProvisioningApi::ConfigurationError.new
       end
     end
 
