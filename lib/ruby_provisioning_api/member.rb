@@ -1,6 +1,6 @@
 module RubyProvisioningApi
 
-  # This module defines the members methods. It is included in the Group class.
+  # This module defines the group members methods. It is included by the Group class.
   #
   module Member
 

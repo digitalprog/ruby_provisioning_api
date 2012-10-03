@@ -1,5 +1,7 @@
 module RubyProvisioningApi
-  
+
+  # This module defines the group owners methods. It is included by the Group class.
+  #
   module Owner
 
     # Retrieve user owners for a group
