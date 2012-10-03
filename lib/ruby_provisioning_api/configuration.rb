@@ -1,10 +1,25 @@
 module RubyProvisioningApi
 
+  # The Configuration class gives the gem the ability to be configured from the final user.
+  # It exposes some configuration parameters that may change from user to user.
+  #
+  # @attr [Hash] config Current configuration from the config_file
+  # @attr [String] user_path User path of google api web service
+  # @attr [String] group_path Group path of google api web service
+  # @attr [Hash] user_actions Available actions on users
+  # @attr [Hash] group_actions Available actions on groups
+  # @attr [String] config_file Path to the configuration file (yml)
+  # @attr [String] base_apps_url Base url of google apps web services
+  # @attr [String] base_path Base path of google apps web services
+  # @attr [Boolean] http_debug Enable (if true) or disable (if false) http debug messages on console
+  # @attr [String] ca_file Path to the certification authority file
   class Configuration
 
     attr_reader :config, :user_path, :group_path, :user_actions, :group_actions, :config_file
     attr_accessor :base_apps_url, :base_path, :http_debug, :ca_file
 
+    #
+    #
     def initialize
       if defined? Rails.root
         @config_file = "{Rails.root}/config/google_apps.yml"
