@@ -18,7 +18,7 @@ module RubyProvisioningApi
 
     # Manages connections to google apps web services
     #
-    # @params [String] url The url to connect to
+    # @param [String] url The url to connect to
     #
     def client(url)
       client_params = { :url => url }
