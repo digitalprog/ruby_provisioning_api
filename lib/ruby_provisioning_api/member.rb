@@ -1,5 +1,7 @@
 module RubyProvisioningApi
-  
+
+  # This module defines the members methods. It is included in the Group class.
+  #
   module Member
 
     # Retrieve user members for a group
