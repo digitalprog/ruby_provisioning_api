@@ -40,7 +40,7 @@ Typically a basic configuration file would look like this example:
 
 If you use the gem in a traditional Ruby application, you can place this file everywhere you want and tell the gem its location through the [advanced configuration](#advanced-configuration).
 
-In a Ruby on Rails application this file would reside under the `config` directory. The gem by default looks for the `#{Rails.root}/config/google_apps.yml` file but of course you can override this behavior through the [advanced configuration](#advanced-configuration).
+In a Ruby on Rails application this file would reside under the `config` directory. The gem by default looks for the `#{Rails.root}/config/google_apps.yml` file but of course you can override this behavior through the [advanced configuration](#advanced-configuration). Note that in this case the advanced configuration is required to tell the gem where to find the file.
 
 Another options provided inside the Ruby on Rails environment is the ability to use multiple configuration environments like the default Rails' `database.yml` file. Here an example:
 
@@ -64,6 +64,8 @@ production:
 ### Advanced configuration
 
 Here a list the parameters of Ruby Provisioning Api gem that can be configured to fit your needs:
+
+* *config_file*: path to the config file in the file system. This setting defaults to `#{Rails.root}/config/google_apps.yml` if you're using Rails, or `nil` otherwise.
 
 * *base_apps_url*: the url to google apps apis (default is: "https://apps-apis.google.com")
 
