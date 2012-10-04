@@ -2,7 +2,7 @@
 
  [![Build Status](https://secure.travis-ci.org/digitalprog/ruby_provisioning_api.png)](http://travis-ci.org/digitalprog/ruby_provisioning_api) [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/digitalprog/ruby_provisioning_api)
 
-[Wiki](https://github.com/digitalprog/ruby_provisioning_api/wiki) | [RDocs] (http://rdoc.info/github/digitalprog/ruby_provisioning_api/frames)
+[Wiki](https://github.com/digitalprog/ruby_provisioning_api/wiki) | [RDocs](http://rdoc.info/github/digitalprog/ruby_provisioning_api/frames)
 
 ## Installation
 
@@ -18,36 +18,82 @@ Or install it yourself as:
 
     $ gem install ruby_provisioning_api
 
-## Usage
-
-TODO: Write usage instructions here
-http://rdoc.info/github/digitalprog/ruby_provisioning_api/master/frames
-
 ## Configuration
+
+The configuration of Ruby Provisioning Api gem can be achieved in two steps. The first one is mandatory and contains the minimal required configuration for the gem to work. The second one is optional and allows you to tweak some aspects of the gem functionalities.
+
+### Basic configuration (required)
+
+The Ruby Provisioning Api gem looks for a configuration file named `google_apps.yml`. This file must contain the following parameters for the gem to work:
+
+* username: the username to authenticate to google apps
+* password: the password to authenticate to google apps
+* domain: the domain linked to google apps
+
+Typically a basic configuration file would look like this example:
+
+```
+:username: foo
+:password: pa55w0rd
+:domain: foobar.com
+```
+
+If you use the gem in a traditional Ruby application, you can place this file everywhere you want and tell the gem its location through the [advanced configuration](#advanced-configuration).
+
+In a Ruby on Rails application this file would reside under the `config` directory. The gem by default looks for the `#{Rails.root}/config/google_apps.yml` file but of course you can override this behavior through the [advanced configuration](#advanced-configuration). Note that in this case the advanced configuration is required to tell the gem where to find the file.
+
+Another options provided inside the Ruby on Rails environment is the ability to use multiple configuration environments like the default Rails' `database.yml` file. Here an example:
+
+```
+development:
+  :username: dev_foo
+  :password: dev_pa55w0rd
+  :domain: dev.foobar.com
+  
+test:
+  :username: test_foo
+  :password: test_pa55w0rd
+  :domain: test.foobar.com
+
+production:
+  :username: prod_foo
+  :password: prod_pa55w0rd
+  :domain: prod.foobar.com
+```
+
+### Advanced configuration
 
 Here a list the parameters of Ruby Provisioning Api gem that can be configured to fit your needs:
 
-### base_apps_url
+* *config_file*: path to the config file in the file system. This setting defaults to `#{Rails.root}/config/google_apps.yml` if you're using Rails, or `nil` otherwise.
 
-the url to google apps apis (default is: "https://apps-apis.google.com")
+* *base_apps_url*: the url to google apps apis (default is: "https://apps-apis.google.com")
 
-### base_path
+* *base_path*: the path to append to _base_apps_url_ to the google apps api (default is: "/a/feeds")
 
-the path to append to _base_apps_url_ to the google apps api (default is: "/a/feeds")
+* *http_debug*: console log level (for development purposes). Logs all http headers, requests and responses if _true_, doesn't log nothing if _false_ (default is false)
 
-### http_debug
+* *ca_file*: path to the ca file in the file system. This setting is required in case you get a "certificate verify failed" error.
 
-console log level (for development purposes). Logs all http headers, requests and responses if _true_, doesn't log nothing if _false_ (default is false)
+Example:
 
-### ca_file
+```ruby
+RubyProvisioningApi.configure do |config|
+  config.config_file = "/my/custom/path/google_apps.yml"
+  config.ca_file = "/my/custom/path/to/certs"
+  config.http_debug = true
+end
+```
 
+In a Ruby on Rails application you would tipically insert this code into an initializer file and place it inside the `config/initializers` directory.
 
-TODO: Write configuration example with initializer here
-TODO: Write configuration options
+## Usage
 
-## Changelog
+TODO: write usage instructions here
 
-TODO: Write changelog here
+## Documentation
+
+http://rdoc.info/github/digitalprog/ruby_provisioning_api/master/frames
 
 ## Contributing
 
@@ -59,4 +105,4 @@ TODO: Write changelog here
 
 ## Authors
 
-This rubygem was developed by Damiano Braga and Davide Targa.
+This rubygem was developed by [Damiano Braga](http://www.damianobraga.com) and [Davide Targa](http://www.davidetarga.it).
