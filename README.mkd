@@ -25,6 +25,12 @@ http://rdoc.info/github/digitalprog/ruby_provisioning_api/master/frames
 
 ## Configuration
 
+### Basic configuration
+
+
+
+### Advanced configuration
+
 Here a list the parameters of Ruby Provisioning Api gem that can be configured to fit your needs:
 
 * *base_apps_url*: the url to google apps apis (default is: "https://apps-apis.google.com")
