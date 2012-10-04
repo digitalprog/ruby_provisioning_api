@@ -51,14 +51,20 @@ Another options provided inside the Ruby on Rails environment is the ability to 
 
 ```
 development:
-  :username: foo
-  :password: 
+  :username: dev_foo
+  :password: dev_pa55w0rd
+  :domain: dev.foobar.com
+  
 test:
+  :username: test_foo
+  :password: test_pa55w0rd
+  :domain: test.foobar.com
 
 production:
-
+  :username: prod_foo
+  :password: prod_pa55w0rd
+  :domain: prod.foobar.com
 ```
-
 
 ### Advanced configuration
 
