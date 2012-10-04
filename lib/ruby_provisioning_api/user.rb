@@ -243,7 +243,7 @@ module RubyProvisioningApi
     # @raise [Error] if group_id does not exist
     #
     def is_member_of?(group_id)
-      params = self.class.prepare_params_for(:member_of, {"groupId" => group_id, "memberId" => user_name} )
+      params = self.class.prepare_params_for(:member_of, {"groupId" => group_id, "memberId" => user_name})
       begin
         self.class.check_response(self.class.perform(params))
       rescue
@@ -256,22 +256,16 @@ module RubyProvisioningApi
 
     def self.extract_user(doc)
       user = new
-      extract_login(doc, user)
-      extract_name(doc, user)
-      user.quota = doc.css("apps|quota").first.attributes["limit"].value
+      extract_info(doc, user, "login", {:user_name => 'userName', :suspended => 'suspended'})
+      extract_info(doc, user, "name", {:family_name => 'familyName', :given_name => 'givenName'})
+      extract_info(doc, user, "quota", {:quota => 'limit'})
       user
     end
 
-    def self.extract_login(doc, u)
-      login = doc.css("apps|login").first
-      u.user_name = login.attributes["userName"].value
-      u.suspended = login.attributes["suspended"].value
-    end
-
-    def self.extract_name(doc, u)
-      name = doc.css("apps|name").first
-      u.family_name = name.attributes["familyName"].value
-      u.given_name = name.attributes["givenName"].value
+    def self.extract_info(doc, u, location, options)
+      options.each do |k, v|
+        u.send("#{k.to_s}=", doc.css("apps|#{location}").first.attributes[v].value)
+      end
     end
 
     def prepare_xml_request(user_name, suspended, quota, family_name, given_name)
