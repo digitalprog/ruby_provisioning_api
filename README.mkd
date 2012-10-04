@@ -25,7 +25,7 @@ http://rdoc.info/github/digitalprog/ruby_provisioning_api/master/frames
 
 ## Configuration
 
-### Basic configuration
+### Basic configuration (required)
 
 
 
