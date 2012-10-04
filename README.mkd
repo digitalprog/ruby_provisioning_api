@@ -18,10 +18,6 @@ Or install it yourself as:
 
     $ gem install ruby_provisioning_api
 
-## Usage
-
-http://rdoc.info/github/digitalprog/ruby_provisioning_api/master/frames
-
 ## Configuration
 
 The configuration of Ruby Provisioning Api gem can be achieved in two steps. The first one is mandatory and contains the minimal required configuration for the gem to work. The second one is optional and allows you to tweak some aspects of the gem functionalities.
@@ -88,6 +84,10 @@ end
 ```
 
 In a Ruby on Rails application you would tipically insert this code into an initializer file and place it inside the `config/initializers` directory.
+
+## Usage
+
+http://rdoc.info/github/digitalprog/ruby_provisioning_api/master/frames
 
 ## Contributing
 
