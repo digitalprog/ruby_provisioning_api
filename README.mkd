@@ -105,4 +105,4 @@ http://rdoc.info/github/digitalprog/ruby_provisioning_api/master/frames
 
 ## Authors
 
-This rubygem was developed by Damiano Braga and [Davide Targa](http://www.davidetarga.it).
+This rubygem was developed by [Damiano Braga](http://www.damianobraga.com) and [Davide Targa](http://www.davidetarga.it).
