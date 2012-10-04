@@ -256,10 +256,12 @@ module RubyProvisioningApi
 
     def self.extract_user(doc)
       u = new
-      u.user_name = doc.css("apps|login").first.attributes["userName"].value
-      u.suspended = doc.css("apps|login").first.attributes["suspended"].value
-      u.family_name = doc.css("apps|name").first.attributes["familyName"].value
-      u.given_name = doc.css("apps|name").first.attributes["givenName"].value
+      login = doc.css("apps|login").first
+      u.user_name = login.attributes["userName"].value
+      u.suspended = login.attributes["suspended"].value
+      name = doc.css("apps|name").first
+      u.family_name = name.attributes["familyName"].value
+      u.given_name = name.attributes["givenName"].value
       u.quota = doc.css("apps|quota").first.attributes["limit"].value
       u
     end
