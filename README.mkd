@@ -35,9 +35,27 @@ The Ruby Provisioning Api gem looks for a configuration file named `google_apps.
 * password
 * domain
 
-Typically this file would look like this example:
+Typically a basic configuration file would look like this example:
 
 ```
+:username: foo
+:password: pa55w0rd
+:domain: foobar.com
+```
+
+If you use the gem in a traditional Ruby application, you can place this file everywhere you want and tell the gem its location through the advanced configuration.
+
+In a Ruby on Rails application this file would reside under the `config` directory. The gem by default looks for `#{Rails.root}/config/google_apps.yml` but of course you can override this behavior through the advanced configuration.
+
+Another options provided inside the Ruby on Rails environment is the ability to use multiple configuration environments like the default Rails' `database.yml` file. Here an example:
+
+```
+development:
+  :username: foo
+  :password: 
+test:
+
+production:
 
 ```
 
