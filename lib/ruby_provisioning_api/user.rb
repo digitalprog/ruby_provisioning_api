@@ -255,15 +255,23 @@ module RubyProvisioningApi
     private
 
     def self.extract_user(doc)
-      u = new
+      user = new
+      extract_login(doc, user)
+      extract_name(doc, user)
+      user.quota = doc.css("apps|quota").first.attributes["limit"].value
+      user
+    end
+
+    def self.extract_login(doc, u)
       login = doc.css("apps|login").first
       u.user_name = login.attributes["userName"].value
       u.suspended = login.attributes["suspended"].value
+    end
+
+    def self.extract_name(doc, u)
       name = doc.css("apps|name").first
       u.family_name = name.attributes["familyName"].value
       u.given_name = name.attributes["givenName"].value
-      u.quota = doc.css("apps|quota").first.attributes["limit"].value
-      u
     end
 
     def prepare_xml_request(user_name, suspended, quota, family_name, given_name)
