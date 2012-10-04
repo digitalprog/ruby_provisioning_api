@@ -37,7 +37,11 @@ Here a list the parameters of Ruby Provisioning Api gem that can be configured t
 
 ### Example
 
+```ruby
+RubyProvisioningApi.configure do |config|
 
+end
+```
 
 ## Changelog
 
