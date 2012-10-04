@@ -89,6 +89,10 @@ In a Ruby on Rails application you would tipically insert this code into an init
 
 ## Usage
 
+TODO: write usage instructions here
+
+## Documentation
+
 http://rdoc.info/github/digitalprog/ruby_provisioning_api/master/frames
 
 ## Contributing
