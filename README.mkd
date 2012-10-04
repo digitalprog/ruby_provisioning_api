@@ -42,7 +42,7 @@ Typically a basic configuration file would look like this example:
 :domain: foobar.com
 ```
 
-If you use the gem in a traditional Ruby application, you can place this file everywhere you want and tell the gem its location through the advanced configuration.
+If you use the gem in a traditional Ruby application, you can place this file everywhere you want and tell the gem its location through the [advanced configuration](#advanced-configuration).
 
 In a Ruby on Rails application this file would reside under the `config` directory. The gem by default looks for the `#{Rails.root}/config/google_apps.yml` file but of course you can override this behavior through the [advanced configuration](#advanced-configuration).
 
