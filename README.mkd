@@ -40,7 +40,7 @@ the path to append to _base_apps_url_ to the google apps api (default is: "/a/fe
 console log level (for development purposes). Logs all http headers, requests and responses if _true_, doesn't log nothing if _false_ (default is false)
 
 ca_file
-: prova
+: prova console log level (for development purposes). Logs all http headers, requests and responses if _true_, doesn't log nothing if _false_ (default is false)
 
 
 TODO: Write configuration example with initializer here
