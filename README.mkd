@@ -30,9 +30,9 @@ The configuration of Ruby Provisioning Api gem can be achieved in two steps. The
 
 The Ruby Provisioning Api gem looks for a configuration file named `google_apps.yml`. This file must contain the following parameters for the gem to work:
 
-* username
-* password
-* domain
+* username: the username to authenticate to google apps
+* password: the password to authenticate to google apps
+* domain: the domain linked to google apps
 
 Typically a basic configuration file would look like this example:
 
