@@ -39,7 +39,9 @@ Here a list the parameters of Ruby Provisioning Api gem that can be configured t
 
 ```ruby
 RubyProvisioningApi.configure do |config|
-
+  config.config_file = "/my/custom/path/google_apps.yml"
+  config.ca_file = "/my/custom/path/to/certs"
+  config.http_debug = true
 end
 ```
 
