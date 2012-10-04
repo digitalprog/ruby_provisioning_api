@@ -35,7 +35,7 @@ Here a list the parameters of Ruby Provisioning Api gem that can be configured t
 
 * *ca_file*: path to the ca file in the file system. This setting is required in case you get a "certificate verify failed" error.
 
-### Example
+Example:
 
 ```ruby
 RubyProvisioningApi.configure do |config|
