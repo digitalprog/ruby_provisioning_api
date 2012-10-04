@@ -10,8 +10,6 @@ module RubyProvisioningApi
   #
   class User
     extend Entity
-    include Member
-    include Owner
 
     include ActiveModel::Validations
     include ActiveModel::Dirty
