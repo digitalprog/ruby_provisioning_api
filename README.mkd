@@ -25,8 +25,21 @@ http://rdoc.info/github/digitalprog/ruby_provisioning_api/master/frames
 
 ## Configuration
 
+The configuration of Ruby Provisioning Api gem can be achieved in two steps. The first one is mandatory and contains the minimal required configuration for the gem to work. The second one is optional and allows you to tweak some aspects of the gem functionalities.
+
 ### Basic configuration (required)
 
+The Ruby Provisioning Api gem looks for a configuration file named `google_apps.yml`. This file must contain the following parameters for the gem to work:
+
+* username
+* password
+* domain
+
+Typically this file would look like this example:
+
+```
+
+```
 
 
 ### Advanced configuration
