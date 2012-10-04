@@ -98,6 +98,14 @@ module RubyProvisioningApi
       Marshal.load(Marshal.dump(element))
     end
 
+    private
+
+    def perform_and_check_response(params)
+      response = perform(params)
+      check_response(response)
+      Nokogiri::XML(response.body)
+    end
+
   end
 
 end

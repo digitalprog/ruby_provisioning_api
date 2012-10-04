@@ -67,9 +67,7 @@ module RubyProvisioningApi
     #
     def self.find(user_name)
       params = prepare_params_for(:retrieve, "userName" => user_name)
-      response = perform(params)
-      check_response(response)
-      doc = Nokogiri::XML(response.body)
+      doc = perform_and_check_response(params)
       extract_user(doc)
     end
 

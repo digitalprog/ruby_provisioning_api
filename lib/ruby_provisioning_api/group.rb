@@ -198,13 +198,8 @@ module RubyProvisioningApi
     #
     def self.groups(member_id)
       params = prepare_params_for(:retrieve_groups, "memberId" => member_id)
-      response = perform(params)
-      # Perform the request & Check if the response contains an error
-      check_response(response)     
-      # Parse the response
-      xml = Nokogiri::XML(response.body)
-      # Return the array of Groups
-      parse_group_response(xml)
+      doc = perform_and_check_response(params)
+      parse_group_response(doc)
     end
 
     # Add member to group 
