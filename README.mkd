@@ -90,10 +90,6 @@ end
 
 In a Ruby on Rails application you would tipically insert this code into an initializer file and place it inside the `config/initializers` directory.
 
-## Changelog
-
-TODO: Write changelog here
-
 ## Contributing
 
 1. Fork it
