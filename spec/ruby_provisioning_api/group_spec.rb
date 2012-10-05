@@ -259,100 +259,99 @@ describe "Group" do
 
   it "should initialize a group with a step-by-step initialization"
 
-end
 
-it "Creates a group" do
-  # define stubs
-  save_stub
-  # Exec the api call
-  RubyProvisioningApi::Group.create(:group_id => FAKE_GROUP_NAME, :group_name => FAKE_GROUP_NAME, :description => FAKE_DESCRIPTION, :email_permission => FAKE_EMAIL_PERMISSION)
-end
-
-it "Saves a group" do
-  # define stubs
-  save_stub
-  # Exec the api call
-  RubyProvisioningApi::Group.new(:group_id => FAKE_GROUP_NAME, :group_name => FAKE_GROUP_NAME, :description => FAKE_DESCRIPTION, :email_permission => FAKE_EMAIL_PERMISSION).save
-end
-
-it "Finds and Updates a group" do
-  # constants
-  NEW_FAKE_DESCRIPTION = "New Description"
-  NEW_FAKE_EMAIL_PERMISSION = "Member"
-  NEW_FAKE_GROUP_NAME = "New Name"
-  # define stubs
-  find_stub
-  save_stub(FAKE_GROUP_ID, NEW_FAKE_GROUP_NAME, NEW_FAKE_DESCRIPTION, NEW_FAKE_EMAIL_PERMISSION)
-  # Normal update
-  group = RubyProvisioningApi::Group.find(FAKE_GROUP_ID)
-  group.description = NEW_FAKE_DESCRIPTION
-  group.email_permission = NEW_FAKE_EMAIL_PERMISSION
-  group.group_name = NEW_FAKE_GROUP_NAME
-  group.update
-  # With update_attributes
-  group = RubyProvisioningApi::Group.find(FAKE_GROUP_ID)
-  group.update_attributes(:description => NEW_FAKE_DESCRIPTION, :email_permission => NEW_FAKE_EMAIL_PERMISSION, :group_name => NEW_FAKE_GROUP_NAME)
-end
-
-it "Returns all groups for a given member" do
-  # define constants
-  # define stubs
-  groups_stub
-  groups = RubyProvisioningApi::Group.groups(FAKE_MEMBER_ID)
-  groups.each do |group|
-    # Check values
-    group.group_id.should eql "#{FAKE_GROUP_ID}@#{RubyProvisioningApi.configuration.config[:domain]}"
-    group.group_name.should eql FAKE_GROUP_NAME
-    group.description.should eql FAKE_DESCRIPTION
-    group.email_permission.should eql FAKE_EMAIL_PERMISSION
+  it "Creates a group" do
+    # define stubs
+    save_stub
+    # Exec the api call
+    RubyProvisioningApi::Group.create(:group_id => FAKE_GROUP_NAME, :group_name => FAKE_GROUP_NAME, :description => FAKE_DESCRIPTION, :email_permission => FAKE_EMAIL_PERMISSION)
   end
-end
 
-it "Adds a member to a group" do
-  # define stubs
-  find_stub
-  find_stub(FAKE_MEMBER_ID)
-  add_entity_stub("member", FAKE_MEMBER_ID)
-  RubyProvisioningApi::Group.find(FAKE_GROUP_ID).add_member(FAKE_MEMBER_ID)
-end
+  it "Saves a group" do
+    # define stubs
+    save_stub
+    # Exec the api call
+    RubyProvisioningApi::Group.new(:group_id => FAKE_GROUP_NAME, :group_name => FAKE_GROUP_NAME, :description => FAKE_DESCRIPTION, :email_permission => FAKE_EMAIL_PERMISSION).save
+  end
+
+  it "Finds and Updates a group" do
+    # constants
+    NEW_FAKE_DESCRIPTION = "New Description"
+    NEW_FAKE_EMAIL_PERMISSION = "Member"
+    NEW_FAKE_GROUP_NAME = "New Name"
+    # define stubs
+    find_stub
+    save_stub(FAKE_GROUP_ID, NEW_FAKE_GROUP_NAME, NEW_FAKE_DESCRIPTION, NEW_FAKE_EMAIL_PERMISSION)
+    # Normal update
+    group = RubyProvisioningApi::Group.find(FAKE_GROUP_ID)
+    group.description = NEW_FAKE_DESCRIPTION
+    group.email_permission = NEW_FAKE_EMAIL_PERMISSION
+    group.group_name = NEW_FAKE_GROUP_NAME
+    group.update
+    # With update_attributes
+    group = RubyProvisioningApi::Group.find(FAKE_GROUP_ID)
+    group.update_attributes(:description => NEW_FAKE_DESCRIPTION, :email_permission => NEW_FAKE_EMAIL_PERMISSION, :group_name => NEW_FAKE_GROUP_NAME)
+  end
+
+  it "Returns all groups for a given member" do
+    # define constants
+    # define stubs
+    groups_stub
+    groups = RubyProvisioningApi::Group.groups(FAKE_MEMBER_ID)
+    groups.each do |group|
+      # Check values
+      group.group_id.should eql "#{FAKE_GROUP_ID}@#{RubyProvisioningApi.configuration.config[:domain]}"
+      group.group_name.should eql FAKE_GROUP_NAME
+      group.description.should eql FAKE_DESCRIPTION
+      group.email_permission.should eql FAKE_EMAIL_PERMISSION
+    end
+  end
+
+  it "Adds a member to a group" do
+    # define stubs
+    find_stub
+    find_stub(FAKE_MEMBER_ID)
+    add_entity_stub("member", FAKE_MEMBER_ID)
+    RubyProvisioningApi::Group.find(FAKE_GROUP_ID).add_member(FAKE_MEMBER_ID)
+  end
 
 
-it "Checks if a group has a specific member" do
-  # define stubs
-  find_stub
-  has_entity_stub("member", FAKE_MEMBER_ID)
-  RubyProvisioningApi::Group.find(FAKE_GROUP_ID).has_member?(FAKE_MEMBER_ID)
-end
+  it "Checks if a group has a specific member" do
+    # define stubs
+    find_stub
+    has_entity_stub("member", FAKE_MEMBER_ID)
+    RubyProvisioningApi::Group.find(FAKE_GROUP_ID).has_member?(FAKE_MEMBER_ID)
+  end
 
-it "Deletes a member" do
-  # define stubs
-  find_stub
-  delete_entity_stub("member", FAKE_MEMBER_ID)
-  RubyProvisioningApi::Group.find(FAKE_GROUP_ID).delete_member(FAKE_MEMBER_ID)
-end
-
-
-it "Adds an owner to a group" do
-  # define stubs
-  find_stub
-  find_stub(FAKE_OWNER_ID)
-  add_entity_stub("owner", FAKE_OWNER_ID)
-  RubyProvisioningApi::Group.find(FAKE_GROUP_ID).add_owner(FAKE_OWNER_ID)
-end
+  it "Deletes a member" do
+    # define stubs
+    find_stub
+    delete_entity_stub("member", FAKE_MEMBER_ID)
+    RubyProvisioningApi::Group.find(FAKE_GROUP_ID).delete_member(FAKE_MEMBER_ID)
+  end
 
 
-it "Checks if a group has a specific owner" do
-  # define stubs
-  find_stub
-  has_entity_stub("owner", FAKE_OWNER_ID)
-  RubyProvisioningApi::Group.find(FAKE_GROUP_ID).has_owner?(FAKE_OWNER_ID)
-end
+  it "Adds an owner to a group" do
+    # define stubs
+    find_stub
+    find_stub(FAKE_OWNER_ID)
+    add_entity_stub("owner", FAKE_OWNER_ID)
+    RubyProvisioningApi::Group.find(FAKE_GROUP_ID).add_owner(FAKE_OWNER_ID)
+  end
 
-it "Deletes an owner" do
-  # define stubs
-  find_stub
-  delete_entity_stub("owner", FAKE_OWNER_ID)
-  RubyProvisioningApi::Group.find(FAKE_GROUP_ID).delete_owner(FAKE_OWNER_ID)
-end
+
+  it "Checks if a group has a specific owner" do
+    # define stubs
+    find_stub
+    has_entity_stub("owner", FAKE_OWNER_ID)
+    RubyProvisioningApi::Group.find(FAKE_GROUP_ID).has_owner?(FAKE_OWNER_ID)
+  end
+
+  it "Deletes an owner" do
+    # define stubs
+    find_stub
+    delete_entity_stub("owner", FAKE_OWNER_ID)
+    RubyProvisioningApi::Group.find(FAKE_GROUP_ID).delete_owner(FAKE_OWNER_ID)
+  end
 
 end
