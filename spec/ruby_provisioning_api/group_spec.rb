@@ -342,39 +342,46 @@ describe RubyProvisioningApi::Group do
 
   end
 
-  describe "#add_member" do
+  context "members" do
 
-    it "should add an existing member to an existing group" do
-      # define stubs
-      find_stub
-      find_stub(FAKE_MEMBER_ID)
-      add_entity_stub("member", FAKE_MEMBER_ID)
-      RubyProvisioningApi::Group.find(FAKE_GROUP_ID).add_member(FAKE_MEMBER_ID)
+    describe "#add_member" do
+
+      it "should add an existing member to an existing group" do
+        # define stubs
+        find_stub
+        find_stub(FAKE_MEMBER_ID)
+        add_entity_stub("member", FAKE_MEMBER_ID)
+        RubyProvisioningApi::Group.find(FAKE_GROUP_ID).add_member(FAKE_MEMBER_ID)
+      end
+
+      it "should raise an exception when trying to add a user to a non existing group"
+
     end
 
-    it "should raise an exception when trying to add a user to a non existing group"
 
-  end
+    describe "#has_member?" do
 
+      it "should return true if the Group has the specified member" do
+        # define stubs
+        find_stub
+        has_entity_stub("member", FAKE_MEMBER_ID)
+        RubyProvisioningApi::Group.find(FAKE_GROUP_ID).has_member?(FAKE_MEMBER_ID)
+      end
 
-  describe "#has_member?" do
+      it "should return false if the Group doesn't contain the specified member"
 
-    it "should return true if the Group has the specified member" do
-      # define stubs
-      find_stub
-      has_entity_stub("member", FAKE_MEMBER_ID)
-      RubyProvisioningApi::Group.find(FAKE_GROUP_ID).has_member?(FAKE_MEMBER_ID)
     end
 
-    it "should return false if the Group doesn't contain the specified member"
+    describe "#delete_member" do
 
-  end
+      it "Deletes a member" do
+        # define stubs
+        find_stub
+        delete_entity_stub("member", FAKE_MEMBER_ID)
+        RubyProvisioningApi::Group.find(FAKE_GROUP_ID).delete_member(FAKE_MEMBER_ID)
+      end
 
-  it "Deletes a member" do
-    # define stubs
-    find_stub
-    delete_entity_stub("member", FAKE_MEMBER_ID)
-    RubyProvisioningApi::Group.find(FAKE_GROUP_ID).delete_member(FAKE_MEMBER_ID)
+    end
   end
 
 
