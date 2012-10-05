@@ -263,70 +263,111 @@ describe RubyProvisioningApi::Group do
 
   describe ".create" do
 
-  #it "should create a group if valid parameters are passed" do
-  #  save_stub
-  #  retval = RubyProvisioningApi::Group.create(:group_id => FAKE_GROUP_NAME, :group_name => FAKE_GROUP_NAME, :description => FAKE_DESCRIPTION, :email_permission => FAKE_EMAIL_PERMISSION)
-  #  retval.should be_eql true
-  #end
+    #it "should create a group if valid parameters are passed" do
+    #  save_stub
+    #  retval = RubyProvisioningApi::Group.create(:group_id => FAKE_GROUP_NAME, :group_name => FAKE_GROUP_NAME, :description => FAKE_DESCRIPTION, :email_permission => FAKE_EMAIL_PERMISSION)
+    #  retval.should be_eql true
+    #end
 
-  it "should not create a group with missing parameters"
+    it "should return false if you try to save an invalid Group"
 
   end
 
-  it "Saves a group" do
-    # define stubs
-    save_stub
-    # Exec the api call
-    RubyProvisioningApi::Group.new(:group_id => FAKE_GROUP_NAME, :group_name => FAKE_GROUP_NAME, :description => FAKE_DESCRIPTION, :email_permission => FAKE_EMAIL_PERMISSION).save
-  end
+  describe "#save" do
 
-  it "Finds and Updates a group" do
-    # constants
-    NEW_FAKE_DESCRIPTION = "New Description"
-    NEW_FAKE_EMAIL_PERMISSION = "Member"
-    NEW_FAKE_GROUP_NAME = "New Name"
-    # define stubs
-    find_stub
-    save_stub(FAKE_GROUP_ID, NEW_FAKE_GROUP_NAME, NEW_FAKE_DESCRIPTION, NEW_FAKE_EMAIL_PERMISSION)
-    # Normal update
-    group = RubyProvisioningApi::Group.find(FAKE_GROUP_ID)
-    group.description = NEW_FAKE_DESCRIPTION
-    group.email_permission = NEW_FAKE_EMAIL_PERMISSION
-    group.group_name = NEW_FAKE_GROUP_NAME
-    group.update
-    # With update_attributes
-    group = RubyProvisioningApi::Group.find(FAKE_GROUP_ID)
-    group.update_attributes(:description => NEW_FAKE_DESCRIPTION, :email_permission => NEW_FAKE_EMAIL_PERMISSION, :group_name => NEW_FAKE_GROUP_NAME)
-  end
-
-  it "Returns all groups for a given member" do
-    # define constants
-    # define stubs
-    groups_stub
-    groups = RubyProvisioningApi::Group.groups(FAKE_MEMBER_ID)
-    groups.each do |group|
-      # Check values
-      group.group_id.should eql "#{FAKE_GROUP_ID}@#{RubyProvisioningApi.configuration.config[:domain]}"
-      group.group_name.should eql FAKE_GROUP_NAME
-      group.description.should eql FAKE_DESCRIPTION
-      group.email_permission.should eql FAKE_EMAIL_PERMISSION
+    before do
+      save_stub
     end
+
+    it "Saves a group" do
+      retval = RubyProvisioningApi::Group.new(:group_id => FAKE_GROUP_NAME, :group_name => FAKE_GROUP_NAME, :description => FAKE_DESCRIPTION, :email_permission => FAKE_EMAIL_PERMISSION).save
+      retval.should be_eql true
+    end
+
+    #it "should return false if you try to save an invalid Group" do
+    #  retval = RubyProvisioningApi::Group.new(:group_id => FAKE_GROUP_NAME, :group_name => FAKE_GROUP_NAME, :description => "").save
+    #  retval.should be_eql false
+    #end
+
   end
 
-  it "Adds a member to a group" do
-    # define stubs
-    find_stub
-    find_stub(FAKE_MEMBER_ID)
-    add_entity_stub("member", FAKE_MEMBER_ID)
-    RubyProvisioningApi::Group.find(FAKE_GROUP_ID).add_member(FAKE_MEMBER_ID)
+  describe "#update_attributes" do
+
+    it "should update a Group" do
+      # constants
+      NEW_FAKE_DESCRIPTION = "New Description"
+      NEW_FAKE_EMAIL_PERMISSION = "Member"
+      NEW_FAKE_GROUP_NAME = "New Name"
+      # define stubs
+      find_stub
+      save_stub(FAKE_GROUP_ID, NEW_FAKE_GROUP_NAME, NEW_FAKE_DESCRIPTION, NEW_FAKE_EMAIL_PERMISSION)
+      # Normal update
+      group = RubyProvisioningApi::Group.find(FAKE_GROUP_ID)
+      group.description = NEW_FAKE_DESCRIPTION
+      group.email_permission = NEW_FAKE_EMAIL_PERMISSION
+      group.group_name = NEW_FAKE_GROUP_NAME
+      group.update
+      # With update_attributes
+      group = RubyProvisioningApi::Group.find(FAKE_GROUP_ID)
+      group.update_attributes(:description => NEW_FAKE_DESCRIPTION, :email_permission => NEW_FAKE_EMAIL_PERMISSION, :group_name => NEW_FAKE_GROUP_NAME)
+    end
+
+    it "should return true if the update succeeded"
+
+  end
+
+  describe ".groups" do
+
+    it "should return all groups for a given member" do
+      # define constants
+      # define stubs
+      groups_stub
+      groups = RubyProvisioningApi::Group.groups(FAKE_MEMBER_ID)
+      groups.each do |group|
+        # Check values
+        group.group_id.should eql "#{FAKE_GROUP_ID}@#{RubyProvisioningApi.configuration.config[:domain]}"
+        group.group_name.should eql FAKE_GROUP_NAME
+        group.description.should eql FAKE_DESCRIPTION
+        group.email_permission.should eql FAKE_EMAIL_PERMISSION
+      end
+    end
+
+    it "should return an empty array if the user isn't member of any Group"
+
+    it "should always return an Array" do
+      groups_stub
+      groups = RubyProvisioningApi::Group.groups(FAKE_MEMBER_ID)
+      groups.should be_kind_of Array
+    end
+
+  end
+
+  describe "#add_member" do
+
+    it "should add an existing member to an existing group" do
+      # define stubs
+      find_stub
+      find_stub(FAKE_MEMBER_ID)
+      add_entity_stub("member", FAKE_MEMBER_ID)
+      RubyProvisioningApi::Group.find(FAKE_GROUP_ID).add_member(FAKE_MEMBER_ID)
+    end
+
+    it "should raise an exception when trying to add a user to a non existing group"
+
   end
 
 
-  it "Checks if a group has a specific member" do
-    # define stubs
-    find_stub
-    has_entity_stub("member", FAKE_MEMBER_ID)
-    RubyProvisioningApi::Group.find(FAKE_GROUP_ID).has_member?(FAKE_MEMBER_ID)
+  describe "#has_member?" do
+
+    it "should return true if the Group has the specified member" do
+      # define stubs
+      find_stub
+      has_entity_stub("member", FAKE_MEMBER_ID)
+      RubyProvisioningApi::Group.find(FAKE_GROUP_ID).has_member?(FAKE_MEMBER_ID)
+    end
+
+    it "should return false if the Group doesn't contain the specified member"
+
   end
 
   it "Deletes a member" do
