@@ -182,42 +182,83 @@ describe "Group" do
                    :response_body => "", :request_body => "")
   end
 
-  it "Finds a group" do
-    # define stubs
-    find_stub
-    # Exec the api call
-    group = RubyProvisioningApi::Group.find(FAKE_GROUP_ID)
-    # Check values
-    group.group_id.should eql "#{FAKE_GROUP_ID}@#{RubyProvisioningApi.configuration.config[:domain]}"
-    group.group_name.should eql FAKE_GROUP_NAME
-    group.description.should eql FAKE_DESCRIPTION
-    group.email_permission.should eql FAKE_EMAIL_PERMISSION
-  end
+  #---------------------------------------------------------------------------------------------------------------------
 
-  it "Returns all the groups" do
-    # define stubs
-    all_stub
-    groups = RubyProvisioningApi::Group.all
-    # Exec the api call
-    groups.each do |group|
+  describe ".find" do
+
+    it "should find an existing group" do
+      # define stubs
+      find_stub
+      # Exec the api call
+      group = RubyProvisioningApi::Group.find(FAKE_GROUP_ID)
       # Check values
-      group.group_id.should eql "#{FAKE_GROUP_ID}@#{RubyProvisioningApi.configuration.config[:domain]}"
-      group.group_name.should eql FAKE_GROUP_NAME
-      group.description.should eql FAKE_DESCRIPTION
-      group.email_permission.should eql FAKE_EMAIL_PERMISSION
+      group.group_id.should be_eql "#{FAKE_GROUP_ID}@#{RubyProvisioningApi.configuration.config[:domain]}"
+      group.group_name.should be_eql FAKE_GROUP_NAME
+      group.description.should be_eql FAKE_DESCRIPTION
+      group.email_permission.should be_eql FAKE_EMAIL_PERMISSION
     end
+
+    it "should raise an exception if the group does not exist"
+
   end
 
-  it "Deletes a group" do
-    # define stubs
-    find_stub
-    delete_stub
-    # Exec the api call
-    RubyProvisioningApi::Group.find(FAKE_GROUP_ID).delete
+  describe ".all" do
+
+    before do
+      all_stub
+      @groups = RubyProvisioningApi::Group.all
+    end
+
+    it "should always return an Array" do
+      @groups.should be_kind_of Array
+    end
+
+    it "should return an empty array if no Group exists"
+
+    it "should return an array of Group" do
+      @groups.each do |group|
+        group.should be_kind_of RubyProvisioningApi::Group
+      end
+    end
+
+    it "should return valid gorups" do
+      @groups.each do |group|
+        group.group_id.should be_eql "#{FAKE_GROUP_ID}@#{RubyProvisioningApi.configuration.config[:domain]}"
+        group.group_name.should be_eql FAKE_GROUP_NAME
+        group.description.should be_eql FAKE_DESCRIPTION
+        group.email_permission.should be_eql FAKE_EMAIL_PERMISSION
+      end
+
+    end
+
   end
 
-  it "Initializes a group" do
-    RubyProvisioningApi::Group.new(:group_id => FAKE_GROUP_NAME, :group_name => FAKE_GROUP_NAME, :description => FAKE_DESCRIPTION, :email_permission => FAKE_EMAIL_PERMISSION)
+  describe ".delete" do
+
+    it "should delete an existing Group" do
+      # define stubs
+      find_stub
+      delete_stub
+      # Exec the api call
+      RubyProvisioningApi::Group.find(FAKE_GROUP_ID).delete.should be_eql true
+    end
+
+    it "should raise an exception if the given group does not exist"
+
+  end
+
+  describe "#new"
+
+  it "should initialize a group if passing a hash of valid parameters" do
+    group = RubyProvisioningApi::Group.new(:group_id => FAKE_GROUP_ID, :group_name => FAKE_GROUP_NAME, :description => FAKE_DESCRIPTION, :email_permission => FAKE_EMAIL_PERMISSION)
+    group.group_id.should be_eql FAKE_GROUP_ID
+    group.group_name.should be_eql FAKE_GROUP_NAME
+    group.description.should be_eql FAKE_DESCRIPTION
+    group.email_permission.should be_eql FAKE_EMAIL_PERMISSION
+  end
+
+  it "should initialize a group with a step-by-step initialization"
+
   end
 
   it "Creates a group" do
