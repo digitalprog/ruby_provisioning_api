@@ -342,12 +342,11 @@ describe RubyProvisioningApi::Group do
 
   end
 
-  context "members" do
+  context "member" do
 
     describe "#add_member" do
 
       it "should add an existing member to an existing group" do
-        # define stubs
         find_stub
         find_stub(FAKE_MEMBER_ID)
         add_entity_stub("member", FAKE_MEMBER_ID)
@@ -358,11 +357,9 @@ describe RubyProvisioningApi::Group do
 
     end
 
-
     describe "#has_member?" do
 
       it "should return true if the Group has the specified member" do
-        # define stubs
         find_stub
         has_entity_stub("member", FAKE_MEMBER_ID)
         RubyProvisioningApi::Group.find(FAKE_GROUP_ID).has_member?(FAKE_MEMBER_ID)
@@ -374,38 +371,59 @@ describe RubyProvisioningApi::Group do
 
     describe "#delete_member" do
 
-      it "Deletes a member" do
-        # define stubs
+      it "should delete a member from a given group" do
         find_stub
         delete_entity_stub("member", FAKE_MEMBER_ID)
         RubyProvisioningApi::Group.find(FAKE_GROUP_ID).delete_member(FAKE_MEMBER_ID)
       end
 
+      it "should raise an exception if the user is not a member of the Group"
+      it "should return true if the operation succeeded"
+
     end
+
   end
 
+  context "owner" do
 
-  it "Adds an owner to a group" do
-    # define stubs
-    find_stub
-    find_stub(FAKE_OWNER_ID)
-    add_entity_stub("owner", FAKE_OWNER_ID)
-    RubyProvisioningApi::Group.find(FAKE_GROUP_ID).add_owner(FAKE_OWNER_ID)
-  end
+    describe "#add_owner" do
 
+      it "should return true if the operation succeeded" do
+        find_stub
+        find_stub(FAKE_OWNER_ID)
+        add_entity_stub("owner", FAKE_OWNER_ID)
+        retval = RubyProvisioningApi::Group.find(FAKE_GROUP_ID).add_owner(FAKE_OWNER_ID)
+        retval.should be_eql true
+      end
 
-  it "Checks if a group has a specific owner" do
-    # define stubs
-    find_stub
-    has_entity_stub("owner", FAKE_OWNER_ID)
-    RubyProvisioningApi::Group.find(FAKE_GROUP_ID).has_owner?(FAKE_OWNER_ID)
-  end
+      it "should raise an exception if the operation fails"
 
-  it "Deletes an owner" do
-    # define stubs
-    find_stub
-    delete_entity_stub("owner", FAKE_OWNER_ID)
-    RubyProvisioningApi::Group.find(FAKE_GROUP_ID).delete_owner(FAKE_OWNER_ID)
+    end
+
+    describe "#has_owner?" do
+
+      it "should return true if the user is one of the owners of the given group" do
+        find_stub
+        has_entity_stub("owner", FAKE_OWNER_ID)
+        RubyProvisioningApi::Group.find(FAKE_GROUP_ID).has_owner?(FAKE_OWNER_ID)
+      end
+
+      it "should return false if the user is not an owner of the group"
+
+    end
+
+    describe "#delete_owner" do
+
+      it "should return true if the operation succeeded" do
+        find_stub
+        delete_entity_stub("owner", FAKE_OWNER_ID)
+        RubyProvisioningApi::Group.find(FAKE_GROUP_ID).delete_owner(FAKE_OWNER_ID)
+      end
+
+      it "should raise an exception if the user is not one of the owners of the given group"
+
+    end
+
   end
 
 end
