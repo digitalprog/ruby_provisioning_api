@@ -198,7 +198,9 @@ describe RubyProvisioningApi::Group do
       group.email_permission.should be_eql FAKE_EMAIL_PERMISSION
     end
 
-    it "should raise an exception if the group does not exist"
+    it "should raise an exception if the group does not exist" do
+      lambda { RubyProvisioningApi::Group.find("This_group_does_not_exist") }.should raise_error
+    end
 
   end
 
