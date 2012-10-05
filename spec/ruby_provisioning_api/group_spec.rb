@@ -247,24 +247,30 @@ describe "Group" do
 
   end
 
-  describe "#new"
+  describe "#new" do
 
-  it "should initialize a group if passing a hash of valid parameters" do
-    group = RubyProvisioningApi::Group.new(:group_id => FAKE_GROUP_ID, :group_name => FAKE_GROUP_NAME, :description => FAKE_DESCRIPTION, :email_permission => FAKE_EMAIL_PERMISSION)
-    group.group_id.should be_eql FAKE_GROUP_ID
-    group.group_name.should be_eql FAKE_GROUP_NAME
-    group.description.should be_eql FAKE_DESCRIPTION
-    group.email_permission.should be_eql FAKE_EMAIL_PERMISSION
+    it "should initialize a group if passing a hash of valid parameters" do
+      group = RubyProvisioningApi::Group.new(:group_id => FAKE_GROUP_ID, :group_name => FAKE_GROUP_NAME, :description => FAKE_DESCRIPTION, :email_permission => FAKE_EMAIL_PERMISSION)
+      group.group_id.should be_eql FAKE_GROUP_ID
+      group.group_name.should be_eql FAKE_GROUP_NAME
+      group.description.should be_eql FAKE_DESCRIPTION
+      group.email_permission.should be_eql FAKE_EMAIL_PERMISSION
+    end
+
+    it "should initialize a group with a step-by-step initialization"
+
   end
 
-  it "should initialize a group with a step-by-step initialization"
+  describe ".create" do
 
+  #it "should create a group if valid parameters are passed" do
+  #  save_stub
+  #  retval = RubyProvisioningApi::Group.create(:group_id => FAKE_GROUP_NAME, :group_name => FAKE_GROUP_NAME, :description => FAKE_DESCRIPTION, :email_permission => FAKE_EMAIL_PERMISSION)
+  #  retval.should be_eql true
+  #end
 
-  it "Creates a group" do
-    # define stubs
-    save_stub
-    # Exec the api call
-    RubyProvisioningApi::Group.create(:group_id => FAKE_GROUP_NAME, :group_name => FAKE_GROUP_NAME, :description => FAKE_DESCRIPTION, :email_permission => FAKE_EMAIL_PERMISSION)
+  it "should not create a group with missing parameters"
+
   end
 
   it "Saves a group" do
