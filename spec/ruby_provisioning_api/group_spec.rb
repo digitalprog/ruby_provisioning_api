@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'webmock/rspec'
 require 'ruby_provisioning_api'
 
-describe "Group" do
+describe RubyProvisioningApi::Group do
 
   FAKE_GROUP_ID = "foo_id"
   FAKE_GROUP_NAME = "foo_name"
