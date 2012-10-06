@@ -74,7 +74,12 @@ module RubyProvisioningApi
       xml = Nokogiri::XML(response.body)
       group = Group.new
       GROUP_ATTRIBUTES.each do |attribute_name|
-        group.send("#{attribute_name.underscore}=",xml.children.css("entry apps|property[name='#{attribute_name}']").attribute("value").value)
+        name = "#{attribute_name.underscore}="
+        value = xml.children.css("entry apps|property[name='#{attribute_name}']").attribute("value").value
+        if name.eql?("group_id=")
+          value = value.split("@").first
+        end
+        group.send(name, value)
       end
       group
     end
