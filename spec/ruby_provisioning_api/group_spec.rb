@@ -101,7 +101,7 @@ describe RubyProvisioningApi::Group do
 
   def delete_stub(group_id = FAKE_GROUP_ID)
     handle_request(:method => :delete,
-                   :url => "https://apps-apis.google.com/a/feeds/group/2.0/#{RubyProvisioningApi.configuration.config[:domain]}/#{group_id}@#{RubyProvisioningApi.configuration.config[:domain]}",
+                   :url => "https://apps-apis.google.com/a/feeds/group/2.0/#{RubyProvisioningApi.configuration.config[:domain]}/#{group_id}",
                    :response_body => "", :request_body => "")
   end
 
@@ -111,6 +111,14 @@ describe RubyProvisioningApi::Group do
                    :url => "https://apps-apis.google.com/a/feeds/group/2.0/#{RubyProvisioningApi.configuration.config[:domain]}",
                    :response_body => "", :request_body => request_body)
   end
+
+  def update_stub(group_id = FAKE_GROUP_ID, group_name = FAKE_GROUP_NAME, description = FAKE_DESCRIPTION, email_permission = FAKE_EMAIL_PERMISSION)
+    request_body = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<atom:entry xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns:apps=\"http://schemas.google.com/apps/2006\">\n  <atom:category scheme=\"http://schemas.google.com/g/2005#kind\" term=\"http://schemas.google.com/apps/2006#emailList\"/>\n  <apps:property name=\"groupName\" value=\"#{group_name}\"/>\n  <apps:property name=\"description\" value=\"#{description}\"/>\n  <apps:property name=\"emailPermission\" value=\"#{email_permission}\"/>\n</atom:entry>\n"
+    handle_request(:method => :put,
+                   :url => "https://apps-apis.google.com/a/feeds/group/2.0/#{RubyProvisioningApi.configuration.config[:domain]}/#{group_id}",
+                   :response_body => "", :request_body => request_body)
+  end
+
 
   def groups_stub(member_id = FAKE_MEMBER_ID, group_id = FAKE_GROUP_ID, group_name = FAKE_GROUP_NAME, description = FAKE_DESCRIPTION, email_permission = FAKE_EMAIL_PERMISSION)
     response_body = <<-eos
@@ -127,7 +135,7 @@ describe RubyProvisioningApi::Group do
 			<updated>fake date</updated>
 			<link rel='self' type='application/atom+xml' href='foo link'/>
 			<link rel='edit' type='application/atom+xml' href='foo link'/>
-			<apps:property name='groupId' value="#{group_id}@#{RubyProvisioningApi.configuration.config[:domain]}"/>
+			<apps:property name='groupId' value="#{group_id}"/>
 			<apps:property name='groupName' value="#{group_name}"/>
 			<apps:property name='emailPermission' value="#{email_permission}"/>
 			<apps:property name='permissionPreset' value='Custom'/>
@@ -140,7 +148,7 @@ describe RubyProvisioningApi::Group do
 			<updated>fake date</updated>
 			<link rel='self' type='application/atom+xml' href='foo link'/>
 			<link rel='edit' type='application/atom+xml' href='foo link'/>
-			<apps:property name='groupId' value="#{group_id}@#{RubyProvisioningApi.configuration.config[:domain]}"/>
+			<apps:property name='groupId' value="#{group_id}"/>
 			<apps:property name='groupName' value="#{group_name}"/>
 			<apps:property name='emailPermission' value="#{email_permission}"/>
 			<apps:property name='permissionPreset' value='Custom'/>
@@ -164,7 +172,7 @@ describe RubyProvisioningApi::Group do
       request_body << "<apps:property name=\"email\" value=\"#{entity_id}\"/>\n</atom:entry>\n"
     end
     handle_request(:method => :post,
-                   :url => "https://apps-apis.google.com/a/feeds/group/2.0/#{RubyProvisioningApi.configuration.config[:domain]}/#{group_id}@#{RubyProvisioningApi.configuration.config[:domain]}/#{entity}",
+                   :url => "https://apps-apis.google.com/a/feeds/group/2.0/#{RubyProvisioningApi.configuration.config[:domain]}/#{group_id}/#{entity}",
                    :response_body => "", :request_body => request_body)
 
 
@@ -172,13 +180,13 @@ describe RubyProvisioningApi::Group do
 
   def delete_entity_stub(entity, entity_id, group_id = FAKE_GROUP_ID)
     handle_request(:method => :delete,
-                   :url => "https://apps-apis.google.com/a/feeds/group/2.0/#{RubyProvisioningApi.configuration.config[:domain]}/#{group_id}@#{RubyProvisioningApi.configuration.config[:domain]}/#{entity}/#{entity_id}",
+                   :url => "https://apps-apis.google.com/a/feeds/group/2.0/#{RubyProvisioningApi.configuration.config[:domain]}/#{group_id}/#{entity}/#{entity_id}",
                    :response_body => "", :request_body => "")
   end
 
   def has_entity_stub(entity, entity_id, group_id = FAKE_GROUP_ID)
     handle_request(:method => :get,
-                   :url => "https://apps-apis.google.com/a/feeds/group/2.0/#{RubyProvisioningApi.configuration.config[:domain]}/#{group_id}@#{RubyProvisioningApi.configuration.config[:domain]}/#{entity}/#{entity_id}",
+                   :url => "https://apps-apis.google.com/a/feeds/group/2.0/#{RubyProvisioningApi.configuration.config[:domain]}/#{group_id}/#{entity}/#{entity_id}",
                    :response_body => "", :request_body => "")
   end
 
@@ -192,7 +200,7 @@ describe RubyProvisioningApi::Group do
       # Exec the api call
       group = RubyProvisioningApi::Group.find(FAKE_GROUP_ID)
       # Check values
-      group.group_id.should be_eql "#{FAKE_GROUP_ID}@#{RubyProvisioningApi.configuration.config[:domain]}"
+      group.group_id.should be_eql FAKE_GROUP_ID
       group.group_name.should be_eql FAKE_GROUP_NAME
       group.description.should be_eql FAKE_DESCRIPTION
       group.email_permission.should be_eql FAKE_EMAIL_PERMISSION
@@ -302,7 +310,7 @@ describe RubyProvisioningApi::Group do
       NEW_FAKE_GROUP_NAME = "New Name"
       # define stubs
       find_stub
-      save_stub(FAKE_GROUP_ID, NEW_FAKE_GROUP_NAME, NEW_FAKE_DESCRIPTION, NEW_FAKE_EMAIL_PERMISSION)
+      update_stub(FAKE_GROUP_ID, NEW_FAKE_GROUP_NAME, NEW_FAKE_DESCRIPTION, NEW_FAKE_EMAIL_PERMISSION)
       # Normal update
       group = RubyProvisioningApi::Group.find(FAKE_GROUP_ID)
       group.description = NEW_FAKE_DESCRIPTION
@@ -327,7 +335,7 @@ describe RubyProvisioningApi::Group do
       groups = RubyProvisioningApi::Group.groups(FAKE_MEMBER_ID)
       groups.each do |group|
         # Check values
-        group.group_id.should eql "#{FAKE_GROUP_ID}@#{RubyProvisioningApi.configuration.config[:domain]}"
+        group.group_id.should eql FAKE_GROUP_ID
         group.group_name.should eql FAKE_GROUP_NAME
         group.description.should eql FAKE_DESCRIPTION
         group.email_permission.should eql FAKE_EMAIL_PERMISSION
