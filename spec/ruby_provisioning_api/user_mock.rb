@@ -99,6 +99,25 @@ class UserMock
                   :headers => {})
   end
 
+  def stub_save(user)
+    xml_request = <<-eof
+    <?xml version='1.0' encoding='UTF-8'?>
+    <entry xmlns='http://www.w3.org/2005/Atom' xmlns:apps='http://schemas.google.com/apps/2006' xmlns:gd='http://schemas.google.com/g/2005'>
+      <id>https://apps-apis.google.com/a/feeds/#{@domain}/user/2.0/#{user.user_name}</id>
+      <updated>1970-01-01T00:00:00.000Z</updated>
+      <category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/apps/2006#user'/>
+      <title type='text'>#{user.user_name}</title>
+      <link rel='self' type='application/atom+xml' href='https://apps-apis.google.com/a/feeds/#{@domain}/user/2.0/#{user.user_name}'/>
+      <link rel='edit' type='application/atom+xml' href='https://apps-apis.google.com/a/feeds/#{@domain}/user/2.0/#{user.user_name}'/>
+      <apps:login userName='#{user.user_name}' suspended='#{user.suspended}' ipWhitelisted='false' admin='false' changePasswordAtNextLogin='false' agreedToTerms='false'/>
+      <apps:quota limit='#{user.quota}'/>
+      <apps:name familyName='#{user.family_name}' givenName='#{user.given_name}'/>
+      <gd:feedLink rel='http://schemas.google.com/apps/2006#user.nicknames' href='https://apps-apis.google.com/a/feeds/#{@domain}/nickname/2.0?username=#{user.user_name}'/>
+      <gd:feedLink rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/#{@domain}/emailList/2.0?recipient=#{user.user_name}%40#{@domain}'/>
+    </entry>
+    eof
+  end
+
   private
 
   def find_user(username)

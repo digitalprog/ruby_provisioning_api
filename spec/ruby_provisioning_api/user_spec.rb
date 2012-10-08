@@ -81,20 +81,19 @@ describe RubyProvisioningApi::User do
 
     before :all do
       @mock.user_list << RubyProvisioningApi::User.new(:user_name => "foobar", :given_name => "Foo", :family_name => "Bar")
+      @mock.stub_find("foobar")
+      @user = RubyProvisioningApi::User.find("foobar")
     end
 
     it "should return the expected user" do
-      @mock.stub_find("foobar")
-      user = RubyProvisioningApi::User.find("foobar")
-      user.user_name.should be_eql("foobar")
-      user.given_name.should be_eql("Foo")
-      user.family_name.should be_eql("Bar")
-      user.suspended.should be_eql("false")
+      @user.user_name.should be_eql("foobar")
+      @user.given_name.should be_eql("Foo")
+      @user.family_name.should be_eql("Bar")
+      @user.suspended.should be_eql("false")
     end
 
     it "should return a RubyProvisioningApi::User object" do
-      user = RubyProvisioningApi::User.find("foobar")
-      user.should be_kind_of(RubyProvisioningApi::User)
+      @user.should be_kind_of(RubyProvisioningApi::User)
     end
 
     it "should raise an exception if the user does not exist" do
@@ -145,6 +144,8 @@ describe RubyProvisioningApi::User do
   end
 
   describe "#save" do
+
+
 
     it "should return true when saving a valid User"
     it "should save a new record if the username does not exist"
