@@ -216,6 +216,7 @@ module RubyProvisioningApi
     def delete
       params = self.class.prepare_params_for(:delete, "userName" => user_name)
       response = self.class.perform(params)
+      check_response(response)
     end
 
     # Returns all the groups which the user is subscribed to
