@@ -4,8 +4,11 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'rake'
-gem 'rspec'
-gem 'factory_girl'
-gem 'webmock'
-gem 'spork', '~> 1.0rc'
-gem 'faker'
+
+group :test do    
+  gem "rspec"
+		gem 'factory_girl'
+		gem 'webmock'
+		gem 'spork', '~> 1.0rc'
+		gem 'faker'  
+end  
