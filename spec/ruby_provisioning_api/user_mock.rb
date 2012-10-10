@@ -100,7 +100,17 @@ class UserMock
   end
 
   def stub_save(user)
-    xml_request = <<-eof
+    xml_request = <<-eos
+<?xml version="1.0" encoding="UTF-8"?>
+<atom:entry xmlns:atom="http://www.w3.org/2005/Atom" xmlns:apps="http://schemas.google.com/apps/2006">
+  <atom:category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/apps/2006#user"/>
+  <apps:login userName="#{user.user_name}" password="51eea05d46317fadd5cad6787a8f562be90b4446" suspended="#{user.suspended}"/>
+  <apps:quota limit="#{user.quota}"/>
+  <apps:name familyName="#{user.family_name}" givenName="#{user.given_name}"/>
+</atom:entry>
+    eos
+
+    xml_response = <<-eos
     <?xml version='1.0' encoding='UTF-8'?>
     <entry xmlns='http://www.w3.org/2005/Atom' xmlns:apps='http://schemas.google.com/apps/2006' xmlns:gd='http://schemas.google.com/g/2005'>
       <id>https://apps-apis.google.com/a/feeds/#{@domain}/user/2.0/#{user.user_name}</id>
@@ -115,7 +125,29 @@ class UserMock
       <gd:feedLink rel='http://schemas.google.com/apps/2006#user.nicknames' href='https://apps-apis.google.com/a/feeds/#{@domain}/nickname/2.0?username=#{user.user_name}'/>
       <gd:feedLink rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/#{@domain}/emailList/2.0?recipient=#{user.user_name}%40#{@domain}'/>
     </entry>
-    eof
+    eos
+
+    fake_user = find_user(user.user_name)
+
+    if fake_user
+      # update
+      WebMock.stub_request(:put, "https://apps-apis.google.com/a/feeds/#{@domain}/user/2.0/#{user.user_name}").
+          with(:headers => {'Accept' => '*/*', 'Authorization' => "GoogleLogin auth=#{@token}", 'Content-Type' => 'application/atom+xml', 'User-Agent' => 'Ruby'},
+               :body => xml_request).
+          to_return(:status => 200,
+                    :body => xml_response,
+                    :headers => {})
+    else
+      # create
+      @user_list << user
+      WebMock.stub_request(:post, "https://apps-apis.google.com/a/feeds/#{@domain}/user/2.0").
+          with(:headers => {'Accept' => '*/*', 'Authorization' => "GoogleLogin auth=#{@token}", 'Content-Type' => 'application/atom+xml', 'User-Agent' => 'Ruby'},
+               :body => xml_request).
+          to_return(:status => 200,
+                    :body => xml_response,
+                    :headers => {})
+    end
+
   end
 
   private

@@ -145,10 +145,23 @@ describe RubyProvisioningApi::User do
 
   describe "#save" do
 
+    before :all do
+      3.times { @mock.user_list << RubyProvisioningApi::User.new(:user_name => Faker::Internet.user_name, :given_name => Faker::Name.first_name, :family_name => Faker::Name.last_name) }
+      @user = RubyProvisioningApi::User.new(:user_name => Faker::Internet.user_name, :given_name => Faker::Name.first_name, :family_name => Faker::Name.last_name)
+      #@mock.stub_save(@user)
+    end
 
+    it "should return true when saving a valid User" do
+      #@user.save.should be_eql(true)
+    end
 
-    it "should return true when saving a valid User"
-    it "should save a new record if the username does not exist"
+    it "should save a new record if the username does not exist" do
+      @mock.stub_all
+      puts RubyProvisioningApi::User.all.length
+      @user.save
+      puts RubyProvisioningApi::User.all.length
+    end
+
     it "should return false when saving a non valid User"
     it "should save an invalid user when passing :validate => false"
     it "should not change the users count when performing an update"
