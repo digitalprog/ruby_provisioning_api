@@ -1,11 +1,7 @@
 require 'spec_helper'
-require 'ruby_provisioning_api/user_mock'
+#require 'ruby_provisioning_api/user_mock'
 
 describe RubyProvisioningApi::User do
-
-  before :all do
-    @mock = UserMock.new
-  end
 
   describe ".new" do
 
@@ -77,104 +73,145 @@ describe RubyProvisioningApi::User do
 
   end
 
+
   describe ".find" do
 
-    before :all do
-      @mock.user_list << RubyProvisioningApi::User.new(:user_name => "foobar", :given_name => "Foo", :family_name => "Bar")
-      @mock.stub_find("foobar")
-      @user = RubyProvisioningApi::User.find("foobar")
+    context "existing user" do
+
+      before :all do
+        VCR.use_cassette "create_and_find_user" do
+          user = RubyProvisioningApi::User.new(:user_name => "foobar", :given_name => "Foo", :family_name => "Bar")
+          user.save
+          @user = RubyProvisioningApi::User.find("foobar")
+        end
+      end
+
+      it "should return the expected user" do
+        @user.user_name.should be_eql("foobar")
+        @user.given_name.should be_eql("Foo")
+        @user.family_name.should be_eql("Bar")
+        @user.suspended.should be_eql("false")
+      end
+
+      it "should return a RubyProvisioningApi::User object" do
+        @user.should be_kind_of(RubyProvisioningApi::User)
+      end
+
     end
 
-    it "should return the expected user" do
-      @user.user_name.should be_eql("foobar")
-      @user.given_name.should be_eql("Foo")
-      @user.family_name.should be_eql("Bar")
-      @user.suspended.should be_eql("false")
-    end
+    context "non existing user" do
 
-    it "should return a RubyProvisioningApi::User object" do
-      @user.should be_kind_of(RubyProvisioningApi::User)
-    end
-
-    it "should raise an exception if the user does not exist" do
-      @mock.stub_find("fake")
-      lambda { RubyProvisioningApi::User.find("fake") }.should raise_error(RubyProvisioningApi::Error, "Entity does not exist")
+      it "should raise an exception if the user does not exist" do
+        VCR.use_cassette "find_non_existing_user" do
+          lambda {
+            RubyProvisioningApi::User.find("ThIsUsErIsNoTvAlId")
+          }.should raise_error(RubyProvisioningApi::Error, "Entity does not exist")
+        end
+      end
     end
 
   end
 
   describe ".all" do
 
-    before :all do
-      @mock.user_list = []
-      3.times { @mock.user_list << RubyProvisioningApi::User.new(:user_name => Faker::Internet.user_name, :given_name => Faker::Name.first_name, :family_name => Faker::Name.last_name) }
-      @mock.stub_all
-      @users = RubyProvisioningApi::User.all
-    end
+    context "with existing users" do
 
-    context "with no existing user" do
-
-      before do
-        @mock.user_list = []
-        @mock.stub_all
-        @users = RubyProvisioningApi::User.all
+      before :all do
+        VCR.use_cassette "find_all_users_with_existing_users" do
+          @users = RubyProvisioningApi::User.all
+        end
       end
 
-      it "should return an empty array" do
-        @users.should be_empty
+      it "should retrieve all the users in the domain" do
+        @users.count.should be_eql(5) # May change depending on vcr files used
+      end
+
+      it "should return an Array" do
         @users.should be_kind_of(Array)
       end
 
-    end
-
-    it "should retrieve all the users in the domain" do
-      @users.count.should be_eql(3)
-    end
-
-    it "should return an Array" do
-      @users.should be_kind_of(Array)
-    end
-
-    it "should return an Array of users" do
-      @users.each do |user|
-        user.should be_kind_of(RubyProvisioningApi::User)
+      it "should return an Array of users" do
+        @users.each do |user|
+          user.should be_kind_of(RubyProvisioningApi::User)
+        end
       end
+
     end
+
+    # TODO: commented out ask Damiano if we can delete all users
+    #context "with no existing users" do
+    #
+    #  before :all do
+    #    VCR.use_cassette "find_all_users_with_no_user" do
+    #      @users = RubyProvisioningApi::User.all.each { |user| user.delete }
+    #      @users = RubyProvisioningApi::User.all
+    #    end
+    #  end
+    #
+    #  it "should return an empty array" do
+    #    @users.should be_empty
+    #    @users.should be_kind_of(Array)
+    #  end
+    #
+    #end
 
   end
 
   describe "#save" do
 
     before :all do
-      3.times { @mock.user_list << RubyProvisioningApi::User.new(:user_name => Faker::Internet.user_name, :given_name => Faker::Name.first_name, :family_name => Faker::Name.last_name) }
       @user = RubyProvisioningApi::User.new(:user_name => Faker::Internet.user_name, :given_name => Faker::Name.first_name, :family_name => Faker::Name.last_name)
-      #@mock.stub_save(@user)
+      @user1 = RubyProvisioningApi::User.new(:user_name => Faker::Internet.user_name, :given_name => Faker::Name.first_name, :family_name => Faker::Name.last_name)
+      @invalid_user = RubyProvisioningApi::User.new(:user_name => Faker::Internet.user_name, :given_name => Faker::Name.first_name)
     end
 
+    # TODO: domain user limit exceeded
     it "should return true when saving a valid User" do
-      #@user.save.should be_eql(true)
+      VCR.use_cassette "save_a_valid_user" do
+        @user.save.should be_eql(true)
+      end
     end
 
-    it "should save a new record if the username does not exist" do
-      @mock.stub_all
-      puts RubyProvisioningApi::User.all.length
-      @user.save
-      puts RubyProvisioningApi::User.all.length
+    it "should save a new record if the username does not exist and return true" do
+      VCR.use_cassette("users_before_save") { @users_before = RubyProvisioningApi::User.all }
+      VCR.use_cassette "save_a_valid_user" do
+        @user1.save.should be_eql(true)
+      end
+      sleep 100
+      VCR.use_cassette("users_after_save") { @users_after = RubyProvisioningApi::User.all }
+      puts @users_before.length
+      puts @users_after.length
+      @users_before.length.should be_eql(@users_after.length - 1)
     end
 
-    it "should return false when saving a non valid User"
-    it "should save an invalid user when passing :validate => false"
-    it "should not change the users count when performing an update"
+    it "should return false when saving a non valid User" do
+      @invalid_user.save.should be_eql(false)
+    end
+
+    it "should not change the users count when performing an update" do
+      VCR.use_cassette "find_user_foo_bar" do
+        @user = RubyProvisioningApi::User.find("foobar")
+      end
+      @user.user_name = "barfoo"
+      @user.given_name = "ooF"
+      @user.family_name = "raB"
+      VCR.use_cassette("users_before_update") { @users_before_update = RubyProvisioningApi::User.all }
+      VCR.use_cassette("update_user_foobar"){ @user.save.should be_eql(true) }
+      VCR.use_cassette("users_after_update") { @users_after_update = RubyProvisioningApi::User.all }
+      @users_after_update.length.should be_eql(@users_before_update.length)
+    end
 
   end
 
-  describe ".create" do
-
-  end
-
-  describe "#update_attributes" do
-
-  end
+#end
+#
+#describe ".create" do
+#
+#end
+#
+#describe "#update_attributes" do
+#
+#end
 
 end
 

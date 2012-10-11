@@ -1,0 +1,120 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Content-Type:
+      - application/atom+xml
+      Authorization:
+      - GoogleLogin auth=DQAAAOUAAADUwnt3UnBbtEPjmLDL-Hxd_Nz7grQUcb_o8Kmb7D-sax15uW0OLJYRPqCHsycIjZ-l0zexzENmOlF66sQtiLCcR5QDRh-P-NX5H5DJjKIAv0cj8D7-lNaCCoq1JPew8nKY3iayb5mgFGc6td_Nneo8CNQdDRF9gkMB5Gq0-KfOJY04Rz5fdrlu6UFMSng0nwFXLCkUHTaDfJs07OwdmxGIyjE70XRJY9SazJNwC8WE-BxuH1qtIA0P6gaYuDvcy_mOOy-Q6zjX5rhqx4AEDRflN42-1d6EjpBLbW4UXlMg-YxCx7jWe-RYwdL5qWyZra4
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/atom+xml; charset=UTF-8
+      Expires:
+      - Thu, 11 Oct 2012 11:54:49 GMT
+      Date:
+      - Thu, 11 Oct 2012 11:54:49 GMT
+      Cache-Control:
+      - private, max-age=0, must-revalidate, no-transform
+      Vary:
+      - Accept, X-GData-Authorization, GData-Version
+      Gdata-Version:
+      - '1.0'
+      Last-Modified:
+      - Thu, 01 Jan 1970 00:00:00 GMT
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      Server:
+      - GSE
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: US-ASCII
+      string: <?xml version='1.0' encoding='UTF-8'?><feed xmlns='http://www.w3.org/2005/Atom'
+        xmlns:openSearch='http://a9.com/-/spec/opensearchrss/1.0/' xmlns:apps='http://schemas.google.com/apps/2006'
+        xmlns:gd='http://schemas.google.com/g/2005'><id>https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0</id><updated>1970-01-01T00:00:00.000Z</updated><category
+        scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/apps/2006#user'/><title
+        type='text'>Users</title><link rel='http://schemas.google.com/g/2005#feed'
+        type='application/atom+xml' href='https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0'/><link
+        rel='http://schemas.google.com/g/2005#post' type='application/atom+xml' href='https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0'/><link
+        rel='self' type='application/atom+xml' href='https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0'/><openSearch:startIndex>1</openSearch:startIndex><entry><id>https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/bboobs</id><updated>1970-01-01T00:00:00.000Z</updated><category
+        scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/apps/2006#user'/><title
+        type='text'>bboobs</title><link rel='self' type='application/atom+xml' href='https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/bboobs'/><link
+        rel='edit' type='application/atom+xml' href='https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/bboobs'/><apps:login
+        userName='bboobs' suspended='false' ipWhitelisted='false' admin='false' changePasswordAtNextLogin='false'
+        agreedToTerms='false'/><apps:quota limit='10240'/><apps:name familyName='eccheccacchio'
+        givenName='mah'/><gd:feedLink rel='http://schemas.google.com/apps/2006#user.nicknames'
+        href='https://apps-apis.google.com/a/feeds/<LOCATION>/nickname/2.0?username=bboobs'/><gd:feedLink
+        rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/<LOCATION>/emailList/2.0?recipient=bboobs%40<LOCATION>'/></entry><entry><id>https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/<USERNAME></id><updated>1970-01-01T00:00:00.000Z</updated><category
+        scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/apps/2006#user'/><title
+        type='text'><USERNAME></title><link rel='self' type='application/atom+xml'
+        href='https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/<USERNAME>'/><link
+        rel='edit' type='application/atom+xml' href='https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/<USERNAME>'/><apps:login
+        userName='<USERNAME>' suspended='false' ipWhitelisted='false' admin='true'
+        changePasswordAtNextLogin='false' agreedToTerms='true'/><apps:quota limit='10240'/><apps:name
+        familyName='braga' givenName='damiano'/><gd:feedLink rel='http://schemas.google.com/apps/2006#user.nicknames'
+        href='https://apps-apis.google.com/a/feeds/<LOCATION>/nickname/2.0?username=<USERNAME>'/><gd:feedLink
+        rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/<LOCATION>/emailList/2.0?recipient=<USERNAME>%40<LOCATION>'/></entry><entry><id>https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/celestino.gaylord</id><updated>1970-01-01T00:00:00.000Z</updated><category
+        scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/apps/2006#user'/><title
+        type='text'>celestino.gaylord</title><link rel='self' type='application/atom+xml'
+        href='https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/celestino.gaylord'/><link
+        rel='edit' type='application/atom+xml' href='https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/celestino.gaylord'/><apps:login
+        userName='celestino.gaylord' suspended='false' ipWhitelisted='false' admin='false'
+        changePasswordAtNextLogin='false' agreedToTerms='false'/><apps:quota limit='10240'/><apps:name
+        familyName='Kautzer' givenName='Keon'/><gd:feedLink rel='http://schemas.google.com/apps/2006#user.nicknames'
+        href='https://apps-apis.google.com/a/feeds/<LOCATION>/nickname/2.0?username=celestino.gaylord'/><gd:feedLink
+        rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/<LOCATION>/emailList/2.0?recipient=celestino.gaylord%40<LOCATION>'/></entry><entry><id>https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/foobar</id><updated>1970-01-01T00:00:00.000Z</updated><category
+        scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/apps/2006#user'/><title
+        type='text'>foobar</title><link rel='self' type='application/atom+xml' href='https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/foobar'/><link
+        rel='edit' type='application/atom+xml' href='https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/foobar'/><apps:login
+        userName='foobar' suspended='false' ipWhitelisted='false' admin='false' changePasswordAtNextLogin='false'
+        agreedToTerms='false'/><apps:quota limit='10240'/><apps:name familyName='Bar'
+        givenName='Foo'/><gd:feedLink rel='http://schemas.google.com/apps/2006#user.nicknames'
+        href='https://apps-apis.google.com/a/feeds/<LOCATION>/nickname/2.0?username=foobar'/><gd:feedLink
+        rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/<LOCATION>/emailList/2.0?recipient=foobar%40<LOCATION>'/></entry><entry><id>https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/paolo</id><updated>1970-01-01T00:00:00.000Z</updated><category
+        scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/apps/2006#user'/><title
+        type='text'>paolo</title><link rel='self' type='application/atom+xml' href='https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/paolo'/><link
+        rel='edit' type='application/atom+xml' href='https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/paolo'/><apps:login
+        userName='paolo' suspended='true' ipWhitelisted='false' admin='false' changePasswordAtNextLogin='false'
+        agreedToTerms='false'/><apps:quota limit='10240'/><apps:name familyName='gay'
+        givenName='ii'/><gd:feedLink rel='http://schemas.google.com/apps/2006#user.nicknames'
+        href='https://apps-apis.google.com/a/feeds/<LOCATION>/nickname/2.0?username=paolo'/><gd:feedLink
+        rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/<LOCATION>/emailList/2.0?recipient=paolo%40<LOCATION>'/></entry><entry><id>https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/robb.oconnell</id><updated>1970-01-01T00:00:00.000Z</updated><category
+        scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/apps/2006#user'/><title
+        type='text'>robb.oconnell</title><link rel='self' type='application/atom+xml'
+        href='https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/robb.oconnell'/><link
+        rel='edit' type='application/atom+xml' href='https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/robb.oconnell'/><apps:login
+        userName='robb.oconnell' suspended='false' ipWhitelisted='false' admin='false'
+        changePasswordAtNextLogin='false' agreedToTerms='false'/><apps:quota limit='10240'/><apps:name
+        familyName='Halvorson' givenName='Johan'/><gd:feedLink rel='http://schemas.google.com/apps/2006#user.nicknames'
+        href='https://apps-apis.google.com/a/feeds/<LOCATION>/nickname/2.0?username=robb.oconnell'/><gd:feedLink
+        rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/<LOCATION>/emailList/2.0?recipient=robb.oconnell%40<LOCATION>'/></entry><entry><id>https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/uuu</id><updated>1970-01-01T00:00:00.000Z</updated><category
+        scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/apps/2006#user'/><title
+        type='text'>uuu</title><link rel='self' type='application/atom+xml' href='https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/uuu'/><link
+        rel='edit' type='application/atom+xml' href='https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/uuu'/><apps:login
+        userName='uuu' suspended='false' ipWhitelisted='false' admin='false' changePasswordAtNextLogin='false'
+        agreedToTerms='false'/><apps:quota limit='10240'/><apps:name familyName='rossi'
+        givenName='jj'/><gd:feedLink rel='http://schemas.google.com/apps/2006#user.nicknames'
+        href='https://apps-apis.google.com/a/feeds/<LOCATION>/nickname/2.0?username=uuu'/><gd:feedLink
+        rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/<LOCATION>/emailList/2.0?recipient=uuu%40<LOCATION>'/></entry></feed>
+    http_version: !!null 
+  recorded_at: Thu, 11 Oct 2012 11:54:48 GMT
+recorded_with: VCR 2.2.5

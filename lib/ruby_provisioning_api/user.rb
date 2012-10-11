@@ -14,10 +14,16 @@ module RubyProvisioningApi
     include ActiveModel::Validations
     include ActiveModel::Dirty
 
-    attr_accessor :user_name, :family_name, :given_name, :suspended, :quota
+    attr_accessor :family_name, :given_name, :suspended, :quota
+    attr_reader :user_name
     alias_method :suspended?, :suspended
     define_attribute_methods [:user_name]
     validates :user_name, :family_name, :given_name, :presence => true
+
+    def user_name=(value)
+      user_name_will_change! unless value == @name
+      @user_name = value
+    end
 
     # @param [Hash] params the options to create a User with.
     # @option params [String] :user_name User identification

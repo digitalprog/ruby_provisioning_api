@@ -11,4 +11,5 @@ group :test do
 		gem 'webmock'
 		gem 'spork', '~> 1.0rc'
 		gem 'faker'  
-end  
+		gem 'vcr'
+end
