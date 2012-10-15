@@ -189,6 +189,7 @@ describe RubyProvisioningApi::User do
 
       before :all do
         VCR.use_cassette("update-find_user_foo_bar") { @foo_bar_before = RubyProvisioningApi::User.find("foobar") }
+        puts @foo_bar_before.inspect
         VCR.use_cassette("update-users_before_update") { @users_before_update = RubyProvisioningApi::User.all }
         @foo_bar_before.user_name = "barfoo"
         @foo_bar_before.given_name = "ooF"
