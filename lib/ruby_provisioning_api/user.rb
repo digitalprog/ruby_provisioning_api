@@ -21,9 +21,7 @@ module RubyProvisioningApi
     validates :user_name, :family_name, :given_name, :presence => true
 
     def user_name=(value)
-      #unless value == @user_name
-        user_name_will_change!
-      #end
+      user_name_will_change! unless value == @user_name
       @user_name = value
     end
 
@@ -115,9 +113,7 @@ module RubyProvisioningApi
         return false unless valid?
       end
       builder = prepare_xml_request(user_name, suspended, quota, family_name, given_name)
-      puts "username was : #{user_name_was} ----"
       if User.present?(user_name_was)
-        puts "updating..."
         # UPDATING an old record
         params = self.class.prepare_params_for(:update, "userName" => user_name_was)
         response = self.class.perform(params, builder.to_xml)
