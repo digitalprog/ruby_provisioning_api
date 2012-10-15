@@ -120,6 +120,7 @@ module RubyProvisioningApi
       builder = prepare_xml_request(user_name, suspended, quota, family_name, given_name)
       puts "username was : #{user_name_was} ----"
       if User.present?(user_name_was)
+        puts "updating..."
         # UPDATING an old record
         params = self.class.prepare_params_for(:update, "userName" => user_name_was)
         response = self.class.perform(params, builder.to_xml)
