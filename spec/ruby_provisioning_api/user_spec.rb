@@ -187,7 +187,7 @@ describe RubyProvisioningApi::User do
 
     context "on update" do
 
-      before do
+      before :all do
         VCR.use_cassette("update-find_user_foo_bar") { @foo_bar_before = RubyProvisioningApi::User.find("foobar") }
         VCR.use_cassette("update-users_before_update") { @users_before_update = RubyProvisioningApi::User.all }
         @foo_bar_before.user_name = "barfoo"
