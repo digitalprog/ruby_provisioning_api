@@ -207,6 +207,9 @@ describe RubyProvisioningApi::User do
         @foo_bar_after.user_name.should be_eql("barfoo")
         @foo_bar_after.given_name.should be_eql("ooF")
         @foo_bar_after.family_name.should be_eql("raB")
+
+        puts @users_before_update.map(&:user_name)
+        puts @users_after_update.map(&:user_name)
       end
 
     end
