@@ -25,9 +25,9 @@ http_interactions:
       Content-Type:
       - application/atom+xml; charset=UTF-8
       Expires:
-      - Thu, 11 Oct 2012 11:56:36 GMT
+      - Mon, 15 Oct 2012 12:10:07 GMT
       Date:
-      - Thu, 11 Oct 2012 11:56:36 GMT
+      - Mon, 15 Oct 2012 12:10:07 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Vary:
@@ -89,7 +89,15 @@ http_interactions:
         changePasswordAtNextLogin='false' agreedToTerms='false'/><apps:quota limit='10240'/><apps:name
         familyName='Kautzer' givenName='Keon'/><gd:feedLink rel='http://schemas.google.com/apps/2006#user.nicknames'
         href='https://apps-apis.google.com/a/feeds/<LOCATION>/nickname/2.0?username=celestino.gaylord'/><gd:feedLink
-        rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/<LOCATION>/emailList/2.0?recipient=celestino.gaylord%40<LOCATION>'/></entry><entry><id>https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/paolo</id><updated>1970-01-01T00:00:00.000Z</updated><category
+        rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/<LOCATION>/emailList/2.0?recipient=celestino.gaylord%40<LOCATION>'/></entry><entry><id>https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/jermaine</id><updated>1970-01-01T00:00:00.000Z</updated><category
+        scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/apps/2006#user'/><title
+        type='text'>jermaine</title><link rel='self' type='application/atom+xml' href='https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/jermaine'/><link
+        rel='edit' type='application/atom+xml' href='https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/jermaine'/><apps:login
+        userName='jermaine' suspended='false' ipWhitelisted='false' admin='false'
+        changePasswordAtNextLogin='false' agreedToTerms='false'/><apps:quota limit='10240'/><apps:name
+        familyName='Harber' givenName='Cyrus'/><gd:feedLink rel='http://schemas.google.com/apps/2006#user.nicknames'
+        href='https://apps-apis.google.com/a/feeds/<LOCATION>/nickname/2.0?username=jermaine'/><gd:feedLink
+        rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/<LOCATION>/emailList/2.0?recipient=jermaine%40<LOCATION>'/></entry><entry><id>https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/paolo</id><updated>1970-01-01T00:00:00.000Z</updated><category
         scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/apps/2006#user'/><title
         type='text'>paolo</title><link rel='self' type='application/atom+xml' href='https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/paolo'/><link
         rel='edit' type='application/atom+xml' href='https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/paolo'/><apps:login
@@ -116,5 +124,5 @@ http_interactions:
         href='https://apps-apis.google.com/a/feeds/<LOCATION>/nickname/2.0?username=uuu'/><gd:feedLink
         rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/<LOCATION>/emailList/2.0?recipient=uuu%40<LOCATION>'/></entry></feed>
     http_version: !!null 
-  recorded_at: Thu, 11 Oct 2012 11:56:36 GMT
+  recorded_at: Mon, 15 Oct 2012 12:10:07 GMT
 recorded_with: VCR 2.2.5

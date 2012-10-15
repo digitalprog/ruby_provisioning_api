@@ -123,7 +123,7 @@ describe RubyProvisioningApi::User do
       end
 
       it "should retrieve all the users in the domain" do
-        @users.count.should be_eql(5) # May change depending on vcr files used
+        @users.count.should be_eql(6) # May change depending on vcr files used
       end
 
       it "should return an Array" do
@@ -142,7 +142,7 @@ describe RubyProvisioningApi::User do
     #context "with no existing users" do
     #
     #  before :all do
-    #    VCR.use_cassette "find_all_users_with_no_user" do
+    #    VCR.use_cassette "delete_all_users_and_find_all" do
     #      @users = RubyProvisioningApi::User.all.each { |user| user.delete }
     #      @users = RubyProvisioningApi::User.all
     #    end
@@ -174,13 +174,10 @@ describe RubyProvisioningApi::User do
 
     it "should save a new record if the username does not exist and return true" do
       VCR.use_cassette("users_before_save") { @users_before = RubyProvisioningApi::User.all }
-      VCR.use_cassette "save_a_valid_user" do
+      VCR.use_cassette "save_a_valid_user_2" do
         @user1.save.should be_eql(true)
       end
-      sleep 100
       VCR.use_cassette("users_after_save") { @users_after = RubyProvisioningApi::User.all }
-      puts @users_before.length
-      puts @users_after.length
       @users_before.length.should be_eql(@users_after.length - 1)
     end
 
@@ -188,17 +185,29 @@ describe RubyProvisioningApi::User do
       @invalid_user.save.should be_eql(false)
     end
 
-    it "should not change the users count when performing an update" do
-      VCR.use_cassette "find_user_foo_bar" do
-        @user = RubyProvisioningApi::User.find("foobar")
+    context "on update" do
+
+      before do
+        VCR.use_cassette("update-find_user_foo_bar") { @foo_bar_before = RubyProvisioningApi::User.find("foobar") }
+        VCR.use_cassette("update-users_before_update") { @users_before_update = RubyProvisioningApi::User.all }
+        @foo_bar_before.user_name = "barfoo"
+        @foo_bar_before.given_name = "ooF"
+        @foo_bar_before.family_name = "raB"
+        VCR.use_cassette("update-update_user_foobar") { @foo_bar_before.save }
+        VCR.use_cassette("update-users_after_update") { @users_after_update = RubyProvisioningApi::User.all }
+        VCR.use_cassette("update-find_user_foo_bar_after_update") { @foo_bar_after = RubyProvisioningApi::User.find("foobar") }
       end
-      @user.user_name = "barfoo"
-      @user.given_name = "ooF"
-      @user.family_name = "raB"
-      VCR.use_cassette("users_before_update") { @users_before_update = RubyProvisioningApi::User.all }
-      VCR.use_cassette("update_user_foobar"){ @user.save.should be_eql(true) }
-      VCR.use_cassette("users_after_update") { @users_after_update = RubyProvisioningApi::User.all }
-      @users_after_update.length.should be_eql(@users_before_update.length)
+
+      it "should not change the users count" do
+        @users_after_update.length.should be_eql(@users_before_update.length)
+      end
+
+      it "should return barfoo when finding foobar" do
+        @foo_bar_after.user_name.should be_eql("barfoo")
+        @foo_bar_after.given_name.should be_eql("ooF")
+        @foo_bar_after.family_name.should be_eql("raB")
+      end
+
     end
 
   end
