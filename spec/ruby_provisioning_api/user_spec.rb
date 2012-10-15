@@ -188,24 +188,14 @@ describe RubyProvisioningApi::User do
     context "on update" do
 
       before :all do
-        VCR.use_cassette("update-find_user_foo_bar") do
-          @foo_bar_before = RubyProvisioningApi::User.find("foobar")
-        end
-        VCR.use_cassette("update-users_before_update") do
-          @users_before_update = RubyProvisioningApi::User.all
-        end
+        VCR.use_cassette("update-find_user_foo_bar") { @foo_bar_before = RubyProvisioningApi::User.find("foobar") }
+        VCR.use_cassette("update-users_before_update") { @users_before_update = RubyProvisioningApi::User.all }
         @foo_bar_before.user_name = "barfoo"
         @foo_bar_before.given_name = "ooF"
         @foo_bar_before.family_name = "raB"
-        VCR.use_cassette("update-update_user_foobar") do
-          @foo_bar_before.save
-        end
-        VCR.use_cassette("update-users_after_update") do
-          @users_after_update = RubyProvisioningApi::User.all
-        end
-        VCR.use_cassette("update-find_user_foo_bar_after_update") do
-          @foo_bar_after = RubyProvisioningApi::User.find("foobar")
-        end
+        VCR.use_cassette("update-update_user_foobar") { @foo_bar_before.save }
+        VCR.use_cassette("update-users_after_update") { @users_after_update = RubyProvisioningApi::User.all }
+        VCR.use_cassette("update-find_user_foo_bar_after_update") { @foo_bar_after = RubyProvisioningApi::User.find("foobar") }
       end
 
       it "should not change the users count" do
