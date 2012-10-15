@@ -192,10 +192,10 @@ describe RubyProvisioningApi::User do
         puts @foo_bar_before.inspect
         VCR.use_cassette("update-users_before_update") { @users_before_update = RubyProvisioningApi::User.all }
         @foo_bar_before.user_name = "barfoo"
+        puts @foo_bar_before.inspect
         @foo_bar_before.given_name = "ooF"
         @foo_bar_before.family_name = "raB"
-        puts "new username = #{@foo_bar_before.user_name}"
-        puts "username was : ------------ #{@foo_bar_before.user_name_was}"
+        puts @foo_bar_before.inspect
         VCR.use_cassette("update-update_user_foobar") { @foo_bar_before.save }
         VCR.use_cassette("update-users_after_update") { @users_after_update = RubyProvisioningApi::User.all }
         VCR.use_cassette("update-find_user_foo_bar_after_update") { @foo_bar_after = RubyProvisioningApi::User.find("foobar") }
