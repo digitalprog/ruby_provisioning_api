@@ -21,11 +21,8 @@ module RubyProvisioningApi
     validates :user_name, :family_name, :given_name, :presence => true
 
     def user_name=(value)
-      unless value == user_name
+      unless value == @user_name
         user_name_will_change!
-
-        puts "\n\nchanging username"
-        puts "#{user_name} -> #{value}"
       end
       @user_name = value
     end
