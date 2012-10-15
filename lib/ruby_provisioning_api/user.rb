@@ -14,10 +14,10 @@ module RubyProvisioningApi
     include ActiveModel::Validations
     include ActiveModel::Dirty
 
+    define_attribute_methods [:user_name]
     attr_accessor :family_name, :given_name, :suspended, :quota
     attr_reader :user_name
     alias_method :suspended?, :suspended
-    define_attribute_methods [:user_name]
     validates :user_name, :family_name, :given_name, :presence => true
 
     def user_name=(value)
