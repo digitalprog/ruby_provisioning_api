@@ -169,12 +169,11 @@ module RubyProvisioningApi
     #
     def update_attributes(params)
       if params.has_key? :user_name and params[:user_name] != self.user_name
-        user_name_will_change!
         self.user_name = params[:user_name]
       end
-      self.family_name = params[:family_name] if params.has_key? :family_name
-      self.given_name = params[:given_name] if params.has_key? :given_name
-      self.quota = params[:quota] if params.has_key? :quota
+      @family_name = params[:family_name] if params.has_key? :family_name
+      @given_name = params[:given_name] if params.has_key? :given_name
+      @quota = params[:quota] if params.has_key? :quota
       save
     end
 
