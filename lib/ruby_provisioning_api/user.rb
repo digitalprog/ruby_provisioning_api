@@ -15,8 +15,7 @@ module RubyProvisioningApi
     include ActiveModel::Dirty
 
     define_attribute_methods [:user_name]
-    attr_accessor :family_name, :given_name, :suspended, :quota
-    attr_reader :user_name
+    attr_accessor :user_name, :family_name, :given_name, :suspended, :quota
     alias_method :suspended?, :suspended
     validates :user_name, :family_name, :given_name, :presence => true
 
@@ -34,10 +33,10 @@ module RubyProvisioningApi
     #
     def initialize(params = {})
       params.each do |name, value|
-        send("#{name}=", value)
+        instance_variable_set(:"@#{name}", value)
       end
-      self.quota = "1024" if quota.nil?
-      self.suspended = false if suspended.nil?
+      @quota = "1024" if quota.nil?
+      @suspended = false if suspended.nil?
     end
 
     # Retrieve all users in the domain
@@ -271,7 +270,7 @@ module RubyProvisioningApi
 
     def self.extract_info(doc, u, location, options)
       options.each do |k, v|
-        u.send("#{k.to_s}=", doc.css("apps|#{location}").first.attributes[v].value)
+        u.instance_variable_set(:"@#{k.to_s}", doc.css("apps|#{location}").first.attributes[v].value)
       end
     end
 
