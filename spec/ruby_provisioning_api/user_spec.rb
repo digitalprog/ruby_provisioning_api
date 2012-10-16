@@ -212,11 +212,11 @@ describe RubyProvisioningApi::User do
 
   end
 
-#end
-#
-#describe ".create" do
-#
-#end
+  describe ".create" do
+
+
+
+  end
 #
 #describe "#update_attributes" do
 #
