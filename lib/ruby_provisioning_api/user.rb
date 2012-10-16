@@ -139,7 +139,7 @@ module RubyProvisioningApi
     #                                           :quota => "2000") # => true
     #
     # @see https://developers.google.com/google-apps/provisioning/#creating_a_user_account
-    # @return [Boolean] true if created, false if not valid or not created
+    # @return [Boolean] true if created or already existing, false if not valid
     # @raise [Error] if user already exists (user_name must be unique)
     #
     def self.create(params = {})
