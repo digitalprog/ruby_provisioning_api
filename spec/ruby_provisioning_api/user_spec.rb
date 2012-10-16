@@ -239,10 +239,37 @@ describe RubyProvisioningApi::User do
     end
 
   end
-#
-#describe "#update_attributes" do
-#
-#end
+
+  describe "#update_attributes" do
+
+    before do
+      VCR.use_cassette "update_attributes-find_update_attributes_and_find_again" do
+        user = RubyProvisioningApi::User.find("foobar")
+        @retval = user.update_attributes(:user_name => "barfoo", :given_name => "ooF", :family_name => "raB")
+        @updated_user = RubyProvisioningApi::User.find("barfoo")
+      end
+    end
+
+    it "should update a user" do
+      @updated_user.user_name.should be_eql("barfoo")
+      @updated_user.given_name.should be_eql("Foo")
+      @updated_user.family_name.should be_eql("Bar")
+    end
+
+    it "should return true if the update succeeded" do
+      @retval.should be_eql(true)
+    end
+
+    it "update assigning an existing username" do
+      VCR.use_cassette "update_attributes-update_assigning_existing_username" do
+        lambda {
+        @updated_user.update_attributes(:user_name => "celestino.gaylord")
+        }.should raise_error(RubyProvisioningApi::Error, "Entity exists")
+      end
+
+    end
+
+  end
 
 end
 
