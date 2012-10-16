@@ -89,7 +89,7 @@ describe RubyProvisioningApi::User do
         @user.user_name.should be_eql("foobar")
         @user.given_name.should be_eql("Foo")
         @user.family_name.should be_eql("Bar")
-        @user.suspended.should be_eql("false")
+        @user.suspended.should be_false
       end
 
       it "should return a RubyProvisioningApi::User object" do
@@ -294,6 +294,36 @@ describe RubyProvisioningApi::User do
 
       it "should leave the user suspended" do
         @resuspended_user.should be_suspended
+      end
+
+    end
+
+  end
+
+  describe "#restore" do
+
+    before :all do
+      VCR.use_cassette "restore-load_suspended_restore_reload_re-restore_and_reload" do
+        user = RubyProvisioningApi::User.find("barfoo")
+        user.restore
+        @user = RubyProvisioningApi::User.find("barfoo")
+        @user.restore
+        @rerestored_user = RubyProvisioningApi::User.find("barfoo")
+      end
+    end
+
+    context "suspended user" do
+
+      it "should restore the user" do
+        @user.should_not be_suspended
+      end
+
+    end
+
+    context "unsuspended user" do
+
+      it "should leave the user unsuspended" do
+        @rerestored_user.should_not be_suspended
       end
 
     end
