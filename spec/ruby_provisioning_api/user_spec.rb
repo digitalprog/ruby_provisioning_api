@@ -330,5 +330,20 @@ describe RubyProvisioningApi::User do
 
   end
 
+  describe "#delete" do
+
+    it "should delete a user"
+    it "should return true if the operation succeeded"
+
+  end
+
+  describe "#is_member_of?" do
+
+    it "should return true if the user is member of the given group"
+    it "should return false if the user isn't member of the given group"
+    it "should raise an exception if the given group does not exist"
+
+  end
+
 end
 
