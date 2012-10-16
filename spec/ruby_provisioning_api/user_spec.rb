@@ -257,14 +257,44 @@ describe RubyProvisioningApi::User do
     end
 
     it "should return true if the update succeeded" do
-      @retval.should be_eql(true)
+      @retval.should be_true
     end
 
     it "update assigning an existing username" do
       VCR.use_cassette "update_attributes-update_assigning_existing_username" do
         lambda {
-        @updated_user.update_attributes(:user_name => "celestino.gaylord")
+          @updated_user.update_attributes(:user_name => "celestino.gaylord")
         }.should raise_error(RubyProvisioningApi::Error, "Entity exists")
+      end
+
+    end
+
+  end
+
+  describe "#suspend" do
+
+    before :all do
+      VCR.use_cassette "suspend-load_unsuspended_suspend_reload_resuspend_and_reload" do
+        user = RubyProvisioningApi::User.find("barfoo")
+        user.suspend
+        @user = RubyProvisioningApi::User.find("barfoo")
+        @user.suspend
+        @resuspended_user = RubyProvisioningApi::User.find("barfoo")
+      end
+    end
+
+    context "unsuspended user" do
+
+      it "should suspend the user" do
+        @user.should be_suspended
+      end
+
+    end
+
+    context "already suspended user" do
+
+      it "should leave the user suspended" do
+        @resuspended_user.should be_suspended
       end
 
     end
