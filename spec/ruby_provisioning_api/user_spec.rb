@@ -73,7 +73,6 @@ describe RubyProvisioningApi::User do
 
   end
 
-
   describe ".find" do
 
     context "existing user" do
@@ -168,21 +167,21 @@ describe RubyProvisioningApi::User do
     # TODO: domain user limit exceeded
     it "should return true when saving a valid User" do
       VCR.use_cassette "save_a_valid_user" do
-        @user.save.should be_eql(true)
+        @user.save.should be_true
       end
     end
 
     it "should save a new record if the username does not exist and return true" do
       VCR.use_cassette("users_before_save") { @users_before = RubyProvisioningApi::User.all }
       VCR.use_cassette "save_a_valid_user_2" do
-        @user1.save.should be_eql(true)
+        @user1.save.should be_true
       end
       VCR.use_cassette("users_after_save") { @users_after = RubyProvisioningApi::User.all }
       @users_before.length.should be_eql(@users_after.length - 1)
     end
 
     it "should return false when saving a non valid User" do
-      @invalid_user.save.should be_eql(false)
+      @invalid_user.save.should be_false
     end
 
     context "on update" do
@@ -231,11 +230,11 @@ describe RubyProvisioningApi::User do
     end
 
     it "should return true if the user was created successfully" do
-      @retval.should be_eql(true)
+      @retval.should be_true
     end
 
     it "should return true if the user already exists" do
-      @existing_retval.should be_eql(true)
+      @existing_retval.should be_true
     end
 
   end
