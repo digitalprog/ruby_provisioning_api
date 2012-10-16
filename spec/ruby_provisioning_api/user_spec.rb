@@ -214,7 +214,29 @@ describe RubyProvisioningApi::User do
 
   describe ".create" do
 
+    before :all do
+      VCR.use_cassette "create-create_and_find_foo2" do
+        @retval = RubyProvisioningApi::User.create(:user_name => "foo2", :given_name => "foo2_name", :family_name => "foo2_surname")
+        @saved_user = RubyProvisioningApi::User.find("foo2")
+      end
+      VCR.use_cassette "create-create_existing_user" do
+        @existing_retval = RubyProvisioningApi::User.create(:user_name => "foo2", :given_name => "foo2_name", :family_name => "foo2_surname")
+      end
+    end
 
+    it "should create a user does not exist" do
+      @saved_user.user_name.should be_eql("foo2")
+      @saved_user.given_name.should be_eql("foo2_name")
+      @saved_user.family_name.should be_eql("foo2_surname")
+    end
+
+    it "should return true if the user was created successfully" do
+      @retval.should be_eql(true)
+    end
+
+    it "should return true if the user already exists" do
+      @existing_retval.should be_eql(true)
+    end
 
   end
 #
