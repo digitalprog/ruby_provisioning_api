@@ -269,7 +269,11 @@ module RubyProvisioningApi
 
     def self.extract_info(doc, u, location, options)
       options.each do |k, v|
-        u.instance_variable_set(:"@#{k.to_s}", doc.css("apps|#{location}").first.attributes[v].value)
+        value = doc.css("apps|#{location}").first.attributes[v].value
+        if ["true", "false"].include? value
+          value = eval(value)
+        end
+        u.instance_variable_set(:"@#{k.to_s}", value)
       end
     end
 
