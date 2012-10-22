@@ -123,7 +123,7 @@ describe RubyProvisioningApi::User do
       end
 
       it "should retrieve all the users in the domain" do
-        @users.count.should be(6) # May change depending on vcr files used
+        @users.count.should be(5) # May change depending on vcr files used
       end
 
       it "should return an Array" do
