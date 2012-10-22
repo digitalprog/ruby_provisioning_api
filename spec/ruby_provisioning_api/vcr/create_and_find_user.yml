@@ -27,7 +27,7 @@ http_interactions:
       Expires:
       - Mon, 01-Jan-1990 00:00:00 GMT
       Date:
-      - Tue, 16 Oct 2012 06:57:57 GMT
+      - Mon, 22 Oct 2012 08:30:38 GMT
       X-Content-Type-Options:
       - nosniff
       X-Xss-Protection:
@@ -38,15 +38,15 @@ http_interactions:
       - GSE
     body:
       encoding: US-ASCII
-      string: ! 'SID=DQAAAOMAAAALLL341sWFQiTi6lVkH6uFpX44BUSYB_FvzKuLUMgzZ0ntLpnNPVkYi4gAVl8ekL1MXCRL3runQs0C2ouN3q966FcnSJ80Z9lppsMvzWxsUGiwX6Ev0Rq99d-eX8YTnNtpEcBxBEQUvTzCjn4xjvFieYj173fmRxTniddM7CRJLtDTgZIZyBwr6MAznWOVqNRc6_UBD_JJoep1nUTiBWnHZF1D_hUHoimUQcX-azC-31aNGgKKdDpWpiWwme-ukF6bPbaNiZCI9LHdDmH0M7vaAxT7JEvaEBx-WuqeONSKpGK7YwTlch-lrNBF5wiHnx8
+      string: ! 'SID=DQAAAOMAAACP-jGosGD27PlbDcwUwXuiesj9650XWRtoixbcjA-CXWZIFRfqS4KGjnROM1PWVm_qdqsz19qTHcVeeNU31KIpIfe1S25K0Wu3MOjc8z4jCAS2alEE896J3Jh7NwzUQ9bVXWQO3QLIimmipW3IxFMUrgkOAp8wnUyW_sp8bhs_d5yNAbLNrMEI6j0ScAxzURt2XMyPCFkA6UIU5eRFWiMRt58uxxjeex20DG87pIFROe9GCk-U6mVjQdBYk2d7oOGT00ki89yzbIJjnvZWULksPl1Ngz7xbYvcHzzUUKPoHQwXD3Orx2SMgPPS-L3Y2V8
 
-        LSID=DQAAAOYAAADvfMaMGIhYa3HX2oCitMWr1dRc6IpkhTiIWHOgKAs4PwJwef-h3JAOwRPx4wPyajBz91Sq08B82qg4hdA5mMbQIPlzX5TQSwsx8e6oV_BQXU-EeZgxds2Fa8se8lMKI8d7iwrh_fLm-E7_oMHBYjxyjjJlSaPRzA15fkRNhSdIgE1dW_PqToc_AUVSBVb1XxhJgXfUw2cNsuBH9tigCgaEiLXwM1F4sgtvkFvaOQO9CgaDpCQ2McRjyTLlRrpRLAcsxCCaVlibsCyhLrbVVA8Fk4sZmL1TVNOPoenyWNj5t3jcLaK-Ca8yoTJbTy0i_78
+        LSID=DQAAAOcAAAA87x2UfD_GXVvZT3tH4PV2vd3PX3lkkifqyhbMhmPpza2fcYqE5fohD8EoEPCh7Xc9KkQ4pwOBtKvqCPd0BJaVM23mFBsh8CR78-wdB0t1KqgMNOo6mxq0qqsxCPWSrmuLzFGG9PPgI9JU52KlSihBoGMlIEcgAxBP17JEy9iEYoZpOkFJDlImqdvTS3xSn3okuk8DAEfP1dkhaWl-18q3xvn4o6MPoAq6RN_UjvnZHVNkaNwZsEpgX-RPiB95tGdZLzDYq2LIjxpt_yfTBKz542VsqsyZ-572z26RqZ0vVhH4pbVHerbCmqIAhGEALFU
 
-        Auth=DQAAAOYAAADvfMaMGIhYa3HX2oCitMWr1dRc6IpkhTiIWHOgKAs4PwJwef-h3JAOwRPx4wPyajCe8nT4_jyMaF87xJ_E4lPugM3B3OI1O92k33Rzz5mKUYDLh-O7xuNAbPfCIzekfU06DuOjXMog7sJ6Y5tUMPZGgbH714cF7qevGQhBS6LzvMTK6Rce2Dih4b4bVaPer7uRVM_q0OjccIiGx3UZirreEGLAE7sVFS6kwY2AlRCTkgx6Rx5ReXR7OpV1fYiMKnAJR3JhfbZVgpH0TjSqSI3g3hrlMCp9HplnjuycErGSTUABmxBfEsPfHRc7Nr79tlY
+        Auth=DQAAAOUAAAA87x2UfD_GXVvZT3tH4PV2vd3PX3lkkifqyhbMhmPpza2fcYqE5fohD8EoEPCh7XeqkYJAdIZzvm5CkVhe0g-ovNDRfwpjVpQLv_P7jXzC3QbfATe_un3K8_7aP39P-Ycnr980-76FKkoOez8cqy7CSuo2QzHF7odGcHos8MmpVH2a8tl9C0rDaPZhXD1nMvxHqa6Iz2mCfdWdkzkFiu-kfcrX5qqedaZLnQ56Mx5dnGf8FsJJ_-vE_XPgZKhkf9dW3amixmLDOQuj5FAneksYa7PtjzyU8uMUhODcZDTwpuIETnN8wMY0XOneOExbeIY
 
 '
     http_version: !!null 
-  recorded_at: Tue, 16 Oct 2012 06:57:57 GMT
+  recorded_at: Mon, 22 Oct 2012 08:30:38 GMT
 - request:
     method: get
     uri: https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/foobar
@@ -57,7 +57,7 @@ http_interactions:
       Content-Type:
       - application/atom+xml
       Authorization:
-      - GoogleLogin auth=DQAAAOYAAADvfMaMGIhYa3HX2oCitMWr1dRc6IpkhTiIWHOgKAs4PwJwef-h3JAOwRPx4wPyajCe8nT4_jyMaF87xJ_E4lPugM3B3OI1O92k33Rzz5mKUYDLh-O7xuNAbPfCIzekfU06DuOjXMog7sJ6Y5tUMPZGgbH714cF7qevGQhBS6LzvMTK6Rce2Dih4b4bVaPer7uRVM_q0OjccIiGx3UZirreEGLAE7sVFS6kwY2AlRCTkgx6Rx5ReXR7OpV1fYiMKnAJR3JhfbZVgpH0TjSqSI3g3hrlMCp9HplnjuycErGSTUABmxBfEsPfHRc7Nr79tlY
+      - GoogleLogin auth=DQAAAOUAAAA87x2UfD_GXVvZT3tH4PV2vd3PX3lkkifqyhbMhmPpza2fcYqE5fohD8EoEPCh7XeqkYJAdIZzvm5CkVhe0g-ovNDRfwpjVpQLv_P7jXzC3QbfATe_un3K8_7aP39P-Ycnr980-76FKkoOez8cqy7CSuo2QzHF7odGcHos8MmpVH2a8tl9C0rDaPZhXD1nMvxHqa6Iz2mCfdWdkzkFiu-kfcrX5qqedaZLnQ56Mx5dnGf8FsJJ_-vE_XPgZKhkf9dW3amixmLDOQuj5FAneksYa7PtjzyU8uMUhODcZDTwpuIETnN8wMY0XOneOExbeIY
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
@@ -72,9 +72,9 @@ http_interactions:
       Content-Type:
       - text/xml
       Date:
-      - Tue, 16 Oct 2012 06:57:58 GMT
+      - Mon, 22 Oct 2012 08:30:39 GMT
       Expires:
-      - Tue, 16 Oct 2012 06:57:58 GMT
+      - Mon, 22 Oct 2012 08:30:39 GMT
       Cache-Control:
       - private, max-age=0
       X-Content-Type-Options:
@@ -93,7 +93,7 @@ http_interactions:
         \ <error errorCode=\"1301\" invalidInput=\"foobar\" reason=\"EntityDoesNotExist\"
         />\r\n</AppsForYourDomainErrors>\r\n\r\n"
     http_version: !!null 
-  recorded_at: Tue, 16 Oct 2012 06:57:58 GMT
+  recorded_at: Mon, 22 Oct 2012 08:30:39 GMT
 - request:
     method: post
     uri: https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0
@@ -108,7 +108,7 @@ http_interactions:
       Content-Type:
       - application/atom+xml
       Authorization:
-      - GoogleLogin auth=DQAAAOYAAADvfMaMGIhYa3HX2oCitMWr1dRc6IpkhTiIWHOgKAs4PwJwef-h3JAOwRPx4wPyajCe8nT4_jyMaF87xJ_E4lPugM3B3OI1O92k33Rzz5mKUYDLh-O7xuNAbPfCIzekfU06DuOjXMog7sJ6Y5tUMPZGgbH714cF7qevGQhBS6LzvMTK6Rce2Dih4b4bVaPer7uRVM_q0OjccIiGx3UZirreEGLAE7sVFS6kwY2AlRCTkgx6Rx5ReXR7OpV1fYiMKnAJR3JhfbZVgpH0TjSqSI3g3hrlMCp9HplnjuycErGSTUABmxBfEsPfHRc7Nr79tlY
+      - GoogleLogin auth=DQAAAOUAAAA87x2UfD_GXVvZT3tH4PV2vd3PX3lkkifqyhbMhmPpza2fcYqE5fohD8EoEPCh7XeqkYJAdIZzvm5CkVhe0g-ovNDRfwpjVpQLv_P7jXzC3QbfATe_un3K8_7aP39P-Ycnr980-76FKkoOez8cqy7CSuo2QzHF7odGcHos8MmpVH2a8tl9C0rDaPZhXD1nMvxHqa6Iz2mCfdWdkzkFiu-kfcrX5qqedaZLnQ56Mx5dnGf8FsJJ_-vE_XPgZKhkf9dW3amixmLDOQuj5FAneksYa7PtjzyU8uMUhODcZDTwpuIETnN8wMY0XOneOExbeIY
       Accept:
       - ! '*/*'
       User-Agent:
@@ -121,9 +121,9 @@ http_interactions:
       Content-Type:
       - application/atom+xml; charset=UTF-8
       Expires:
-      - Tue, 16 Oct 2012 06:58:01 GMT
+      - Mon, 22 Oct 2012 08:30:41 GMT
       Date:
-      - Tue, 16 Oct 2012 06:58:01 GMT
+      - Mon, 22 Oct 2012 08:30:41 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Vary:
@@ -157,7 +157,7 @@ http_interactions:
         href='https://apps-apis.google.com/a/feeds/<LOCATION>/nickname/2.0?username=foobar'/><gd:feedLink
         rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/<LOCATION>/emailList/2.0?recipient=foobar%40<LOCATION>'/></entry>
     http_version: !!null 
-  recorded_at: Tue, 16 Oct 2012 06:58:00 GMT
+  recorded_at: Mon, 22 Oct 2012 08:30:41 GMT
 - request:
     method: get
     uri: https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/foobar
@@ -168,7 +168,7 @@ http_interactions:
       Content-Type:
       - application/atom+xml
       Authorization:
-      - GoogleLogin auth=DQAAAOYAAADvfMaMGIhYa3HX2oCitMWr1dRc6IpkhTiIWHOgKAs4PwJwef-h3JAOwRPx4wPyajCe8nT4_jyMaF87xJ_E4lPugM3B3OI1O92k33Rzz5mKUYDLh-O7xuNAbPfCIzekfU06DuOjXMog7sJ6Y5tUMPZGgbH714cF7qevGQhBS6LzvMTK6Rce2Dih4b4bVaPer7uRVM_q0OjccIiGx3UZirreEGLAE7sVFS6kwY2AlRCTkgx6Rx5ReXR7OpV1fYiMKnAJR3JhfbZVgpH0TjSqSI3g3hrlMCp9HplnjuycErGSTUABmxBfEsPfHRc7Nr79tlY
+      - GoogleLogin auth=DQAAAOUAAAA87x2UfD_GXVvZT3tH4PV2vd3PX3lkkifqyhbMhmPpza2fcYqE5fohD8EoEPCh7XeqkYJAdIZzvm5CkVhe0g-ovNDRfwpjVpQLv_P7jXzC3QbfATe_un3K8_7aP39P-Ycnr980-76FKkoOez8cqy7CSuo2QzHF7odGcHos8MmpVH2a8tl9C0rDaPZhXD1nMvxHqa6Iz2mCfdWdkzkFiu-kfcrX5qqedaZLnQ56Mx5dnGf8FsJJ_-vE_XPgZKhkf9dW3amixmLDOQuj5FAneksYa7PtjzyU8uMUhODcZDTwpuIETnN8wMY0XOneOExbeIY
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
@@ -183,9 +183,9 @@ http_interactions:
       Content-Type:
       - application/atom+xml; charset=UTF-8
       Expires:
-      - Tue, 16 Oct 2012 06:58:01 GMT
+      - Mon, 22 Oct 2012 08:30:42 GMT
       Date:
-      - Tue, 16 Oct 2012 06:58:01 GMT
+      - Mon, 22 Oct 2012 08:30:42 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Vary:
@@ -217,5 +217,5 @@ http_interactions:
         href='https://apps-apis.google.com/a/feeds/<LOCATION>/nickname/2.0?username=foobar'/><gd:feedLink
         rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/<LOCATION>/emailList/2.0?recipient=foobar%40<LOCATION>'/></entry>
     http_version: !!null 
-  recorded_at: Tue, 16 Oct 2012 06:58:01 GMT
+  recorded_at: Mon, 22 Oct 2012 08:30:42 GMT
 recorded_with: VCR 2.2.5

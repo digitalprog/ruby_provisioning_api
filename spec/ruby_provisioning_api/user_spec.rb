@@ -107,6 +107,7 @@ describe RubyProvisioningApi::User do
           }.should raise_error(RubyProvisioningApi::Error, "Entity does not exist")
         end
       end
+
     end
 
   end
@@ -122,7 +123,7 @@ describe RubyProvisioningApi::User do
       end
 
       it "should retrieve all the users in the domain" do
-        @users.count.should be_eql(6) # May change depending on vcr files used
+        @users.count.should be(6) # May change depending on vcr files used
       end
 
       it "should return an Array" do
@@ -194,6 +195,7 @@ describe RubyProvisioningApi::User do
         @foo_bar_before.family_name = "raB"
         VCR.use_cassette("update-update_user_foobar") { @foo_bar_before.save }
         VCR.use_cassette("update-users_after_update") { @users_after_update = RubyProvisioningApi::User.all }
+        # ASYNC: here it may be necessary to add a sleep to wait the update on google when running tests without vcr
         VCR.use_cassette("update-find_user_foo_bar_after_update") { @foo_bar_after = RubyProvisioningApi::User.find("foobar") }
       end
 
@@ -251,8 +253,8 @@ describe RubyProvisioningApi::User do
 
     it "should update a user" do
       @updated_user.user_name.should be_eql("barfoo")
-      @updated_user.given_name.should be_eql("Foo")
-      @updated_user.family_name.should be_eql("Bar")
+      @updated_user.given_name.should be_eql("ooF")
+      @updated_user.family_name.should be_eql("raB")
     end
 
     it "should return true if the update succeeded" do
@@ -332,8 +334,23 @@ describe RubyProvisioningApi::User do
 
   describe "#delete" do
 
-    it "should delete a user"
-    it "should return true if the operation succeeded"
+    before :all do
+      VCR.use_cassette "delete-find_all_delete_one_find_all" do
+        @users_before = RubyProvisioningApi::User.all.map(&:user_name)
+        user = RubyProvisioningApi::User.find("foo2")
+        @retval = user.delete
+        @users_after = RubyProvisioningApi::User.all.map(&:user_name)
+      end
+    end
+
+    it "should delete a user" do
+      (@users_before - @users_after).should be_eql(["foo2"])
+      @users_before.length.should be(@users_after.length + 1)
+    end
+
+    it "should return true if the operation succeeded" do
+      @retval.should be_true
+    end
 
   end
 

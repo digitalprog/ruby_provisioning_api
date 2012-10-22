@@ -10,7 +10,7 @@ http_interactions:
       Content-Type:
       - application/atom+xml
       Authorization:
-      - GoogleLogin auth=DQAAAOYAAADvfMaMGIhYa3HX2oCitMWr1dRc6IpkhTiIWHOgKAs4PwJwef-h3JAOwRPx4wPyajCe8nT4_jyMaF87xJ_E4lPugM3B3OI1O92k33Rzz5mKUYDLh-O7xuNAbPfCIzekfU06DuOjXMog7sJ6Y5tUMPZGgbH714cF7qevGQhBS6LzvMTK6Rce2Dih4b4bVaPer7uRVM_q0OjccIiGx3UZirreEGLAE7sVFS6kwY2AlRCTkgx6Rx5ReXR7OpV1fYiMKnAJR3JhfbZVgpH0TjSqSI3g3hrlMCp9HplnjuycErGSTUABmxBfEsPfHRc7Nr79tlY
+      - GoogleLogin auth=DQAAAOUAAAA87x2UfD_GXVvZT3tH4PV2vd3PX3lkkifqyhbMhmPpza2fcYqE5fohD8EoEPCh7XeqkYJAdIZzvm5CkVhe0g-ovNDRfwpjVpQLv_P7jXzC3QbfATe_un3K8_7aP39P-Ycnr980-76FKkoOez8cqy7CSuo2QzHF7odGcHos8MmpVH2a8tl9C0rDaPZhXD1nMvxHqa6Iz2mCfdWdkzkFiu-kfcrX5qqedaZLnQ56Mx5dnGf8FsJJ_-vE_XPgZKhkf9dW3amixmLDOQuj5FAneksYa7PtjzyU8uMUhODcZDTwpuIETnN8wMY0XOneOExbeIY
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
@@ -25,9 +25,9 @@ http_interactions:
       Content-Type:
       - application/atom+xml; charset=UTF-8
       Expires:
-      - Tue, 16 Oct 2012 09:48:30 GMT
+      - Mon, 22 Oct 2012 08:31:20 GMT
       Date:
-      - Tue, 16 Oct 2012 09:48:30 GMT
+      - Mon, 22 Oct 2012 08:31:20 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Vary:
@@ -59,7 +59,7 @@ http_interactions:
         href='https://apps-apis.google.com/a/feeds/<LOCATION>/nickname/2.0?username=barfoo'/><gd:feedLink
         rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/<LOCATION>/emailList/2.0?recipient=barfoo%40<LOCATION>'/></entry>
     http_version: !!null 
-  recorded_at: Tue, 16 Oct 2012 09:48:30 GMT
+  recorded_at: Mon, 22 Oct 2012 08:31:20 GMT
 - request:
     method: get
     uri: https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/barfoo
@@ -70,7 +70,7 @@ http_interactions:
       Content-Type:
       - application/atom+xml
       Authorization:
-      - GoogleLogin auth=DQAAAOYAAADvfMaMGIhYa3HX2oCitMWr1dRc6IpkhTiIWHOgKAs4PwJwef-h3JAOwRPx4wPyajCe8nT4_jyMaF87xJ_E4lPugM3B3OI1O92k33Rzz5mKUYDLh-O7xuNAbPfCIzekfU06DuOjXMog7sJ6Y5tUMPZGgbH714cF7qevGQhBS6LzvMTK6Rce2Dih4b4bVaPer7uRVM_q0OjccIiGx3UZirreEGLAE7sVFS6kwY2AlRCTkgx6Rx5ReXR7OpV1fYiMKnAJR3JhfbZVgpH0TjSqSI3g3hrlMCp9HplnjuycErGSTUABmxBfEsPfHRc7Nr79tlY
+      - GoogleLogin auth=DQAAAOUAAAA87x2UfD_GXVvZT3tH4PV2vd3PX3lkkifqyhbMhmPpza2fcYqE5fohD8EoEPCh7XeqkYJAdIZzvm5CkVhe0g-ovNDRfwpjVpQLv_P7jXzC3QbfATe_un3K8_7aP39P-Ycnr980-76FKkoOez8cqy7CSuo2QzHF7odGcHos8MmpVH2a8tl9C0rDaPZhXD1nMvxHqa6Iz2mCfdWdkzkFiu-kfcrX5qqedaZLnQ56Mx5dnGf8FsJJ_-vE_XPgZKhkf9dW3amixmLDOQuj5FAneksYa7PtjzyU8uMUhODcZDTwpuIETnN8wMY0XOneOExbeIY
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
@@ -85,9 +85,9 @@ http_interactions:
       Content-Type:
       - application/atom+xml; charset=UTF-8
       Expires:
-      - Tue, 16 Oct 2012 09:48:31 GMT
+      - Mon, 22 Oct 2012 08:31:21 GMT
       Date:
-      - Tue, 16 Oct 2012 09:48:31 GMT
+      - Mon, 22 Oct 2012 08:31:21 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Vary:
@@ -119,7 +119,7 @@ http_interactions:
         href='https://apps-apis.google.com/a/feeds/<LOCATION>/nickname/2.0?username=barfoo'/><gd:feedLink
         rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/<LOCATION>/emailList/2.0?recipient=barfoo%40<LOCATION>'/></entry>
     http_version: !!null 
-  recorded_at: Tue, 16 Oct 2012 09:48:31 GMT
+  recorded_at: Mon, 22 Oct 2012 08:31:21 GMT
 - request:
     method: put
     uri: https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/barfoo
@@ -134,7 +134,7 @@ http_interactions:
       Content-Type:
       - application/atom+xml
       Authorization:
-      - GoogleLogin auth=DQAAAOYAAADvfMaMGIhYa3HX2oCitMWr1dRc6IpkhTiIWHOgKAs4PwJwef-h3JAOwRPx4wPyajCe8nT4_jyMaF87xJ_E4lPugM3B3OI1O92k33Rzz5mKUYDLh-O7xuNAbPfCIzekfU06DuOjXMog7sJ6Y5tUMPZGgbH714cF7qevGQhBS6LzvMTK6Rce2Dih4b4bVaPer7uRVM_q0OjccIiGx3UZirreEGLAE7sVFS6kwY2AlRCTkgx6Rx5ReXR7OpV1fYiMKnAJR3JhfbZVgpH0TjSqSI3g3hrlMCp9HplnjuycErGSTUABmxBfEsPfHRc7Nr79tlY
+      - GoogleLogin auth=DQAAAOUAAAA87x2UfD_GXVvZT3tH4PV2vd3PX3lkkifqyhbMhmPpza2fcYqE5fohD8EoEPCh7XeqkYJAdIZzvm5CkVhe0g-ovNDRfwpjVpQLv_P7jXzC3QbfATe_un3K8_7aP39P-Ycnr980-76FKkoOez8cqy7CSuo2QzHF7odGcHos8MmpVH2a8tl9C0rDaPZhXD1nMvxHqa6Iz2mCfdWdkzkFiu-kfcrX5qqedaZLnQ56Mx5dnGf8FsJJ_-vE_XPgZKhkf9dW3amixmLDOQuj5FAneksYa7PtjzyU8uMUhODcZDTwpuIETnN8wMY0XOneOExbeIY
       Accept:
       - ! '*/*'
       User-Agent:
@@ -149,9 +149,9 @@ http_interactions:
       Gdata-Version:
       - '1.0'
       Date:
-      - Tue, 16 Oct 2012 09:48:33 GMT
+      - Mon, 22 Oct 2012 08:31:23 GMT
       Expires:
-      - Tue, 16 Oct 2012 09:48:33 GMT
+      - Mon, 22 Oct 2012 08:31:23 GMT
       Cache-Control:
       - private, max-age=0
       X-Content-Type-Options:
@@ -177,7 +177,7 @@ http_interactions:
         href='https://apps-apis.google.com/a/feeds/<LOCATION>/nickname/2.0?username=barfoo'/><gd:feedLink
         rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/<LOCATION>/emailList/2.0?recipient=barfoo%40<LOCATION>'/></entry>
     http_version: !!null 
-  recorded_at: Tue, 16 Oct 2012 09:48:33 GMT
+  recorded_at: Mon, 22 Oct 2012 08:31:23 GMT
 - request:
     method: get
     uri: https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/barfoo
@@ -188,7 +188,7 @@ http_interactions:
       Content-Type:
       - application/atom+xml
       Authorization:
-      - GoogleLogin auth=DQAAAOYAAADvfMaMGIhYa3HX2oCitMWr1dRc6IpkhTiIWHOgKAs4PwJwef-h3JAOwRPx4wPyajCe8nT4_jyMaF87xJ_E4lPugM3B3OI1O92k33Rzz5mKUYDLh-O7xuNAbPfCIzekfU06DuOjXMog7sJ6Y5tUMPZGgbH714cF7qevGQhBS6LzvMTK6Rce2Dih4b4bVaPer7uRVM_q0OjccIiGx3UZirreEGLAE7sVFS6kwY2AlRCTkgx6Rx5ReXR7OpV1fYiMKnAJR3JhfbZVgpH0TjSqSI3g3hrlMCp9HplnjuycErGSTUABmxBfEsPfHRc7Nr79tlY
+      - GoogleLogin auth=DQAAAOUAAAA87x2UfD_GXVvZT3tH4PV2vd3PX3lkkifqyhbMhmPpza2fcYqE5fohD8EoEPCh7XeqkYJAdIZzvm5CkVhe0g-ovNDRfwpjVpQLv_P7jXzC3QbfATe_un3K8_7aP39P-Ycnr980-76FKkoOez8cqy7CSuo2QzHF7odGcHos8MmpVH2a8tl9C0rDaPZhXD1nMvxHqa6Iz2mCfdWdkzkFiu-kfcrX5qqedaZLnQ56Mx5dnGf8FsJJ_-vE_XPgZKhkf9dW3amixmLDOQuj5FAneksYa7PtjzyU8uMUhODcZDTwpuIETnN8wMY0XOneOExbeIY
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
@@ -203,9 +203,9 @@ http_interactions:
       Content-Type:
       - application/atom+xml; charset=UTF-8
       Expires:
-      - Tue, 16 Oct 2012 09:48:34 GMT
+      - Mon, 22 Oct 2012 08:31:24 GMT
       Date:
-      - Tue, 16 Oct 2012 09:48:34 GMT
+      - Mon, 22 Oct 2012 08:31:24 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Vary:
@@ -237,7 +237,7 @@ http_interactions:
         href='https://apps-apis.google.com/a/feeds/<LOCATION>/nickname/2.0?username=barfoo'/><gd:feedLink
         rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/<LOCATION>/emailList/2.0?recipient=barfoo%40<LOCATION>'/></entry>
     http_version: !!null 
-  recorded_at: Tue, 16 Oct 2012 09:48:34 GMT
+  recorded_at: Mon, 22 Oct 2012 08:31:24 GMT
 - request:
     method: get
     uri: https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/barfoo
@@ -248,7 +248,7 @@ http_interactions:
       Content-Type:
       - application/atom+xml
       Authorization:
-      - GoogleLogin auth=DQAAAOYAAADvfMaMGIhYa3HX2oCitMWr1dRc6IpkhTiIWHOgKAs4PwJwef-h3JAOwRPx4wPyajCe8nT4_jyMaF87xJ_E4lPugM3B3OI1O92k33Rzz5mKUYDLh-O7xuNAbPfCIzekfU06DuOjXMog7sJ6Y5tUMPZGgbH714cF7qevGQhBS6LzvMTK6Rce2Dih4b4bVaPer7uRVM_q0OjccIiGx3UZirreEGLAE7sVFS6kwY2AlRCTkgx6Rx5ReXR7OpV1fYiMKnAJR3JhfbZVgpH0TjSqSI3g3hrlMCp9HplnjuycErGSTUABmxBfEsPfHRc7Nr79tlY
+      - GoogleLogin auth=DQAAAOUAAAA87x2UfD_GXVvZT3tH4PV2vd3PX3lkkifqyhbMhmPpza2fcYqE5fohD8EoEPCh7XeqkYJAdIZzvm5CkVhe0g-ovNDRfwpjVpQLv_P7jXzC3QbfATe_un3K8_7aP39P-Ycnr980-76FKkoOez8cqy7CSuo2QzHF7odGcHos8MmpVH2a8tl9C0rDaPZhXD1nMvxHqa6Iz2mCfdWdkzkFiu-kfcrX5qqedaZLnQ56Mx5dnGf8FsJJ_-vE_XPgZKhkf9dW3amixmLDOQuj5FAneksYa7PtjzyU8uMUhODcZDTwpuIETnN8wMY0XOneOExbeIY
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
@@ -263,9 +263,9 @@ http_interactions:
       Content-Type:
       - application/atom+xml; charset=UTF-8
       Expires:
-      - Tue, 16 Oct 2012 09:48:34 GMT
+      - Mon, 22 Oct 2012 08:31:25 GMT
       Date:
-      - Tue, 16 Oct 2012 09:48:34 GMT
+      - Mon, 22 Oct 2012 08:31:25 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Vary:
@@ -297,7 +297,7 @@ http_interactions:
         href='https://apps-apis.google.com/a/feeds/<LOCATION>/nickname/2.0?username=barfoo'/><gd:feedLink
         rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/<LOCATION>/emailList/2.0?recipient=barfoo%40<LOCATION>'/></entry>
     http_version: !!null 
-  recorded_at: Tue, 16 Oct 2012 09:48:34 GMT
+  recorded_at: Mon, 22 Oct 2012 08:31:24 GMT
 - request:
     method: put
     uri: https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/barfoo
@@ -312,7 +312,7 @@ http_interactions:
       Content-Type:
       - application/atom+xml
       Authorization:
-      - GoogleLogin auth=DQAAAOYAAADvfMaMGIhYa3HX2oCitMWr1dRc6IpkhTiIWHOgKAs4PwJwef-h3JAOwRPx4wPyajCe8nT4_jyMaF87xJ_E4lPugM3B3OI1O92k33Rzz5mKUYDLh-O7xuNAbPfCIzekfU06DuOjXMog7sJ6Y5tUMPZGgbH714cF7qevGQhBS6LzvMTK6Rce2Dih4b4bVaPer7uRVM_q0OjccIiGx3UZirreEGLAE7sVFS6kwY2AlRCTkgx6Rx5ReXR7OpV1fYiMKnAJR3JhfbZVgpH0TjSqSI3g3hrlMCp9HplnjuycErGSTUABmxBfEsPfHRc7Nr79tlY
+      - GoogleLogin auth=DQAAAOUAAAA87x2UfD_GXVvZT3tH4PV2vd3PX3lkkifqyhbMhmPpza2fcYqE5fohD8EoEPCh7XeqkYJAdIZzvm5CkVhe0g-ovNDRfwpjVpQLv_P7jXzC3QbfATe_un3K8_7aP39P-Ycnr980-76FKkoOez8cqy7CSuo2QzHF7odGcHos8MmpVH2a8tl9C0rDaPZhXD1nMvxHqa6Iz2mCfdWdkzkFiu-kfcrX5qqedaZLnQ56Mx5dnGf8FsJJ_-vE_XPgZKhkf9dW3amixmLDOQuj5FAneksYa7PtjzyU8uMUhODcZDTwpuIETnN8wMY0XOneOExbeIY
       Accept:
       - ! '*/*'
       User-Agent:
@@ -327,9 +327,9 @@ http_interactions:
       Gdata-Version:
       - '1.0'
       Date:
-      - Tue, 16 Oct 2012 09:48:36 GMT
+      - Mon, 22 Oct 2012 08:31:26 GMT
       Expires:
-      - Tue, 16 Oct 2012 09:48:36 GMT
+      - Mon, 22 Oct 2012 08:31:26 GMT
       Cache-Control:
       - private, max-age=0
       X-Content-Type-Options:
@@ -355,7 +355,7 @@ http_interactions:
         href='https://apps-apis.google.com/a/feeds/<LOCATION>/nickname/2.0?username=barfoo'/><gd:feedLink
         rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/<LOCATION>/emailList/2.0?recipient=barfoo%40<LOCATION>'/></entry>
     http_version: !!null 
-  recorded_at: Tue, 16 Oct 2012 09:48:35 GMT
+  recorded_at: Mon, 22 Oct 2012 08:31:26 GMT
 - request:
     method: get
     uri: https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/barfoo
@@ -366,7 +366,7 @@ http_interactions:
       Content-Type:
       - application/atom+xml
       Authorization:
-      - GoogleLogin auth=DQAAAOYAAADvfMaMGIhYa3HX2oCitMWr1dRc6IpkhTiIWHOgKAs4PwJwef-h3JAOwRPx4wPyajCe8nT4_jyMaF87xJ_E4lPugM3B3OI1O92k33Rzz5mKUYDLh-O7xuNAbPfCIzekfU06DuOjXMog7sJ6Y5tUMPZGgbH714cF7qevGQhBS6LzvMTK6Rce2Dih4b4bVaPer7uRVM_q0OjccIiGx3UZirreEGLAE7sVFS6kwY2AlRCTkgx6Rx5ReXR7OpV1fYiMKnAJR3JhfbZVgpH0TjSqSI3g3hrlMCp9HplnjuycErGSTUABmxBfEsPfHRc7Nr79tlY
+      - GoogleLogin auth=DQAAAOUAAAA87x2UfD_GXVvZT3tH4PV2vd3PX3lkkifqyhbMhmPpza2fcYqE5fohD8EoEPCh7XeqkYJAdIZzvm5CkVhe0g-ovNDRfwpjVpQLv_P7jXzC3QbfATe_un3K8_7aP39P-Ycnr980-76FKkoOez8cqy7CSuo2QzHF7odGcHos8MmpVH2a8tl9C0rDaPZhXD1nMvxHqa6Iz2mCfdWdkzkFiu-kfcrX5qqedaZLnQ56Mx5dnGf8FsJJ_-vE_XPgZKhkf9dW3amixmLDOQuj5FAneksYa7PtjzyU8uMUhODcZDTwpuIETnN8wMY0XOneOExbeIY
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
@@ -381,9 +381,9 @@ http_interactions:
       Content-Type:
       - application/atom+xml; charset=UTF-8
       Expires:
-      - Tue, 16 Oct 2012 09:48:36 GMT
+      - Mon, 22 Oct 2012 08:31:27 GMT
       Date:
-      - Tue, 16 Oct 2012 09:48:36 GMT
+      - Mon, 22 Oct 2012 08:31:27 GMT
       Cache-Control:
       - private, max-age=0, must-revalidate, no-transform
       Vary:
@@ -415,5 +415,5 @@ http_interactions:
         href='https://apps-apis.google.com/a/feeds/<LOCATION>/nickname/2.0?username=barfoo'/><gd:feedLink
         rel='http://schemas.google.com/apps/2006#user.emailLists' href='https://apps-apis.google.com/a/feeds/<LOCATION>/emailList/2.0?recipient=barfoo%40<LOCATION>'/></entry>
     http_version: !!null 
-  recorded_at: Tue, 16 Oct 2012 09:48:36 GMT
+  recorded_at: Mon, 22 Oct 2012 08:31:27 GMT
 recorded_with: VCR 2.2.5
