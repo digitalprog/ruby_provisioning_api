@@ -356,9 +356,21 @@ describe RubyProvisioningApi::User do
 
   describe "#is_member_of?" do
 
-    it "should return true if the user is member of the given group"
-    it "should return false if the user isn't member of the given group"
-    it "should raise an exception if the given group does not exist"
+    #before :all do
+    #  VCR.use_cassette "is_member_of-find_group_add_member_is_member" do
+    #    group = RubyProvisioningApi::Group.find("fake")
+    #    group.add_member("barfoo")
+    #    @retval_true = RubyProvisioningApi::User.find("barfoo").is_member_of?("fake")
+    #    @retval_true = RubyProvisioningApi::User.find("barfoo").is_member_of?("test4")
+    #  end
+    #end
+    #
+    #it "should return true if the user is member of the given group" do
+    #  @retval_true.should be_true
+    #end
+    #
+    #it "should return false if the user isn't member of the given group"
+    #it "should raise an exception if the given group does not exist"
 
   end
 
