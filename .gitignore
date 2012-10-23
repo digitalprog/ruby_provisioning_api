@@ -25,5 +25,5 @@ doc/
 #  Ignore wizzy configuration 
 .wizzy
 wizzy
-.wizzy-config
+wizzy-config.yml
 .DS_Store
