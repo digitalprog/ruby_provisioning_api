@@ -1,5 +1,4 @@
 require 'spec_helper'
-#require 'ruby_provisioning_api/user_mock'
 
 describe RubyProvisioningApi::User do
 
