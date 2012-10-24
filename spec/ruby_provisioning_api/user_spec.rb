@@ -41,7 +41,7 @@ describe RubyProvisioningApi::User do
         @user = RubyProvisioningApi::User.new
       end
 
-      it "should initialize a new user with a step-by-step initialization" do
+      it "should initialize a new user" do
         @user.user_name = "foobar"
         @user.given_name = "Foo"
         @user.family_name = "Bar"
@@ -99,7 +99,7 @@ describe RubyProvisioningApi::User do
 
     context "non existing user" do
 
-      it "should raise an exception if the user does not exist" do
+      it "should raise an exception" do
         VCR.use_cassette "find_non_existing_user" do
           lambda {
             RubyProvisioningApi::User.find("ThIsUsErIsNoTvAlId")
@@ -129,7 +129,7 @@ describe RubyProvisioningApi::User do
         @users.should be_kind_of(Array)
       end
 
-      it "should return an Array of users" do
+      it "should return an Array of User" do
         @users.each do |user|
           user.should be_kind_of(RubyProvisioningApi::User)
         end
@@ -164,7 +164,6 @@ describe RubyProvisioningApi::User do
       @invalid_user = RubyProvisioningApi::User.new(:user_name => Faker::Internet.user_name, :given_name => Faker::Name.first_name)
     end
 
-    # TODO: domain user limit exceeded
     it "should return true when saving a valid User" do
       VCR.use_cassette "save_a_valid_user" do
         @user.save.should be_true
@@ -224,7 +223,7 @@ describe RubyProvisioningApi::User do
       end
     end
 
-    it "should create a user does not exist" do
+    it "should create a user if it does not exist" do
       @saved_user.user_name.should be_eql("foo2")
       @saved_user.given_name.should be_eql("foo2_name")
       @saved_user.family_name.should be_eql("foo2_surname")
@@ -260,7 +259,7 @@ describe RubyProvisioningApi::User do
       @retval.should be_true
     end
 
-    it "update assigning an existing username" do
+    it "should raise error if assigning an existing username" do
       VCR.use_cassette "update_attributes-update_assigning_existing_username" do
         lambda {
           @updated_user.update_attributes(:user_name => "celestino.gaylord")
