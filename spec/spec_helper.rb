@@ -20,6 +20,10 @@ require 'bundler/setup'
 require 'rspec'
 require 'ruby_provisioning_api'
 
+RubyProvisioningApi.configure do |config|
+  config.config_file = File.expand_path(File.join(__FILE__, "..", "..", "lib", "ruby_provisioning_api", "config", "google_apps.yml"))
+end
+
 VCR.configure do |c|
   c.cassette_library_dir = File.join(File.dirname(__FILE__), "ruby_provisioning_api", "vcr")
   c.hook_into :webmock
