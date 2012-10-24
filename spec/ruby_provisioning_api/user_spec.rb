@@ -138,7 +138,7 @@ describe RubyProvisioningApi::User do
 
     end
 
-    # TODO: commented out ask Damiano if we can delete all users
+    # Commented out: this test will delete all users
     #context "with no existing users" do
     #
     #  before :all do
