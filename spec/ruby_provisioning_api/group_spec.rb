@@ -6,13 +6,34 @@ describe RubyProvisioningApi::Group do
 
     context "passing a hash" do
 
-      it "should initialize a new Group"
+      before do
+        @group = RubyProvisioningApi::Group.new(:group_id => "foobar", :group_name => "Foo", :description => "Bar", :email_permission => "Owner")
+      end
 
+      it "should initialize a new Group" do
+        @group.group_id.should be_eql("foobar")
+        @group.group_name.should be_eql("Foo")
+        @group.description.should be_eql("Bar")
+        @group.email_permission.should be_eql("Owner")
+      end
     end
 
     context "step-by-step" do
 
-      it "should initialize a new Group"
+      before do
+        @group = RubyProvisioningApi::Group.new
+      end
+
+      it "should initialize a new Group" do
+        @group.group_id = "foobar"
+        @group.group_name = "Foo"
+        @group.description = "Bar"
+        @group.email_permission = "Owner"
+        @group.group_id.should be_eql("foobar")
+        @group.group_name.should be_eql("Foo")
+        @group.description.should be_eql("Bar")
+        @group.email_permission.should be_eql("Owner")
+      end
 
     end
 
