@@ -7,11 +7,11 @@ describe RubyProvisioningApi::Group do
     context "passing a hash" do
 
       before do
-        @group = RubyProvisioningApi::Group.new(:group_id => "foobar", :group_name => "Foo", :description => "Bar", :email_permission => "Owner")
+        @group = RubyProvisioningApi::Group.new(:group_id => "foo_bar", :group_name => "Foo", :description => "Bar", :email_permission => "Owner")
       end
 
       it "should initialize a new Group" do
-        @group.group_id.should be_eql("foobar")
+        @group.group_id.should be_eql("foo_bar")
         @group.group_name.should be_eql("Foo")
         @group.description.should be_eql("Bar")
         @group.email_permission.should be_eql("Owner")
@@ -25,11 +25,11 @@ describe RubyProvisioningApi::Group do
       end
 
       it "should initialize a new Group" do
-        @group.group_id = "foobar"
+        @group.group_id = "foo_bar"
         @group.group_name = "Foo"
         @group.description = "Bar"
         @group.email_permission = "Owner"
-        @group.group_id.should be_eql("foobar")
+        @group.group_id.should be_eql("foo_bar")
         @group.group_name.should be_eql("Foo")
         @group.description.should be_eql("Bar")
         @group.email_permission.should be_eql("Owner")
@@ -43,14 +43,36 @@ describe RubyProvisioningApi::Group do
 
     context "existing Group" do
 
-      it "should return the expected Group"
-      it "should return a RubyProvisioningApi::Group object"
+      before :all do
+        VCR.use_cassette "create_and_find_group" do
+          group = RubyProvisioningApi::Group.new(:group_id => "foo_bar", :group_name => "Foo", :description => "Bar", :email_permission => "Owner")
+          group.save
+          @group = RubyProvisioningApi::Group.find("foo_bar")
+        end
+      end
+
+      it "should return the expected group" do
+        @group.group_id.should be_eql("foo_bar")
+        @group.group_name.should be_eql("Foo")
+        @group.description.should be_eql("Bar")
+        @group.email_permission.should be_eql("Owner")
+      end
+
+      it "should return a RubyProvisioningApi::Group object" do
+        @group.should be_kind_of(RubyProvisioningApi::Group)
+      end
 
     end
 
     context "non existing Group" do
 
-      it "should raise an exception"
+      it "should raise an exception" do
+        VCR.use_cassette "find_non_existing_group" do
+          lambda {
+            RubyProvisioningApi::Group.find("ThIsGrOuPIsNoTvAlId")
+          }.should raise_error(RubyProvisioningApi::Error, "Entity does not exist")
+        end
+      end
 
     end
 
