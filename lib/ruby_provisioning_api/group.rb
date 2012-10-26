@@ -123,6 +123,9 @@ module RubyProvisioningApi
       # Creating the XML request
       builder = prepare_xml_request(:group_id => group_id , :group_name => group_name, :description => description, :email_permission => email_permission, :update => update)
       if !update
+        puts "i'm here"
+        puts RubyProvisioningApi.configuration.group_actions[:create]
+        puts builder.to_xml
         #Acting on a new object
         # Check if the response contains an error
         self.class.check_response(self.class.perform(RubyProvisioningApi.configuration.group_actions[:create],builder.to_xml))
@@ -362,7 +365,7 @@ module RubyProvisioningApi
           xml.send(:'atom:category', 'scheme' => 'http://schemas.google.com/g/2005#kind', 'term' => 'http://schemas.google.com/apps/2006#emailList')
           xml.send(:'apps:property', 'name' => 'email', 'value' => params[:owner_id]) if params.has_key? :owner_id
           xml.send(:'apps:property', 'name' => 'memberId', 'value' => params[:member_id]) if params.has_key? :member_id
-          xml.send(:'apps:property', 'name' => 'groupId', 'value' => params[:group_id]) if ( params.has_key? :group_id && params[:update] )
+          xml.send(:'apps:property', 'name' => 'groupId', 'value' => params[:group_id]) if ( params.has_key? :group_id ) # TODO: is not working with normal save && params[:update] )
           xml.send(:'apps:property', 'name' => 'groupName', 'value' => params[:group_name]) if params.has_key? :group_name
           xml.send(:'apps:property', 'name' => 'description', 'value' => params[:description]) if params.has_key? :description
           xml.send(:'apps:property', 'name' => 'emailPermission', 'value' => params[:email_permission]) if params.has_key? :email_permission
