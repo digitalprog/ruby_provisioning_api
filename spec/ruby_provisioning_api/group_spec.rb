@@ -82,17 +82,44 @@ describe RubyProvisioningApi::Group do
 
     context "with existing groups" do
 
-      it "should retrieve all the groups in the domain"
-      it "should return an Array"
-      it "should return an Array of Group"
+      before :all do
+        VCR.use_cassette "find_all_groups_with_existing_groups" do
+          @groups = RubyProvisioningApi::Group.all
+        end
+      end
+
+      it "should retrieve all the groups in the domain" do
+        @groups.count.should be(9) # May change depending on vcr files used
+      end
+
+      it "should return an Array" do
+        @groups.should be_kind_of(Array)
+      end
+      it "should return an Array of Group" do
+        @groups.each do |group|
+          group.should be_kind_of(RubyProvisioningApi::Group)
+        end
+      end
 
     end
 
-    context "with no existing groups" do
 
-      it "should return an empty array"
-
-    end
+    # Commented out: this test will delete all groups
+    # context "with no existing groups" do
+    
+    #  before :all do
+    #    VCR.use_cassette "delete_all_groups_and_find_all" do
+    #      @groups = RubyProvisioningApi::Group.all.each { |group| group.delete }
+    #      @groups = RubyProvisioningApi::Group.all
+    #    end
+    #  end
+    
+    #  it "should return an empty array" do
+    #    @groups.should be_empty
+    #    @groups.should be_kind_of(Array)
+    #  end
+    
+    # end
 
   end
 
