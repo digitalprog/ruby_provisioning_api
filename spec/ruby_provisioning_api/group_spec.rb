@@ -82,7 +82,15 @@ describe RubyProvisioningApi::Group do
 
     context "with existing groups" do
 
-      it "should retrieve all the groups in the domain"
+      before do
+        VCR.use_cassette "all-retrieve-all-groups" do
+          @groups = RubyProvisioningApi::Group.all
+        end
+      end
+
+      it "should retrieve all the groups in the domain" do
+        @groups.length.should be(2)
+      end
       it "should return an Array"
       it "should return an Array of Group"
 
