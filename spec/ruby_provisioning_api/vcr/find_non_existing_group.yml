@@ -10,7 +10,7 @@ http_interactions:
       Content-Type:
       - application/atom+xml
       Authorization:
-      - GoogleLogin auth=DQAAAOYAAABXygqe2QShYQf2AA-unVh124uPry_d4Wt4T534UZKDT4Cg2hKLY0KDZdZqUyH7hYEGPGIGYW7M8Y6t2Adk056-R-rjDgBeU5MGagjV5hiovFXUNoYXyxBPMWs60j1eAJWYJyGbW9b74WjOegz-RCQshKFy5kqrSJ601RjTfPepCU3V7wmN5mUi8d5rchsjJvN-7_GIw0Qa5WRXEE0YENpRWIWm_GNJX2jg9f4MxZ8YHRlAD3mqjlHKEzLWR4LUIKQWmahAxeg45VGmOGprB4WypYBPBTkX6MJ1KzuYa4JAEV7GZxl1s2FoxgPLrE-C_18
+      - GoogleLogin auth=DQAAAOYAAACGhTNo91IDUKz8vhaUTwOFoIfU53l12mUGLOJhKukj1WYeTu47Y-hBfwnphrJ93ukqSZ1j2nK4JKHKbwKE_BjpUmQUY5t51xCZQN4tZXC4sg79PiSBK5FVulajqUGkTTTaDaQPScPYdvzywnaqNRiaJZLsbwtNJ8qqIGy8y67j93px9Q0XTR4uQ-ReONZoQNjz0RNVWUr91Qn4WMIjw6kTlrbZ9aeTsVCoW4Dr_U86BM5bQoE6U9OkCNlrl0xQ5l1GQp1TqS6r0IEh-8xoQKexq_CQLK_Bd8A0lwjL4rDGSkkgG4_geKD47htrqZZKNUE
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
@@ -25,9 +25,9 @@ http_interactions:
       Content-Type:
       - text/xml
       Date:
-      - Fri, 26 Oct 2012 06:27:37 GMT
+      - Wed, 31 Oct 2012 10:26:16 GMT
       Expires:
-      - Fri, 26 Oct 2012 06:27:37 GMT
+      - Wed, 31 Oct 2012 10:26:16 GMT
       Cache-Control:
       - private, max-age=0
       X-Content-Type-Options:
@@ -46,5 +46,5 @@ http_interactions:
         \ <error errorCode=\"1301\" invalidInput=\"ThIsGrOuPIsNoTvAlId@<LOCATION>\"
         reason=\"EntityDoesNotExist\" />\r\n</AppsForYourDomainErrors>\r\n\r\n"
     http_version: !!null 
-  recorded_at: Fri, 26 Oct 2012 06:27:37 GMT
+  recorded_at: Wed, 31 Oct 2012 10:26:16 GMT
 recorded_with: VCR 2.2.5

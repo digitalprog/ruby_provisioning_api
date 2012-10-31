@@ -17,6 +17,7 @@ module RubyProvisioningApi
     include ActiveModel::Dirty
 
     attr_accessor :group_id, :group_name, :description, :email_permission
+    validates :group_id, :group_name, :description, :email_permission, :presence => true
 
     # Group attributes list.
     # This constant is used to dynamically extract group's attributes from the google API response.
