@@ -1,6 +1,53 @@
 ---
 http_interactions:
 - request:
+    method: post
+    uri: https://www.google.com/accounts/ClientLogin
+    body:
+      encoding: US-ASCII
+      string: Email=<USERNAME>%40<LOCATION>&Passwd=<PASSWORD>&accountType=HOSTED&service=apps
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept:
+      - ! '*/*'
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/plain
+      Cache-Control:
+      - no-cache, no-store
+      Pragma:
+      - no-cache
+      Expires:
+      - Mon, 01-Jan-1990 00:00:00 GMT
+      Date:
+      - Wed, 31 Oct 2012 09:35:49 GMT
+      X-Content-Type-Options:
+      - nosniff
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '1010'
+      Server:
+      - GSE
+    body:
+      encoding: US-ASCII
+      string: ! 'SID=DQAAAOMAAAANkT5zV-d7fqyC9KZWRykEb1tovbTmFWZQjjhaBQQPHFSr7MYahyS2hcoqWW_ElHR8XEAn3xIswHc167D6YA2rRV7009LzM3KpiQwdy7SSDTJOPB551kxj58S9XPRPCAKAjGH2P-72b08MXAHxmyBtd8so7OHmYkKBE2t7kZP1AZIuSlZkRwLlQVRxsms0er8RWAZppjVNiQXIQmLUYAPLCyFPiFUAdAeoes08Vy891i3Q8GmW5OA8wesceTqlXZG5kAtHrFVBgKTdPbFd7L00RiMH7P5jnGiifv7ZapcOd9-zBn7HfzHPnrAnRvwh7E4
+
+        LSID=DQAAAOYAAAB7SGe3tvk0DAxzN6SjmA8Uz_RavdJgwwr4F42t49ZJQ_0d3jY3-6Puz8DHhtuxKmhsJbs4ZpmXRxYiSvO4t5lvtYqMEHi-HyHr-br9IMGxy1AByaIu9zv7Maf5zsV3dh4oUDIaXEH1BSC7u-QO4xYbzgurwwKwevXuEgJfLbE5RD7KxOSXtJgYuMdtzj-DDNh4_T5dZykAd31MLFZNgiQPu9e4zOJf5mKxryqFWQPYv6ou-QhJX8bQf1HN4dsVi8Ap0f39xI6EImZofIuwUjRmdN97JdWUvvDwGCb-BzAPjUaNGungkJABwE1zQlci9CE
+
+        Auth=DQAAAOUAAAB7SGe3tvk0DAxzN6SjmA8Uz_RavdJgwwr4F42t49ZJQ_0d3jY3-6Puz8DHhtuxKmgiTHRCLXMEi4A8J6SY27q3TMZoKZ9N0xSOmPOonPQ3yyCW6kfPciIR_ipktj9m0j5qJKykA6FK0F2hZwFknD7AFmaMeoCvj6qNvZSmi1--X6jfihiA6LFQbrE91XzCi13IsgiOf2LSNAQ0HzwRzdyDiqGctaWtorqc643IwdLPoddEBtKgnUs3Lv2IdT51nY0ncDEP0Hp8U7JIuEiqSz9M8oYEJdGLO9zONvaIr8r41SO2bujA4zIaMII5asxcs0k
+
+'
+    http_version: !!null 
+  recorded_at: Wed, 31 Oct 2012 09:35:49 GMT
+- request:
     method: get
     uri: https://apps-apis.google.com/a/feeds/<LOCATION>/user/2.0/ThIsUsErIsNoTvAlId
     body:
@@ -10,7 +57,7 @@ http_interactions:
       Content-Type:
       - application/atom+xml
       Authorization:
-      - GoogleLogin auth=DQAAAOUAAAA87x2UfD_GXVvZT3tH4PV2vd3PX3lkkifqyhbMhmPpza2fcYqE5fohD8EoEPCh7XeqkYJAdIZzvm5CkVhe0g-ovNDRfwpjVpQLv_P7jXzC3QbfATe_un3K8_7aP39P-Ycnr980-76FKkoOez8cqy7CSuo2QzHF7odGcHos8MmpVH2a8tl9C0rDaPZhXD1nMvxHqa6Iz2mCfdWdkzkFiu-kfcrX5qqedaZLnQ56Mx5dnGf8FsJJ_-vE_XPgZKhkf9dW3amixmLDOQuj5FAneksYa7PtjzyU8uMUhODcZDTwpuIETnN8wMY0XOneOExbeIY
+      - GoogleLogin auth=DQAAAOUAAAB7SGe3tvk0DAxzN6SjmA8Uz_RavdJgwwr4F42t49ZJQ_0d3jY3-6Puz8DHhtuxKmgiTHRCLXMEi4A8J6SY27q3TMZoKZ9N0xSOmPOonPQ3yyCW6kfPciIR_ipktj9m0j5qJKykA6FK0F2hZwFknD7AFmaMeoCvj6qNvZSmi1--X6jfihiA6LFQbrE91XzCi13IsgiOf2LSNAQ0HzwRzdyDiqGctaWtorqc643IwdLPoddEBtKgnUs3Lv2IdT51nY0ncDEP0Hp8U7JIuEiqSz9M8oYEJdGLO9zONvaIr8r41SO2bujA4zIaMII5asxcs0k
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
@@ -25,9 +72,9 @@ http_interactions:
       Content-Type:
       - text/xml
       Date:
-      - Mon, 22 Oct 2012 08:30:43 GMT
+      - Wed, 31 Oct 2012 09:35:50 GMT
       Expires:
-      - Mon, 22 Oct 2012 08:30:43 GMT
+      - Wed, 31 Oct 2012 09:35:50 GMT
       Cache-Control:
       - private, max-age=0
       X-Content-Type-Options:
@@ -46,5 +93,5 @@ http_interactions:
         \ <error errorCode=\"1301\" invalidInput=\"ThIsUsErIsNoTvAlId\" reason=\"EntityDoesNotExist\"
         />\r\n</AppsForYourDomainErrors>\r\n\r\n"
     http_version: !!null 
-  recorded_at: Mon, 22 Oct 2012 08:30:43 GMT
+  recorded_at: Wed, 31 Oct 2012 09:35:50 GMT
 recorded_with: VCR 2.2.5

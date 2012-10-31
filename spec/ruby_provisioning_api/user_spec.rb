@@ -74,6 +74,18 @@ describe RubyProvisioningApi::User do
 
   describe ".find" do
 
+    context "non existing user" do
+
+      it "should raise an exception" do
+        VCR.use_cassette "find_non_existing_user" do
+          lambda {
+            RubyProvisioningApi::User.find("ThIsUsErIsNoTvAlId")
+          }.should raise_error(RubyProvisioningApi::Error, "Entity does not exist")
+        end
+      end
+
+    end
+
     context "existing user" do
 
       before :all do
@@ -93,18 +105,6 @@ describe RubyProvisioningApi::User do
 
       it "should return a RubyProvisioningApi::User object" do
         @user.should be_kind_of(RubyProvisioningApi::User)
-      end
-
-    end
-
-    context "non existing user" do
-
-      it "should raise an exception" do
-        VCR.use_cassette "find_non_existing_user" do
-          lambda {
-            RubyProvisioningApi::User.find("ThIsUsErIsNoTvAlId")
-          }.should raise_error(RubyProvisioningApi::Error, "Entity does not exist")
-        end
       end
 
     end
