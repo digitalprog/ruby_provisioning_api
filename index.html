@@ -31,32 +31,110 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h3>Welcome to GitHub Pages.</h3>
+        <h1>RubyProvisioningApi</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p><a href="http://travis-ci.org/digitalprog/ruby_provisioning_api"><img src="https://secure.travis-ci.org/digitalprog/ruby_provisioning_api.png" alt="Build Status"></a> <a href="https://codeclimate.com/github/digitalprog/ruby_provisioning_api"><img src="https://codeclimate.com/badge.png" alt="Code Climate"></a></p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+<p><a href="http://digitalprog.github.com/ruby_provisioning_api/">Website</a> | <a href="http://rdoc.info/github/digitalprog/ruby_provisioning_api/frames">RDocs</a></p>
+
+<h2>Installation</h2>
+
+<p>Add this line to your application's Gemfile:</p>
+
+<pre><code>gem 'ruby_provisioning_api'
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<p>And then execute:</p>
 
-<h3>Designer Templates</h3>
+<pre><code>$ bundle
+</code></pre>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<p>Or install it yourself as:</p>
 
-<h3>Rather Drive Stick?</h3>
+<pre><code>$ gem install ruby_provisioning_api
+</code></pre>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<h2>Configuration</h2>
 
-<h3>Authors and Contributors</h3>
+<p>The configuration of Ruby Provisioning Api gem can be achieved in two steps. The first one is mandatory and contains the minimal required configuration for the gem to work. The second one is optional and allows you to tweak some aspects of the gem functionalities.</p>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<h3>Basic configuration (required)</h3>
 
-<h3>Support or Contact</h3>
+<p>The Ruby Provisioning Api gem looks for a configuration file named <code>google_apps.yml</code>. This file must contain the following parameters for the gem to work:</p>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<ul>
+<li>username: the username to authenticate to google apps</li>
+<li>password: the password to authenticate to google apps</li>
+<li>domain: the domain linked to google apps</li>
+</ul><p>Typically a basic configuration file would look like this example:</p>
+
+<pre><code>:username: foo
+:password: pa55w0rd
+:domain: foobar.com
+</code></pre>
+
+<p>If you use the gem in a traditional Ruby application, you can place this file everywhere you want and tell the gem its location through the <a href="#advanced-configuration">advanced configuration</a>.</p>
+
+<p>In a Ruby on Rails application this file would reside under the <code>config</code> directory. The gem by default looks for the <code>#{Rails.root}/config/google_apps.yml</code> file but of course you can override this behavior through the <a href="#advanced-configuration">advanced configuration</a>. Note that in this case the advanced configuration is required to tell the gem where to find the file.</p>
+
+<p>Another options provided inside the Ruby on Rails environment is the ability to use multiple configuration environments like the default Rails' <code>database.yml</code> file. Here an example:</p>
+
+<pre><code>development:
+  :username: dev_foo
+  :password: dev_pa55w0rd
+  :domain: dev.foobar.com
+
+test:
+  :username: test_foo
+  :password: test_pa55w0rd
+  :domain: test.foobar.com
+
+production:
+  :username: prod_foo
+  :password: prod_pa55w0rd
+  :domain: prod.foobar.com
+</code></pre>
+
+<h3>Advanced configuration</h3>
+
+<p>Here a list the parameters of Ruby Provisioning Api gem that can be configured to fit your needs:</p>
+
+<ul>
+<li><p><em>config_file</em>: path to the config file in the file system. This setting defaults to <code>#{Rails.root}/config/google_apps.yml</code> if you're using Rails, or <code>nil</code> otherwise.</p></li>
+<li><p><em>base_apps_url</em>: the url to google apps apis (default is: "<a href="https://apps-apis.google.com%22">https://apps-apis.google.com"</a>)</p></li>
+<li><p><em>base_path</em>: the path to append to <em>base_apps_url</em> to the google apps api (default is: "/a/feeds")</p></li>
+<li><p><em>http_debug</em>: console log level (for development purposes). Logs all http headers, requests and responses if <em>true</em>, doesn't log nothing if <em>false</em> (default is false)</p></li>
+<li><p><em>ca_file</em>: path to the ca file in the file system. This setting is required in case you get a "certificate verify failed" error.</p></li>
+</ul><p>Example:</p>
+
+<div class="highlight"><pre><span class="no">RubyProvisioningApi</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">config_file</span> <span class="o">=</span> <span class="s2">"/my/custom/path/google_apps.yml"</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">ca_file</span> <span class="o">=</span> <span class="s2">"/my/custom/path/to/certs"</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">http_debug</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="k">end</span>
+</pre></div>
+
+<p>In a Ruby on Rails application you would tipically insert this code into an initializer file and place it inside the <code>config/initializers</code> directory.</p>
+
+<h2>Usage</h2>
+
+<p>TODO: write usage instructions here</p>
+
+<h2>Documentation</h2>
+
+<p><a href="http://rdoc.info/github/digitalprog/ruby_provisioning_api/master/frames">http://rdoc.info/github/digitalprog/ruby_provisioning_api/master/frames</a></p>
+
+<h2>Contributing</h2>
+
+<ol>
+<li>Fork it</li>
+<li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li>
+<li>Commit your changes (<code>git commit -am 'Added some feature'</code>)</li>
+<li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
+<li>Create new Pull Request</li>
+</ol><h2>Authors</h2>
+
+<p>This rubygem was developed by <a href="http://www.damianobraga.com">Damiano Braga</a> and <a href="http://www.davidetarga.it">Davide Targa</a>.</p>
       </section>
     </div>
 
