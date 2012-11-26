@@ -20,7 +20,7 @@ module RubyProvisioningApi
 
     def initialize
       if defined? Rails.root
-        @config_file = "{Rails.root}/config/google_apps.yml"
+        @config_file = "#{Rails.root}/config/google_apps.yml"
         set_attributes
       end
     end
