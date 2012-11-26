@@ -82,7 +82,7 @@ module RubyProvisioningApi
     # @return [Array<String>] all entity owner ids for an entity [Group or User]
     # @param [String] entity Entity name
     #    
-    def owner_ids
+    def owner_ids(entity)
       params = self.class.prepare_params_for(:owners, "groupId" => group_id)
       response = self.class.perform(params)
       self.class.check_response(response)
