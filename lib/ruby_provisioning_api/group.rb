@@ -8,7 +8,7 @@ module RubyProvisioningApi
   # @attr [String] description Group description
   # @attr [String] email_permission Group permission: Owner or Member 
   #
-  class Group 
+  class Group
     extend Entity
     include Member
     include Owner
@@ -23,7 +23,7 @@ module RubyProvisioningApi
     # This constant is used to dynamically extract group's attributes from the google API response.
     #
     GROUP_ATTRIBUTES = ['groupId','groupName','description','emailPermission']
-    
+
     # @param [Hash] params the options to create a Group with.
     # @option params [String] :group_id Group identification
     # @option params [String] :group_name Group name
@@ -48,11 +48,18 @@ module RubyProvisioningApi
     def self.all
       response = perform(RubyProvisioningApi.configuration.group_actions[:retrieve_all])
       # Perform the request & Check if the response contains an error
-      check_response(response)       
+      check_response(response)
       # Parse the response
       xml = Nokogiri::XML(response.body)
       # Return the array of Groups
       groups = parse_group_response(xml)
+      while (np = next_page(xml))
+        params = prepare_params_for(:group_page, "startFrom" => np.to_s.split("start=").last)
+        response = perform(params)
+        xml = Nokogiri::XML(response.body)
+        groups += parse_group_response(xml)
+      end
+      groups
     end
 
     # Retrieve a group
@@ -104,7 +111,7 @@ module RubyProvisioningApi
     # @raise [Error] if group already exists (group_id must be unique)
     #    
     def self.create(params = {})
-      group = Group.new(params).save    
+      group = Group.new(params).save
     end
 
     # Save a group
@@ -134,7 +141,7 @@ module RubyProvisioningApi
         #Acting on an existing object
         params = self.class.prepare_params_for(:update, "groupId" => group_id)
         # Perform the request & Check if the response contains an error
-        self.class.check_response(self.class.perform(params,builder.to_xml))  
+        self.class.check_response(self.class.perform(params,builder.to_xml))
       end
     end
 
@@ -152,7 +159,7 @@ module RubyProvisioningApi
     # @raise [Error] if group does not exist
     #
     def update
-      save 
+      save
     end
 
     # Update attributes of a group 
@@ -175,7 +182,7 @@ module RubyProvisioningApi
       self.description = params[:description] if params[:description]
       self.email_permission = params[:email_permission] if params[:email_permission]
       update
-    end    
+    end
 
     # Delete group  
     # @note This method executes a <b>DELETE</b> request to <i>apps-apis.google.com/a/feeds/group/2.0/domain/groupId </i>
@@ -207,8 +214,16 @@ module RubyProvisioningApi
     #
     def self.groups(member_id)
       params = prepare_params_for(:retrieve_groups, "memberId" => member_id)
-      doc = perform_and_check_response(params)
-      parse_group_response(doc)
+      xml = perform_and_check_response(params)
+      groups = parse_group_response(xml)
+      puts xml
+      while (np = next_page(xml))
+        params = prepare_params_for(:retrieve_groups_page, "memberId" => member_id, "startFrom" => np.to_s.split("start=").last)
+        response = perform(params)
+        xml = Nokogiri::XML(response.body)
+        groups += parse_group_response(xml)
+      end
+      groups
     end
 
     # Add member to group 
@@ -224,7 +239,7 @@ module RubyProvisioningApi
     # @raise [Error] if member(user) does not exist
     #
     def add_member(member_id)
-      add_entity("member",member_id) 
+      add_entity("member",member_id)
     end
 
     # Group membership of a given member
@@ -247,7 +262,7 @@ module RubyProvisioningApi
       rescue
         User.find(owner_id)
         false
-      end    
+      end
     end
 
 
@@ -264,7 +279,7 @@ module RubyProvisioningApi
     # @raise [Error] if member(user) does not exist
     #
     def delete_member(member_id)
-      delete_entity("member",member_id)   
+      delete_entity("member",member_id)
     end
 
     # Add owner to group 
@@ -280,7 +295,7 @@ module RubyProvisioningApi
     # @raise [Error] if owner(user) does not exist
     #       
     def add_owner(owner_id)
-      add_entity("owner",owner_id) 
+      add_entity("owner",owner_id)
     end
 
     # Group ownership of a given owner
@@ -302,7 +317,7 @@ module RubyProvisioningApi
       rescue
         User.find(owner_id)
         false
-      end   
+      end
     end
 
 
@@ -319,7 +334,7 @@ module RubyProvisioningApi
     # @raise [Error] if owner(user) does not exist
     #
     def delete_owner(owner_id)
-      delete_entity("owner",owner_id)   
+      delete_entity("owner",owner_id)
     end
 
     private
@@ -351,13 +366,13 @@ module RubyProvisioningApi
       builder = prepare_xml_request("#{entity}_id".to_sym => entity_id)
       params = self.class.prepare_params_for("add_#{entity}".to_sym, "groupId" => group_id )
       # Perform the request & Check if the response contains an error
-      self.class.check_response(self.class.perform(params,builder.to_xml))  
+      self.class.check_response(self.class.perform(params,builder.to_xml))
     end
 
     def delete_entity(entity,entity_id)
       params = self.class.prepare_params_for("delete_#{entity}".to_sym, { "groupId" => group_id, "#{entity}Id" => entity_id })
       # Perform the request & Check if the response contains an error
-      self.class.check_response(self.class.perform(params)) 
+      self.class.check_response(self.class.perform(params))
     end
 
     def prepare_xml_request(params = {})

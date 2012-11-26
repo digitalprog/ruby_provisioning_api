@@ -92,7 +92,9 @@ module RubyProvisioningApi
           :update => {method: "PUT", url: "#{group_path}/groupId"},
           :delete => {method: "DELETE", url: "#{group_path}/groupId"},
           :retrieve_all => {method: "GET", url: "#{group_path}"},
+          :group_page => {method: "GET", url: "#{group_path}/?start=startFrom"},
           :retrieve_groups => {method: "GET", url: "#{group_path}/?member=memberId"},
+          :retrieve_groups_page => {method: "GET", url: "#{group_path}/?member=memberId&start=startFrom"},
           :retrieve => {method: "GET", url: "#{group_path}/groupId"},
           :add_member => {method: "POST", url: "#{group_path}/groupId/member"},
           :add_owner => {method: "POST", url: "#{group_path}/groupId/owner"},
@@ -102,8 +104,10 @@ module RubyProvisioningApi
           :delete_owner => {method: "DELETE", url: "#{group_path}/groupId/owner/ownerId"},
           :member => {method: "GET", url: "#{group_path}/groupId/member/memberId"},
           :members => {method: "GET", url: "#{group_path}/groupId/member"},
+          :members_page => {method: "GET", url: "#{group_path}/groupId/member/?start=startFrom"},
           :owner => {method: "GET", url: "#{group_path}/groupId/owner/ownerId"},
-          :owners => {method: "GET", url: "#{group_path}/groupId/owner"}
+          :owners => {method: "GET", url: "#{group_path}/groupId/owner"},
+          :owners_page => {method: "GET", url: "#{group_path}/groupId/owner/?start=startFrom"}
       }
     end
 

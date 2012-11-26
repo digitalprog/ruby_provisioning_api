@@ -73,17 +73,16 @@ module RubyProvisioningApi
       response = self.class.perform(params)
       self.class.check_response(response)
       # Prepare a User array
-      entity_ids = []
-      Nokogiri::XML(response.body).children.css("entry").each do |entry|
-        # If the member is a user
-        entry_details = entry.css("apps|property[name]")
-        if entry_details[0].attributes["value"].value.eql?(entity)
-          # Fill the array with the username
-          entity_ids << entry_details[1].attributes["value"].value.split("@")[0]
-        end
+      xml = Nokogiri::XML(response.body)
+      entity_ids = parse_member_response(xml, entity)
+      while (np = self.class.next_page(xml))
+        params = self.class.prepare_params_for(:members_page, "groupId" => group_id,
+                                               "startFrom" => np.to_s.split("start=").last)
+        response = self.class.perform(params)
+        xml = Nokogiri::XML(response.body)
+        entity_ids += parse_member_response(xml, entity)
       end
-      # Return the array of users ids (members)
-      entity_ids         
+      entity_ids
     end
 
     # Retrieve entity members for a group
@@ -99,6 +98,19 @@ module RubyProvisioningApi
     def members(entity)   
       member_ids(entity).map{ |member| "RubyProvisioningApi::#{entity}".constantize.send(:find, member) }
     end
-    
+
+    def parse_member_response(xml, entity)
+      entity_ids = []
+      xml.children.css("entry").each do |entry|
+        # If the member is a user
+        entry_details = entry.css("apps|property[name]")
+        if entry_details[0].attributes["value"].value.eql?(entity)
+          # Fill the array with the username
+          entity_ids << entry_details[1].attributes["value"].value.split("@")[0]
+        end
+      end
+      entity_ids
+    end
+
   end
 end

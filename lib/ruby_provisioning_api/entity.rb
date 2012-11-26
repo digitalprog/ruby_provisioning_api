@@ -98,6 +98,14 @@ module RubyProvisioningApi
       Marshal.load(Marshal.dump(element))
     end
 
+    def next_page(xml)
+      unless xml.css("link[rel=next]").empty?
+        xml.css("link[rel=next]").attribute("href")
+      else
+        false
+      end
+    end
+
     private
 
     def perform_and_check_response(params)
