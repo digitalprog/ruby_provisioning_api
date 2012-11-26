@@ -374,7 +374,7 @@ Full-Width Styles
   background: #212121;
 }
 
-img[alt="Build Status"] {
+img[alt="Build Status"], img[alt="Code Climate"] {
   width: 100px;
 }
 
