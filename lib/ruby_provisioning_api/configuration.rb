@@ -60,7 +60,7 @@ module RubyProvisioningApi
 
     def configuration_locator(config)
       if defined? Rails
-        env = Rails.env.to_sym
+        env = Rails.env
         return rails_configuration_locator(config, env)
       else
         return(config)
