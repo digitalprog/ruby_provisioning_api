@@ -106,7 +106,7 @@ module RubyProvisioningApi
         entry_details = entry.css("apps|property[name]")
         if entry_details[0].attributes["value"].value.eql?(entity)
           # Fill the array with the username
-          entity_ids << entry_details[1].attributes["value"].value.split("@")[0]
+          entity_ids << entry_details[1].attributes["value"].value
         end
       end
       entity_ids
