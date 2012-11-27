@@ -260,7 +260,7 @@ module RubyProvisioningApi
         # Perform the request & Check if the response contains an error
         self.class.check_response(self.class.perform(params))
       rescue
-        User.find(owner_id)
+        User.find(member_id)
         false
       end
     end
